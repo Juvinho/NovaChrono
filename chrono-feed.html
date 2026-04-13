@@ -158,46 +158,66 @@
       padding: 0 14px;
     }
 
-    .search-wrap {
-      width: 360px;
-      max-width: 100%;
+    .header-search {
       position: relative;
-      transition: transform 0.2s ease;
+      display: flex;
+      align-items: center;
+      width: 360px;
+      flex-shrink: 0;
     }
 
-    .search-wrap input {
+    .search-input {
+      display: block;
       width: 100%;
       height: 36px;
-      border-radius: 999px;
-      border: 1px solid var(--color-border);
-      background: var(--color-surface-2);
-      color: var(--color-text);
-      padding: 0 38px 0 14px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 20px;
+      padding: 0 40px 0 16px;
       font-size: 13px;
+      color: var(--color-text);
+      outline: none;
+      transition: border-color 150ms ease, background 150ms ease;
     }
 
-    .search-wrap input::placeholder {
+    .search-input::placeholder {
       color: var(--color-text-faint);
     }
 
-    .search-wrap i {
+    .search-input:focus {
+      background: rgba(255, 255, 255, 0.10);
+      border-color: rgba(124, 90, 240, 0.5);
+    }
+
+    .search-icon-btn {
       position: absolute;
       right: 12px;
       top: 50%;
       transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: var(--color-text-muted);
+      padding: 0;
       width: 16px;
       height: 16px;
-      color: var(--color-text-muted);
       pointer-events: none;
     }
 
-    .search-wrap:focus-within {
-      transform: scale(1.02);
+    .search-icon-btn svg {
+      width: 15px;
+      height: 15px;
+      stroke-width: 2;
+      display: block;
     }
 
-    .search-wrap:focus-within input {
-      border-color: rgba(124, 90, 240, 0.7);
-      box-shadow: 0 0 0 1px rgba(124, 90, 240, 0.32);
+    .search-icon-btn i {
+      width: 15px;
+      height: 15px;
+      display: block;
     }
 
     .autocomplete-highlight-wrap {
@@ -477,6 +497,7 @@
       gap: 4px;
       flex-shrink: 0;
       position: relative;
+      overflow: visible;
     }
 
     .header-action-btn {
@@ -1041,9 +1062,10 @@
     }
 
     .header-notif-dropdown {
-      position: absolute;
-      top: 48px;
-      right: -80px;
+      position: fixed;
+      top: calc(var(--header-h) + 8px);
+      left: 16px;
+      right: auto;
       width: 320px;
       max-height: 420px;
       overflow-y: auto;
@@ -1052,7 +1074,7 @@
       border: 1px solid rgba(255, 255, 255, 0.09);
       border-radius: 16px;
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-      z-index: 200;
+      z-index: 600;
       transform-origin: top right;
       transform: scale(0.9);
       opacity: 0;
@@ -1210,16 +1232,17 @@
     }
 
     .profile-dropdown {
-      position: absolute;
-      top: 48px;
-      right: 52px;
+      position: fixed;
+      top: calc(var(--header-h) + 8px);
+      left: 16px;
+      right: auto;
       width: 200px;
       background: rgba(10, 11, 20, 0.98);
       backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.09);
       border-radius: 12px;
       box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
-      z-index: 200;
+      z-index: 600;
       overflow: hidden;
       transform-origin: top right;
       transform: scale(0.92);
@@ -1879,6 +1902,1338 @@
       animation: tabShift 280ms ease;
     }
 
+    #app-view-container {
+      position: relative;
+      min-height: 420px;
+    }
+
+    .app-view {
+      display: none;
+      opacity: 0;
+      transform: translateY(8px);
+      pointer-events: none;
+    }
+
+    .app-view.is-active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .app-view.is-entering {
+      animation: appViewIn 180ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    .app-view.is-leaving {
+      animation: appViewOut 140ms ease forwards;
+    }
+
+    @keyframes appViewIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes appViewOut {
+      from {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+    }
+
+    body.layout-internal .left-sidebar,
+    body.layout-internal .right-sidebar {
+      display: none;
+    }
+
+    body.layout-internal .columns {
+      grid-template-columns: minmax(0, 900px);
+      max-width: 980px;
+    }
+
+    body.layout-internal .feed-column {
+      max-width: 900px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    body.layout-hide-timeline .timeline-bar {
+      display: none;
+    }
+
+    body.layout-hide-timeline .app-main {
+      padding-bottom: 20px;
+    }
+
+    .view-shell {
+      border: 1px solid var(--color-border);
+      background: rgba(15, 17, 32, 0.95);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.32);
+    }
+
+    .view-head {
+      padding: 20px 22px 0;
+      display: grid;
+      gap: 5px;
+    }
+
+    .view-title {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 700;
+      font-family: var(--font-display);
+      color: var(--color-text);
+    }
+
+    .view-subtitle {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: 13px;
+    }
+
+    .profile-view {
+      padding-top: 6px;
+    }
+
+    .profile-shell {
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 6px 8px 18px;
+    }
+
+    .profile-hero {
+      margin: 0;
+      position: relative;
+    }
+
+    .profile-cover {
+      height: 220px;
+      border-radius: 20px 20px 0 0;
+      border: 1px solid var(--color-border);
+      border-bottom: 0;
+      background-image:
+        linear-gradient(rgba(5, 6, 14, 0.24), rgba(5, 6, 14, 0.58)),
+        url('https://picsum.photos/seed/chrono-cover/1400/500');
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      overflow: hidden;
+      transform-origin: center;
+    }
+
+    .profile-cover::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 14% 22%, rgba(0, 196, 204, 0.16), transparent 48%),
+        radial-gradient(circle at 80% 18%, rgba(124, 90, 240, 0.24), transparent 52%);
+      pointer-events: none;
+    }
+
+    .profile-cover::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(6, 7, 15, 0) 44%, rgba(6, 7, 15, 0.56) 100%);
+      pointer-events: none;
+    }
+
+    .profile-info-card {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 18px;
+      padding: 16px 24px 22px;
+      background: rgba(10, 11, 20, 0.96);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 0;
+      border-radius: 0 0 20px 20px;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.34);
+      position: relative;
+    }
+
+    .profile-avatar-wrap {
+      align-self: start;
+      margin-top: -68px;
+      z-index: 2;
+    }
+
+    .profile-avatar {
+      width: 104px;
+      height: 104px;
+      border-radius: 999px;
+      border: 4px solid var(--color-bg);
+      object-fit: cover;
+      background: #101325;
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.07),
+        0 8px 24px rgba(0, 0, 0, 0.45),
+        0 0 24px rgba(124, 90, 240, 0.22);
+      transition: transform 180ms ease;
+    }
+
+    .profile-avatar:hover {
+      transform: scale(1.02);
+    }
+
+    .profile-main-info {
+      min-width: 0;
+      display: grid;
+      gap: 10px;
+      padding-top: 2px;
+    }
+
+    .profile-identity-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .profile-handle-big {
+      margin: 0;
+      font-size: 34px;
+      line-height: 1.04;
+      letter-spacing: -0.02em;
+      font-family: var(--font-display);
+      font-weight: 800;
+      color: #f6f7ff;
+    }
+
+    .profile-verified-badge {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      display: inline-grid;
+      place-items: center;
+      color: #ff6a75;
+      background: rgba(255, 106, 117, 0.12);
+      border: 1px solid rgba(255, 106, 117, 0.3);
+    }
+
+    .profile-verified-badge i,
+    .profile-verified-badge svg {
+      width: 13px;
+      height: 13px;
+    }
+
+    .profile-pronouns {
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--color-text-muted);
+      padding: 3px 8px;
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1;
+    }
+
+    .profile-display-name {
+      margin: 0;
+      font-size: 15px;
+      color: var(--color-text-muted);
+      font-weight: 500;
+    }
+
+    .profile-bio {
+      margin: 2px 0 0;
+      font-size: 18px;
+      color: var(--color-text);
+      line-height: 1.55;
+      max-width: 70ch;
+    }
+
+    .profile-bio-link {
+      color: var(--color-primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .profile-bio-link:hover {
+      text-decoration: underline;
+    }
+
+    .profile-meta-list {
+      margin: 2px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 8px;
+      color: var(--color-text-muted);
+      font-size: 13px;
+    }
+
+    .profile-meta-list li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 20px;
+    }
+
+    .profile-meta-list i,
+    .profile-meta-list svg {
+      width: 14px;
+      height: 14px;
+      color: var(--color-text-faint);
+      flex-shrink: 0;
+    }
+
+    .profile-meta-list a {
+      color: var(--color-primary);
+      text-decoration: none;
+      overflow-wrap: anywhere;
+    }
+
+    .profile-meta-list a:hover {
+      text-decoration: underline;
+    }
+
+    .profile-counters {
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .profile-counter {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 10px;
+      padding: 8px 11px;
+      min-width: 106px;
+      display: grid;
+      gap: 2px;
+      cursor: pointer;
+      transition: border-color 150ms ease, background 150ms ease;
+    }
+
+    .profile-counter:hover {
+      border-color: rgba(124, 90, 240, 0.35);
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .profile-counter-value {
+      font-size: 16px;
+      color: #eef0ff;
+      font-family: var(--font-display);
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .profile-counter-label {
+      font-size: 11px;
+      color: var(--color-text-muted);
+      line-height: 1.1;
+    }
+
+    .profile-side-actions {
+      display: grid;
+      gap: 9px;
+      justify-items: end;
+      align-content: start;
+      min-width: 172px;
+      padding-top: 2px;
+    }
+
+    .profile-edit-cta {
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: transparent;
+      color: var(--color-text);
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 150ms ease, border-color 150ms ease;
+    }
+
+    .profile-edit-cta:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .profile-back-link {
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--color-text-faint);
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 150ms ease, color 150ms ease;
+    }
+
+    .profile-back-link:hover {
+      color: var(--color-text);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .profile-content-card {
+      margin-top: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      background: rgba(10, 11, 20, 0.96);
+      overflow: hidden;
+      box-shadow: 0 12px 26px rgba(0, 0, 0, 0.24);
+    }
+
+    .profile-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      min-height: 52px;
+    }
+
+    .profile-tab {
+      border: 0;
+      border-bottom: 2px solid transparent;
+      background: transparent;
+      color: var(--color-text-muted);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      padding: 0 10px;
+      cursor: pointer;
+      transition: color 140ms ease, border-color 140ms ease, background 140ms ease;
+    }
+
+    .profile-tab:hover {
+      color: var(--color-text);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .profile-tab.active {
+      color: #ebe6ff;
+      border-bottom-color: var(--color-primary);
+      font-weight: 700;
+    }
+
+    .profile-tab-panels {
+      padding: 18px;
+      min-height: 270px;
+      transition: opacity 120ms ease;
+    }
+
+    .profile-tab-panels.is-switching {
+      opacity: 0;
+    }
+
+    .profile-tab-panel {
+      opacity: 0;
+      transform: translateY(4px);
+      animation: profileTabIn 160ms ease forwards;
+    }
+
+    @keyframes profileTabIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .profile-post-stream {
+      display: grid;
+      gap: 12px;
+    }
+
+    .profile-post-stream .post-card {
+      cursor: pointer;
+    }
+
+    .profile-media-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .profile-media-item {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.03);
+      cursor: pointer;
+      transition: border-color 150ms ease, transform 150ms ease;
+    }
+
+    .profile-media-item:hover {
+      border-color: rgba(124, 90, 240, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .profile-media-thumb {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      display: block;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .profile-media-body {
+      padding: 10px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .profile-media-body p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--color-text);
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .profile-media-meta {
+      font-size: 11px;
+      color: var(--color-text-muted);
+    }
+
+    .profile-temporal-card {
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.02);
+      padding: 14px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .profile-temporal-title {
+      margin: 0;
+      font-size: 15px;
+      color: var(--color-text);
+      font-family: var(--font-display);
+    }
+
+    .profile-temporal-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .profile-temporal-input {
+      min-width: 200px;
+      height: 36px;
+      border-radius: 9px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--color-text);
+      padding: 0 10px;
+      outline: none;
+    }
+
+    .profile-temporal-input:focus {
+      border-color: rgba(124, 90, 240, 0.45);
+    }
+
+    .profile-temporal-go {
+      height: 36px;
+      border-radius: 9px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: transparent;
+      color: var(--color-text);
+      padding: 0 14px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .profile-temporal-go:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .profile-milestones {
+      margin: 0;
+      padding-left: 18px;
+      display: grid;
+      gap: 6px;
+      color: var(--color-text-muted);
+      font-size: 13px;
+    }
+
+    .profile-temporal-results {
+      display: grid;
+      gap: 10px;
+    }
+
+    .profile-empty-state {
+      border: 1px dashed rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      padding: 40px 16px;
+      text-align: center;
+      color: var(--color-text-muted);
+      background: rgba(255, 255, 255, 0.02);
+      display: grid;
+      gap: 6px;
+      justify-items: center;
+    }
+
+    .profile-empty-state i,
+    .profile-empty-state svg {
+      width: 18px;
+      height: 18px;
+      color: var(--color-text-faint);
+    }
+
+    #view-profile.is-entering .profile-cover {
+      animation: profileCoverIn 260ms ease forwards;
+    }
+
+    #view-profile.is-entering .profile-avatar-wrap {
+      animation: profileAvatarIn 280ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    #view-profile.is-entering .profile-info-card {
+      animation: profileInfoIn 300ms ease forwards;
+    }
+
+    @keyframes profileCoverIn {
+      from {
+        opacity: 0;
+        transform: scale(0.985);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes profileAvatarIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes profileInfoIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 1023px) {
+      .profile-cover {
+        height: 180px;
+      }
+
+      .profile-avatar-wrap {
+        margin-top: -58px;
+      }
+
+      .profile-avatar {
+        width: 88px;
+        height: 88px;
+      }
+
+      .profile-handle-big {
+        font-size: 28px;
+      }
+
+      .profile-bio {
+        font-size: 16px;
+      }
+
+      .profile-info-card {
+        grid-template-columns: auto minmax(0, 1fr);
+      }
+
+      .profile-side-actions {
+        grid-column: 1 / -1;
+        justify-items: start;
+        display: flex;
+        flex-wrap: wrap;
+        min-width: 0;
+      }
+
+      .profile-edit-cta,
+      .profile-back-link {
+        width: auto;
+      }
+    }
+
+    .edit-profile-wrap {
+      margin-top: 14px;
+      border: 1px solid var(--color-border);
+      background: rgba(15, 17, 32, 0.95);
+      border-radius: 18px;
+      padding: 20px;
+      max-width: 720px;
+      display: grid;
+      gap: 14px;
+      margin-inline: auto;
+    }
+
+    .edit-row {
+      display: grid;
+      gap: 6px;
+    }
+
+    .edit-label {
+      font-size: 12px;
+      color: var(--color-text-muted);
+      font-weight: 600;
+    }
+
+    .edit-input,
+    .edit-textarea,
+    .edit-url {
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--color-text);
+      padding: 9px 11px;
+      font-size: 13px;
+      outline: 0;
+      transition: border-color 150ms ease, background 150ms ease;
+    }
+
+    .edit-input:focus,
+    .edit-textarea:focus,
+    .edit-url:focus {
+      border-color: rgba(124, 90, 240, 0.45);
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .edit-textarea {
+      min-height: 88px;
+      max-height: 220px;
+      resize: vertical;
+    }
+
+    .edit-inline {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .edit-preview-avatar,
+    .edit-preview-cover {
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.03);
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .edit-preview-avatar {
+      width: 62px;
+      height: 62px;
+      border-radius: 999px;
+    }
+
+    .edit-preview-cover {
+      width: 100%;
+      height: 88px;
+      border-radius: 12px;
+    }
+
+    .edit-upload-btn {
+      border: 1px solid rgba(124, 90, 240, 0.4);
+      background: rgba(124, 90, 240, 0.14);
+      color: #b7a0ff;
+      border-radius: 9px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 7px 10px;
+      cursor: pointer;
+    }
+
+    .edit-upload-btn:hover {
+      background: rgba(124, 90, 240, 0.22);
+    }
+
+    .edit-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      padding-top: 4px;
+    }
+
+    .btn-subtle,
+    .btn-primary,
+    .btn-danger {
+      border: 0;
+      border-radius: 9px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+
+    .btn-subtle {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--color-text);
+    }
+
+    .btn-subtle:hover {
+      background: rgba(255, 255, 255, 0.13);
+    }
+
+    .btn-primary {
+      background: var(--color-primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--color-primary-hover);
+    }
+
+    .btn-danger {
+      background: rgba(255, 77, 109, 0.2);
+      color: #ff6e89;
+    }
+
+    .btn-danger:hover {
+      background: rgba(255, 77, 109, 0.3);
+    }
+
+    .edit-counter {
+      font-size: 11px;
+      color: var(--color-text-faint);
+      justify-self: end;
+    }
+
+    .edit-counter.warn {
+      color: #f0a500;
+    }
+
+    .edit-counter.danger,
+    .field-error {
+      color: #ff5c60;
+    }
+
+    .username-prefix {
+      display: flex;
+      align-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      overflow: hidden;
+    }
+
+    .username-prefix span {
+      color: var(--color-text-muted);
+      font-size: 13px;
+      padding: 0 10px;
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      height: 36px;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .username-prefix input {
+      border: 0;
+      background: transparent;
+      color: var(--color-text);
+      outline: 0;
+      font-size: 13px;
+      height: 36px;
+      width: 100%;
+      padding: 0 10px;
+    }
+
+    .stats-grid {
+      margin-top: 14px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .kpi-grid {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .kpi-card {
+      border: 1px solid var(--color-border);
+      border-radius: 14px;
+      background: rgba(15, 17, 32, 0.92);
+      padding: 12px;
+      display: grid;
+      gap: 4px;
+    }
+
+    .kpi-card strong {
+      font-family: var(--font-display);
+      font-size: 22px;
+      color: var(--color-text);
+    }
+
+    .kpi-label {
+      font-size: 12px;
+      color: var(--color-text-muted);
+    }
+
+    .kpi-trend {
+      font-size: 11px;
+      color: #00c4cc;
+    }
+
+    .stats-section {
+      border: 1px solid var(--color-border);
+      border-radius: 14px;
+      background: rgba(15, 17, 32, 0.92);
+      padding: 14px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .stats-tabs {
+      display: flex;
+      gap: 8px;
+    }
+
+    .stats-tab {
+      border: 0;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--color-text-muted);
+      padding: 6px 10px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .stats-tab.active {
+      background: rgba(124, 90, 240, 0.24);
+      color: #d8cdff;
+    }
+
+    .stats-bars {
+      display: grid;
+      gap: 8px;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      align-items: end;
+      min-height: 130px;
+    }
+
+    .stats-bar {
+      border-radius: 8px 8px 4px 4px;
+      background: linear-gradient(180deg, rgba(124, 90, 240, 0.9), rgba(0, 196, 204, 0.7));
+      min-height: 8px;
+      transition: height 220ms ease;
+    }
+
+    .stats-bar-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+      min-height: 130px;
+    }
+
+    .stats-bar-label {
+      font-size: 10px;
+      color: var(--color-text-faint);
+    }
+
+    .top-post-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .top-post-item {
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 10px;
+      padding: 9px 10px;
+      background: rgba(255, 255, 255, 0.02);
+      cursor: pointer;
+      transition: background 150ms ease;
+      display: grid;
+      gap: 5px;
+    }
+
+    .top-post-item:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .top-post-item p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--color-text);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .top-post-metrics {
+      font-size: 11px;
+      color: var(--color-text-muted);
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .insight-grid {
+      display: grid;
+      gap: 8px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .insight-card {
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 12px;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.02);
+      font-size: 12px;
+      color: var(--color-text-muted);
+      line-height: 1.45;
+    }
+
+    .settings-grid {
+      margin-top: 14px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .choice-row {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .choice-card {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 10px;
+      cursor: pointer;
+      transition: border-color 150ms ease, background 150ms ease, box-shadow 150ms ease;
+      display: grid;
+      gap: 8px;
+    }
+
+    .choice-card:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .choice-card.active {
+      border-color: rgba(124, 90, 240, 0.6);
+      box-shadow: 0 0 0 1px rgba(124, 90, 240, 0.35);
+    }
+
+    .choice-preview {
+      border-radius: 8px;
+      height: 56px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: linear-gradient(180deg, rgba(18, 20, 34, 0.95), rgba(10, 11, 20, 0.95));
+    }
+
+    .choice-title {
+      font-size: 12px;
+      color: var(--color-text);
+      font-weight: 600;
+    }
+
+    .toggle-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .toggle-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 10px;
+      font-size: 12px;
+      color: var(--color-text-muted);
+    }
+
+    .switch {
+      width: 42px;
+      height: 24px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      position: relative;
+      border: 0;
+      cursor: pointer;
+      transition: background 150ms ease;
+    }
+
+    .switch::after {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: #fff;
+      left: 3px;
+      top: 3px;
+      transition: transform 150ms ease;
+    }
+
+    .switch.active {
+      background: rgba(124, 90, 240, 0.7);
+    }
+
+    .switch.active::after {
+      transform: translateX(18px);
+    }
+
+    .language-list {
+      margin-top: 14px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .language-card {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 150ms ease;
+      font-size: 13px;
+      color: var(--color-text);
+    }
+
+    .language-card.active {
+      border-color: rgba(124, 90, 240, 0.55);
+      background: rgba(124, 90, 240, 0.12);
+    }
+
+    .language-check {
+      color: #b7a0ff;
+      width: 16px;
+      height: 16px;
+      opacity: 0;
+      transition: opacity 120ms ease;
+    }
+
+    .language-card.active .language-check {
+      opacity: 1;
+    }
+
+    .logout-view {
+      min-height: calc(100vh - var(--header-h) - 42px);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 24px;
+    }
+
+    .logout-view-card {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      background: rgba(12, 14, 26, 0.97);
+      padding: 26px;
+      max-width: 420px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .logout-view-title {
+      margin: 0;
+      font-size: 24px;
+      font-family: var(--font-display);
+      color: var(--color-text);
+    }
+
+    .logout-view-text {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: 13px;
+    }
+
+    .mini-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(8, 10, 18, 0.5);
+      z-index: 250;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .mini-modal-overlay.is-open {
+      display: flex;
+    }
+
+    .mini-modal {
+      width: min(360px, calc(100vw - 24px));
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      background: rgba(12, 14, 26, 0.98);
+      box-shadow: 0 20px 42px rgba(0, 0, 0, 0.5);
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .mini-modal h4 {
+      margin: 0;
+      color: var(--color-text);
+      font-size: 14px;
+    }
+
+    .mini-modal-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 6px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .mini-modal-list li {
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 8px;
+      font-size: 12px;
+      color: var(--color-text-muted);
+    }
+
+    .mini-modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .app-toast-host {
+      position: fixed;
+      top: calc(var(--header-h) + 12px);
+      right: 16px;
+      z-index: 310;
+      display: grid;
+      gap: 8px;
+      pointer-events: none;
+    }
+
+    .app-toast {
+      border-radius: 10px;
+      border: 1px solid rgba(124, 90, 240, 0.35);
+      background: rgba(12, 14, 26, 0.96);
+      color: var(--color-text);
+      font-size: 12px;
+      padding: 8px 10px;
+      min-width: 220px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+      animation: toastIn 180ms ease;
+    }
+
+    @keyframes toastIn {
+      from {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    body.logout-fade .app-main,
+    body.logout-fade .timeline-bar,
+    body.logout-fade .left-sidebar,
+    body.logout-fade .right-sidebar,
+    body.logout-fade .feed-column {
+      animation: logoutFade 260ms ease forwards;
+    }
+
+    @keyframes logoutFade {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+
+    body.reduced-motion *,
+    body.reduced-motion *::before,
+    body.reduced-motion *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+
+    .bg-particles.is-hidden {
+      display: none;
+    }
+
+    body.no-cordao-highlight .ac-token-cordao,
+    body.no-cordao-highlight .thread-hashtag {
+      color: var(--color-text-muted) !important;
+      font-weight: 500;
+    }
+
+    html[data-theme="light"] {
+      --color-bg: #eef0f7;
+      --color-surface: #ffffff;
+      --color-surface-2: #f5f7ff;
+      --color-border: rgba(35, 42, 80, 0.13);
+      --color-text: #1f2442;
+      --color-text-muted: #50577e;
+      --color-text-faint: #8188a8;
+      --color-divider: rgba(35, 42, 80, 0.1);
+    }
+
+    html[data-theme="light"] body {
+      background-image:
+        radial-gradient(circle at 15% 40%, rgba(124, 90, 240, 0.12) 0%, transparent 55%),
+        radial-gradient(circle at 85% 30%, rgba(0, 180, 190, 0.1) 0%, transparent 50%);
+    }
+
+    body[data-density="compact"] .post-card {
+      padding: 10px;
+      gap: 9px;
+    }
+
+    body[data-density="compact"] .feed-list {
+      gap: 8px;
+    }
+
+    body[data-density="comfortable"] .post-card {
+      padding: 16px;
+      gap: 13px;
+    }
+
+    body[data-density="comfortable"] .feed-list {
+      gap: 16px;
+    }
+
     @keyframes feedPulse {
       0% { opacity: 1; }
       45% { opacity: 0.45; }
@@ -1898,11 +3253,36 @@
       display: grid;
       grid-template-columns: 40px minmax(0, 1fr);
       gap: 11px;
-      transition: border-color 0.2s ease, background 0.2s ease;
+      transition: border-color 0.2s ease, background 0.2s ease, opacity 180ms ease, transform 180ms ease, filter 180ms ease;
       position: relative;
       opacity: 1;
       transform: translateY(0);
       cursor: pointer;
+    }
+
+    .post-card.is-hiding {
+      opacity: 0;
+      transform: translateY(8px);
+      filter: blur(0.25px);
+      pointer-events: none;
+    }
+
+    .post-card.is-hidden {
+      display: none !important;
+    }
+
+    .post-card.is-showing {
+      opacity: 0;
+      transform: translateY(8px);
+      filter: blur(0.25px);
+      pointer-events: none;
+    }
+
+    .post-card.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+      filter: none;
+      pointer-events: auto;
     }
 
     .post-card.search-match {
@@ -2186,6 +3566,41 @@
       text-align: center;
       color: var(--color-text-muted);
       font-size: 13px;
+    }
+
+    .feed-empty-state {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 14px;
+      padding: 24px;
+      text-align: center;
+      margin-top: 12px;
+      color: var(--color-text-muted);
+      display: grid;
+      gap: 8px;
+      justify-items: center;
+    }
+
+    .feed-empty-state i,
+    .feed-empty-state svg {
+      width: 20px;
+      height: 20px;
+      color: var(--color-text-faint);
+    }
+
+    .feed-empty-title {
+      margin: 0;
+      font-size: 15px;
+      color: var(--color-text);
+      font-weight: 700;
+      font-family: var(--font-display);
+    }
+
+    .feed-empty-text {
+      margin: 0;
+      font-size: 13px;
+      color: var(--color-text-muted);
+      line-height: 1.45;
     }
 
     .skeleton-wrap {
@@ -4110,6 +5525,87 @@
         width: min(92vw, 280px);
       }
 
+      .kpi-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .choice-row {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .view-head {
+        padding: 16px 16px 0;
+      }
+
+      .edit-profile-wrap {
+        padding: 14px;
+      }
+
+      .profile-shell {
+        padding: 4px 0 14px;
+      }
+
+      .profile-cover {
+        height: 140px;
+        border-radius: 16px 16px 0 0;
+      }
+
+      .profile-info-card {
+        grid-template-columns: minmax(0, 1fr);
+        border-radius: 0 0 16px 16px;
+        padding: 14px;
+        gap: 12px;
+      }
+
+      .profile-avatar-wrap {
+        margin-top: -48px;
+      }
+
+      .profile-avatar {
+        width: 72px;
+        height: 72px;
+        border-width: 3px;
+      }
+
+      .profile-handle-big {
+        font-size: 22px;
+      }
+
+      .profile-bio {
+        font-size: 15px;
+      }
+
+      .profile-side-actions {
+        display: grid;
+        justify-items: stretch;
+      }
+
+      .profile-edit-cta,
+      .profile-back-link {
+        width: 100%;
+      }
+
+      .profile-tabs {
+        min-height: 48px;
+      }
+
+      .profile-tab {
+        font-size: 12px;
+      }
+
+      .profile-tab-panels {
+        padding: 14px;
+      }
+
+      .profile-media-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .profile-temporal-input {
+        min-width: 0;
+        width: 100%;
+      }
+
       .columns {
         grid-template-columns: minmax(0, 1fr);
         max-width: 720px;
@@ -4152,11 +5648,11 @@
 
       .header-notif-dropdown {
         width: min(94vw, 320px);
-        right: -14px;
+        left: 16px;
       }
 
       .profile-dropdown {
-        right: 0;
+        left: 16px;
       }
 
       .tabs-row {
@@ -4216,10 +5712,19 @@
       </div>
 
       <div class="search-slot">
-        <label class="search-wrap" aria-label="Buscar posts">
-          <input id="globalSearch" type="search" placeholder="Buscar '$artedistopica'...">
-          <i data-lucide="search"></i>
-        </label>
+        <div class="header-search">
+          <input
+            id="globalSearch"
+            type="text"
+            class="search-input"
+            placeholder="Buscar '$artedistopica'..."
+            autocomplete="off"
+            aria-label="Buscar posts"
+          >
+          <button class="search-icon-btn" type="button" tabindex="-1" aria-label="Buscar">
+            <i data-lucide="search"></i>
+          </button>
+        </div>
       </div>
 
       <div class="header-right" id="headerRight">
@@ -4322,28 +5827,28 @@
           </ul>
 
           <footer class="notif-footer">
-            <button type="button">Ver todas as notificacoes →</button>
+            <button id="notifViewAllButton" type="button">Ver todas as notificacoes →</button>
           </footer>
         </section>
 
         <section id="profileDropdown" class="profile-dropdown" aria-label="Menu de perfil">
           <div class="profile-dropdown-header">
-            <img src="https://picsum.photos/seed/juvinho/36/36" alt="Avatar @Juvinho">
+            <img id="profileDropdownAvatar" src="https://picsum.photos/seed/juvinho/36/36" alt="Avatar @Juvinho">
             <div>
-              <strong>@Juvinho</strong>
-              <span>Juvinho Silva</span>
+              <strong id="profileMenuHandle">@Juvinho</strong>
+              <span id="profileMenuDisplayName">Juvinho Silva</span>
             </div>
           </div>
 
           <div class="profile-menu">
-            <button type="button" class="profile-menu-item"><i data-lucide="user"></i><span>Ver perfil</span></button>
-            <button type="button" class="profile-menu-item"><i data-lucide="edit-3"></i><span>Editar perfil</span></button>
-            <button type="button" class="profile-menu-item"><i data-lucide="bar-chart-2"></i><span>Estatisticas</span></button>
+            <button id="profileViewButton" type="button" class="profile-menu-item"><i data-lucide="user"></i><span id="menuProfileLabel">Ver perfil</span></button>
+            <button id="profileEditButton" type="button" class="profile-menu-item"><i data-lucide="edit-3"></i><span id="menuEditProfileLabel">Editar perfil</span></button>
+            <button id="profileStatsButton" type="button" class="profile-menu-item"><i data-lucide="bar-chart-2"></i><span id="menuStatsLabel">Estatisticas</span></button>
             <div class="profile-menu-divider" aria-hidden="true"></div>
             <button id="themeToggleButton" type="button" class="profile-menu-item"><i id="themeToggleIcon" data-lucide="moon"></i><span id="themeToggleLabel">Tema escuro</span></button>
-            <button type="button" class="profile-menu-item"><i data-lucide="globe"></i><span>Idioma: Portugues</span></button>
+            <button id="languageSettingsButton" type="button" class="profile-menu-item"><i data-lucide="globe"></i><span id="languageMenuLabel">Idioma: Portugues</span></button>
             <div class="profile-menu-divider" aria-hidden="true"></div>
-            <button id="profileLogoutButton" type="button" class="profile-menu-item logout-item"><i data-lucide="log-out"></i><span>Sair</span></button>
+            <button id="profileLogoutButton" type="button" class="profile-menu-item logout-item"><i data-lucide="log-out"></i><span id="menuLogoutLabel">Sair</span></button>
           </div>
         </section>
       </div>
@@ -4435,12 +5940,35 @@
   <section id="logoutOverlay" class="logout-overlay" aria-hidden="true">
     <div class="logout-dialog" role="dialog" aria-modal="true" aria-labelledby="logoutTitle">
       <p id="logoutTitle">Deseja sair da Chrono?</p>
+      <p id="logoutSubtitle" class="logout-subtitle">Sua sessao atual sera encerrada.</p>
       <div class="logout-actions">
         <button id="logoutCancelButton" type="button" class="logout-cancel">Cancelar</button>
         <button id="logoutConfirmButton" type="button" class="logout-confirm">Sair</button>
       </div>
     </div>
   </section>
+
+  <section id="miniModalOverlay" class="mini-modal-overlay" aria-hidden="true">
+    <article class="mini-modal" role="dialog" aria-modal="true" aria-labelledby="miniModalTitle">
+      <h4 id="miniModalTitle">Lista</h4>
+      <ul id="miniModalList" class="mini-modal-list"></ul>
+      <div class="mini-modal-actions">
+        <button id="miniModalCloseButton" type="button" class="btn-subtle">Fechar</button>
+      </div>
+    </article>
+  </section>
+
+  <section id="unsavedOverlay" class="mini-modal-overlay" aria-hidden="true">
+    <article class="mini-modal" role="dialog" aria-modal="true" aria-labelledby="unsavedTitle">
+      <h4 id="unsavedTitle">Voce tem alteracoes nao salvas. Deseja descartar?</h4>
+      <div class="mini-modal-actions">
+        <button id="unsavedCancelButton" type="button" class="btn-subtle">Cancelar</button>
+        <button id="unsavedDiscardButton" type="button" class="btn-danger">Descartar</button>
+      </div>
+    </article>
+  </section>
+
+  <div id="appToastHost" class="app-toast-host" aria-live="polite"></div>
 
   <main class="app-main">
     <div class="columns">
@@ -4510,51 +6038,274 @@
       </aside>
 
       <section class="feed-column" aria-label="Feed principal">
-        <nav class="tabs-row" aria-label="Filtros do feed">
-          <button type="button" class="feed-tab active" data-tab="todos">Todos</button>
-          <button type="button" class="feed-tab" data-tab="seguindo">Seguindo</button>
-          <button type="button" class="feed-tab" data-tab="midia">Midia</button>
-          <button type="button" class="feed-tab" data-tab="enquetes">Enquetes</button>
-        </nav>
+        <div id="app-view-container">
+          <section id="view-feed" class="app-view is-active" data-view="feed" aria-label="Feed principal">
+            <nav class="tabs-row" aria-label="Filtros do feed">
+              <button id="feedTabAll" type="button" class="feed-tab active" data-tab="todos" data-feed-filter="all">Todos</button>
+              <button id="feedTabFollowing" type="button" class="feed-tab" data-tab="seguindo" data-feed-filter="following">Seguindo</button>
+              <button id="feedTabMedia" type="button" class="feed-tab" data-tab="midia" data-feed-filter="media">Midia</button>
+              <button id="feedTabPolls" type="button" class="feed-tab" data-tab="enquetes" data-feed-filter="polls">Enquetes</button>
+            </nav>
 
-        <section class="composer" aria-label="Novo post">
-          <div class="composer-top">
-            <img src="https://picsum.photos/seed/juvinho-compose/64/64" alt="Avatar @Juvinho">
-            <label>
-              <span class="sr-only" style="position:absolute;left:-9999px;">Escreva um post</span>
-              <textarea id="postComposer" placeholder="O que esta acontecendo?"></textarea>
-            </label>
-          </div>
-          <div class="composer-bottom">
-            <div class="composer-tools" aria-hidden="true">
-              <button class="icon-btn" type="button" tabindex="-1" aria-label="Adicionar imagem"><i data-lucide="image"></i></button>
-              <button class="icon-btn" type="button" tabindex="-1" aria-label="Criar enquete"><i data-lucide="bar-chart-3"></i></button>
-              <button class="icon-btn" type="button" tabindex="-1" aria-label="Adicionar emoji"><i data-lucide="smile"></i></button>
+            <section class="composer" aria-label="Novo post">
+              <div class="composer-top">
+                <img id="composerAvatar" src="https://picsum.photos/seed/juvinho-compose/64/64" alt="Avatar @Juvinho">
+                <label>
+                  <span class="sr-only" style="position:absolute;left:-9999px;">Escreva um post</span>
+                  <textarea id="postComposer" placeholder="O que esta acontecendo?"></textarea>
+                </label>
+              </div>
+              <div class="composer-bottom">
+                <div class="composer-tools" aria-hidden="true">
+                  <button class="icon-btn" type="button" tabindex="-1" aria-label="Adicionar imagem"><i data-lucide="image"></i></button>
+                  <button class="icon-btn" type="button" tabindex="-1" aria-label="Criar enquete"><i data-lucide="bar-chart-3"></i></button>
+                  <button class="icon-btn" type="button" tabindex="-1" aria-label="Adicionar emoji"><i data-lucide="smile"></i></button>
+                </div>
+                <button type="button" id="publishBtn" class="publish-btn" disabled>Publicar</button>
+              </div>
+            </section>
+
+            <section id="feedSkeleton" class="skeleton-wrap" aria-label="Carregando feed">
+              <article class="skeleton-card">
+                <div class="skeleton-line short"></div>
+                <div class="skeleton-line long"></div>
+                <div class="skeleton-line medium"></div>
+              </article>
+              <article class="skeleton-card">
+                <div class="skeleton-line short"></div>
+                <div class="skeleton-line long"></div>
+                <div class="skeleton-line medium"></div>
+              </article>
+            </section>
+
+            <section id="feedList" class="feed-list hidden" aria-live="polite"></section>
+          </section>
+
+          <section id="view-profile" class="app-view profile-view" data-view="profile" aria-label="Perfil">
+            <section class="profile-shell">
+              <div class="profile-hero">
+                <div id="profileCover" class="profile-cover"></div>
+
+                <div class="profile-info-card">
+                  <div class="profile-avatar-wrap">
+                    <img id="profileAvatarLarge" class="profile-avatar" src="https://picsum.photos/seed/juvinho-profile/200/200" alt="Avatar perfil">
+                  </div>
+
+                  <div class="profile-main-info">
+                    <div class="profile-identity-line">
+                      <h2 id="profileHandle" class="profile-handle-big">@Juvinho</h2>
+                      <span id="profileVerifiedBadge" class="profile-verified-badge" aria-label="Conta verificada"><i data-lucide="badge-check"></i></span>
+                      <span id="profilePronouns" class="profile-pronouns">Ele/Dele</span>
+                    </div>
+
+                    <p id="profileDisplayName" class="profile-display-name">Juvinho Silva</p>
+
+                    <p id="profileBio" class="profile-bio">Cara que gosta de coxinhas bem GORDINHAS e dono da @Chrono.</p>
+
+                    <ul class="profile-meta-list" aria-label="Metadados do perfil">
+                      <li><i data-lucide="cake"></i><span id="profileMetaBirth">Aniversario: 27/09/2004</span></li>
+                      <li><i data-lucide="calendar-days"></i><span id="profileMetaJoined">Entrou em fevereiro de 2026</span></li>
+                      <li><i data-lucide="map-pin"></i><span id="profileMetaLocation">Franca, Brasil</span></li>
+                      <li><i data-lucide="link-2"></i><a id="profileMetaWebsite" href="https://qxyonmarketing.com" target="_blank" rel="noopener noreferrer">qxyonmarketing.com</a></li>
+                    </ul>
+
+                    <div class="profile-counters">
+                      <button id="profileFollowersBtn" class="profile-counter" type="button"><strong id="profileFollowersCount" class="profile-counter-value">0</strong><span class="profile-counter-label">Seguidores</span></button>
+                      <button id="profileFollowingBtn" class="profile-counter" type="button"><strong id="profileFollowingCount" class="profile-counter-value">0</strong><span class="profile-counter-label">Seguindo</span></button>
+                      <div class="profile-counter"><strong id="profilePostsCount" class="profile-counter-value">0</strong><span class="profile-counter-label">Posts</span></div>
+                    </div>
+                  </div>
+
+                  <div class="profile-side-actions">
+                    <button id="profileEditCta" class="profile-edit-cta" type="button">Editar perfil</button>
+                    <button id="profileBackToFeedCta" class="profile-back-link" type="button">&lt;&lt; Voltar ao EchoFrame</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="profile-content-card">
+                <div id="profileTabs" class="profile-tabs" role="tablist" aria-label="Secoes do perfil">
+                  <button type="button" class="profile-tab active" data-profile-tab="posts">Posts</button>
+                  <button type="button" class="profile-tab" data-profile-tab="media">Midias</button>
+                  <button type="button" class="profile-tab" data-profile-tab="temporal">Busca Temporal</button>
+                </div>
+                <div id="profileTabPanels" class="profile-tab-panels"></div>
+              </div>
+            </section>
+          </section>
+
+          <section id="view-edit-profile" class="app-view" data-view="edit-profile" aria-label="Editar perfil">
+            <div class="view-shell">
+              <header class="view-head">
+                <h2 id="editViewTitle" class="view-title">Editar Perfil</h2>
+                <p id="editViewSubtitle" class="view-subtitle">As alteracoes sao aplicadas apenas nesta sessao.</p>
+              </header>
+              <form id="editProfileForm" class="edit-profile-wrap">
+                <input id="editAvatarInput" type="file" accept="image/*" hidden>
+                <input id="editCoverInput" type="file" accept="image/*" hidden>
+
+                <div class="edit-row">
+                  <span class="edit-label">Avatar</span>
+                  <div class="edit-inline">
+                    <img id="editProfileAvatarPreview" class="edit-preview-avatar" src="https://picsum.photos/seed/juvinho/96/96" alt="Preview avatar">
+                    <button id="editAvatarButton" class="edit-upload-btn" type="button">Trocar avatar</button>
+                  </div>
+                </div>
+
+                <div class="edit-row">
+                  <span class="edit-label">Capa</span>
+                  <img id="editCoverPreview" class="edit-preview-cover" src="" alt="Preview capa">
+                  <button id="editCoverButton" class="edit-upload-btn" type="button">Trocar capa</button>
+                </div>
+
+                <div class="edit-row">
+                  <label class="edit-label" for="editDisplayName">Nome de exibicao</label>
+                  <input id="editDisplayName" class="edit-input" type="text" maxlength="40" required>
+                </div>
+
+                <div class="edit-row">
+                  <label class="edit-label" for="editUsername">Usuario</label>
+                  <div class="username-prefix">
+                    <span>@</span>
+                    <input id="editUsername" type="text" maxlength="20" autocomplete="off" required>
+                  </div>
+                  <span id="editUsernameError" class="field-error" role="alert"></span>
+                </div>
+
+                <div class="edit-row">
+                  <label class="edit-label" for="editBio">Bio</label>
+                  <textarea id="editBio" class="edit-textarea" maxlength="160"></textarea>
+                  <span id="editBioCounter" class="edit-counter">0/160</span>
+                </div>
+
+                <div class="edit-row">
+                  <label class="edit-label" for="editLocation">Localizacao</label>
+                  <input id="editLocation" class="edit-input" type="text" maxlength="45">
+                </div>
+
+                <div class="edit-row">
+                  <label class="edit-label" for="editWebsite">Website</label>
+                  <input id="editWebsite" class="edit-url" type="url" placeholder="https://">
+                </div>
+
+                <div class="edit-row">
+                  <label class="edit-label" for="editFavoriteCordao">Cordao favorito</label>
+                  <input id="editFavoriteCordao" class="edit-input" type="text" maxlength="30" placeholder="artedistopica">
+                </div>
+
+                <div class="edit-actions">
+                  <button id="editCancelButton" class="btn-subtle" type="button">Cancelar</button>
+                  <button class="btn-primary" type="submit">Salvar</button>
+                </div>
+              </form>
             </div>
-            <button type="button" id="publishBtn" class="publish-btn" disabled>Publicar</button>
-          </div>
-        </section>
+          </section>
 
-        <section id="feedSkeleton" class="skeleton-wrap" aria-label="Carregando feed">
-          <article class="skeleton-card">
-            <div class="skeleton-line short"></div>
-            <div class="skeleton-line long"></div>
-            <div class="skeleton-line medium"></div>
-          </article>
-          <article class="skeleton-card">
-            <div class="skeleton-line short"></div>
-            <div class="skeleton-line long"></div>
-            <div class="skeleton-line medium"></div>
-          </article>
-        </section>
+          <section id="view-stats" class="app-view" data-view="stats" aria-label="Estatisticas">
+            <div class="view-shell">
+              <header class="view-head">
+                <h2 id="statsViewTitle" class="view-title">Estatisticas</h2>
+                <p id="statsViewSubtitle" class="view-subtitle">Resumo dos seus posts e alcance no periodo.</p>
+              </header>
 
-        <section id="feedList" class="feed-list hidden" aria-live="polite"></section>
+              <div class="stats-grid">
+                <div class="kpi-grid">
+                  <article class="kpi-card"><span class="kpi-label">Visualizacoes</span><strong id="kpiViews">0</strong><span id="kpiViewsTrend" class="kpi-trend">0%</span></article>
+                  <article class="kpi-card"><span class="kpi-label">Boosts</span><strong id="kpiBoosts">0</strong><span id="kpiBoostsTrend" class="kpi-trend">0%</span></article>
+                  <article class="kpi-card"><span class="kpi-label">Ecos</span><strong id="kpiEcos">0</strong><span id="kpiEcosTrend" class="kpi-trend">0%</span></article>
+                  <article class="kpi-card"><span class="kpi-label">Respostas</span><strong id="kpiReplies">0</strong><span id="kpiRepliesTrend" class="kpi-trend">0%</span></article>
+                </div>
+
+                <section class="stats-section">
+                  <div id="statsPeriodTabs" class="stats-tabs" role="tablist" aria-label="Periodo">
+                    <button type="button" class="stats-tab active" data-stats-period="7d">7d</button>
+                    <button type="button" class="stats-tab" data-stats-period="30d">30d</button>
+                    <button type="button" class="stats-tab" data-stats-period="90d">90d</button>
+                  </div>
+                  <div id="statsBars" class="stats-bars"></div>
+                </section>
+
+                <section class="stats-section">
+                  <h3 class="view-subtitle">Top posts</h3>
+                  <div id="statsTopPosts" class="top-post-list"></div>
+                </section>
+              </div>
+            </div>
+          </section>
+
+          <section id="view-theme" class="app-view" data-view="theme" aria-label="Configuracoes de tema">
+            <div class="view-shell">
+              <header class="view-head">
+                <h2 id="themeViewTitle" class="view-title">Tema e Aparencia</h2>
+                <p id="themeViewSubtitle" class="view-subtitle">Ajuste visual, densidade e motion para sua leitura.</p>
+              </header>
+
+              <div class="settings-grid">
+                <section class="stats-section">
+                  <h3 class="view-subtitle">Tema</h3>
+                  <div id="themeModeChoices" class="choice-row">
+                    <button type="button" class="choice-card active" data-theme-mode="dark"><span class="choice-preview"></span><span class="choice-title">Escuro</span></button>
+                    <button type="button" class="choice-card" data-theme-mode="light"><span class="choice-preview"></span><span class="choice-title">Claro</span></button>
+                    <button type="button" class="choice-card" data-theme-mode="system"><span class="choice-preview"></span><span class="choice-title">Sistema</span></button>
+                  </div>
+                </section>
+
+                <section class="stats-section">
+                  <h3 class="view-subtitle">Densidade</h3>
+                  <div id="densityChoices" class="choice-row">
+                    <button type="button" class="choice-card" data-density="compact"><span class="choice-preview"></span><span class="choice-title">Compacta</span></button>
+                    <button type="button" class="choice-card active" data-density="default"><span class="choice-preview"></span><span class="choice-title">Padrao</span></button>
+                    <button type="button" class="choice-card" data-density="comfortable"><span class="choice-preview"></span><span class="choice-title">Confortavel</span></button>
+                  </div>
+                </section>
+
+                <section class="stats-section">
+                  <h3 class="view-subtitle">Acessibilidade e efeitos</h3>
+                  <div class="toggle-list">
+                    <div class="toggle-item"><span>Reducao de movimento</span><button id="toggleReducedMotion" class="switch" type="button" aria-pressed="false"></button></div>
+                    <div class="toggle-item"><span>Particulas de fundo</span><button id="toggleParticles" class="switch active" type="button" aria-pressed="true"></button></div>
+                    <div class="toggle-item"><span>Destaque de cordoes</span><button id="toggleCordaoHighlight" class="switch active" type="button" aria-pressed="true"></button></div>
+                  </div>
+                </section>
+
+                <div class="edit-actions">
+                  <button id="applyThemeSettingsButton" class="btn-primary" type="button">Aplicar ajustes</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="view-language" class="app-view" data-view="language" aria-label="Idioma">
+            <div class="view-shell">
+              <header class="view-head">
+                <h2 id="languageViewTitle" class="view-title">Idioma</h2>
+                <p id="languageViewSubtitle" class="view-subtitle">Escolha o idioma da interface desta sessao.</p>
+              </header>
+
+              <div id="languageList" class="language-list">
+                <button class="language-card active" type="button" data-language="pt"><span>Portugues (Brasil)</span><i class="language-check" data-lucide="check"></i></button>
+                <button class="language-card" type="button" data-language="en"><span>English</span><i class="language-check" data-lucide="check"></i></button>
+                <button class="language-card" type="button" data-language="es"><span>Espanol</span><i class="language-check" data-lucide="check"></i></button>
+              </div>
+            </div>
+          </section>
+
+          <section id="view-signed-out" class="app-view" data-view="signed-out" aria-label="Sessao encerrada">
+            <div class="logout-view">
+              <article class="logout-view-card">
+                <h2 id="signedOutTitle" class="logout-view-title">Sessao encerrada</h2>
+                <p id="signedOutText" class="logout-view-text">Voce saiu da Chrono. Seu estado local desta pagina foi preservado em memoria.</p>
+                <button id="signInAgainButton" type="button" class="btn-primary">Entrar novamente</button>
+              </article>
+            </div>
+          </section>
+        </div>
       </section>
 
       <aside class="right-sidebar" aria-label="Hub de cordoes">
         <h2 class="section-title">:: HUB DE CORDOES</h2>
         <section class="panel hub-panel">
-          <button class="create-thread-btn" type="button">Criar Cordao</button>
+          <button id="createThreadBtn" class="create-thread-btn" type="button">Criar Cordao</button>
           <p class="sub-title">CORDOES POPULARES</p>
           <ul class="thread-list">
             <li class="thread-item"><span class="tag">#ossodemais</span><span class="count">2</span></li>
@@ -4750,6 +6501,13 @@
         selectedDate: ''
       };
 
+      const FOLLOWING_USERS = [
+        'cuberta_dobrada',
+        'Sus_Bacon',
+        'orbital_zero',
+        'Juvinho'
+      ];
+
       const MOCK_USERS = [
         { username: 'cuberta_dobrada', display: 'Cuberta Dobrada', avatar: 'https://picsum.photos/seed/cuberta/32/32', followers: 1420, verified: true },
         { username: 'Sus_Bacon', display: 'Sus Bacon', avatar: 'https://picsum.photos/seed/bacon/32/32', followers: 893, verified: true },
@@ -4806,6 +6564,208 @@
       var threadLightbox = document.getElementById('threadLightbox');
       var threadLightboxImage = document.getElementById('threadLightboxImage');
       var threadLightboxClose = document.getElementById('threadLightboxClose');
+      var appMain = document.querySelector('.app-main');
+      var appViewContainer = document.getElementById('app-view-container');
+      var appViews = Array.prototype.slice.call(document.querySelectorAll('#app-view-container .app-view'));
+
+      var viewProfile = document.getElementById('view-profile');
+      var viewEditProfile = document.getElementById('view-edit-profile');
+      var viewStats = document.getElementById('view-stats');
+      var viewTheme = document.getElementById('view-theme');
+      var viewLanguage = document.getElementById('view-language');
+      var viewSignedOut = document.getElementById('view-signed-out');
+
+      var profileButtonAvatar = document.querySelector('#profileButton img');
+      var profileNameLabel = document.querySelector('#profileButton .profile-name');
+      var profileDropdownAvatar = document.getElementById('profileDropdownAvatar');
+      var profileMenuHandle = document.getElementById('profileMenuHandle');
+      var profileMenuDisplayName = document.getElementById('profileMenuDisplayName');
+      var languageMenuLabel = document.getElementById('languageMenuLabel');
+      var composerAvatar = document.getElementById('composerAvatar');
+
+      var profileDisplayNameEl = document.getElementById('profileDisplayName');
+      var profileHandleEl = document.getElementById('profileHandle');
+      var profileBioEl = document.getElementById('profileBio');
+      var profileMetaLocationEl = document.getElementById('profileMetaLocation');
+      var profileMetaCordaoEl = document.getElementById('profileMetaCordao');
+      var profileAvatarLarge = document.getElementById('profileAvatarLarge');
+      var profileCoverEl = document.getElementById('profileCover');
+      var profilePostsList = document.getElementById('profilePostsList');
+      var profileTabs = document.getElementById('profileTabs');
+
+      var profileViewButton = document.getElementById('profileViewButton');
+      var profileEditButton = document.getElementById('profileEditButton');
+      var profileStatsButton = document.getElementById('profileStatsButton');
+      var languageSettingsButton = document.getElementById('languageSettingsButton');
+      var profileEditCta = document.getElementById('profileEditCta');
+      var profileFollowingBtn = document.getElementById('profileFollowingBtn');
+      var profileFollowersBtn = document.getElementById('profileFollowersBtn');
+      var profileFollowersCount = document.getElementById('profileFollowersCount');
+      var profileFollowingCount = document.getElementById('profileFollowingCount');
+      var profilePostsCount = document.getElementById('profilePostsCount');
+
+      var editProfileForm = document.getElementById('editProfileForm');
+      var editAvatarPreview = document.getElementById('editProfileAvatarPreview');
+      var editCoverPreview = document.getElementById('editCoverPreview');
+      var editAvatarButton = document.getElementById('editAvatarButton');
+      var editCoverButton = document.getElementById('editCoverButton');
+      var editAvatarInput = document.getElementById('editAvatarInput');
+      var editCoverInput = document.getElementById('editCoverInput');
+      var editDisplayNameInput = document.getElementById('editDisplayName');
+      var editUsernameInput = document.getElementById('editUsername');
+      var editUsernameError = document.getElementById('editUsernameError');
+      var editBioInput = document.getElementById('editBio');
+      var editBioCounter = document.getElementById('editBioCounter');
+      var editLocationInput = document.getElementById('editLocation');
+      var editWebsiteInput = document.getElementById('editWebsite');
+      var editFavoriteCordaoInput = document.getElementById('editFavoriteCordao');
+      var editCancelButton = document.getElementById('editCancelButton');
+
+      var statsPeriodTabs = document.getElementById('statsPeriodTabs');
+      var statsBars = document.getElementById('statsBars');
+      var statsTopPosts = document.getElementById('statsTopPosts');
+      var kpiViews = document.getElementById('kpiViews');
+      var kpiBoosts = document.getElementById('kpiBoosts');
+      var kpiEcos = document.getElementById('kpiEcos');
+      var kpiReplies = document.getElementById('kpiReplies');
+      var kpiViewsTrend = document.getElementById('kpiViewsTrend');
+      var kpiBoostsTrend = document.getElementById('kpiBoostsTrend');
+      var kpiEcosTrend = document.getElementById('kpiEcosTrend');
+      var kpiRepliesTrend = document.getElementById('kpiRepliesTrend');
+
+      var themeModeChoices = document.getElementById('themeModeChoices');
+      var densityChoices = document.getElementById('densityChoices');
+      var toggleReducedMotion = document.getElementById('toggleReducedMotion');
+      var toggleParticles = document.getElementById('toggleParticles');
+      var toggleCordaoHighlight = document.getElementById('toggleCordaoHighlight');
+      var applyThemeSettingsButton = document.getElementById('applyThemeSettingsButton');
+
+      var languageList = document.getElementById('languageList');
+      var createThreadBtn = document.getElementById('createThreadBtn');
+      var notifViewAllButton = document.getElementById('notifViewAllButton');
+      var feedTabAll = document.getElementById('feedTabAll');
+      var feedTabFollowing = document.getElementById('feedTabFollowing');
+      var feedTabMedia = document.getElementById('feedTabMedia');
+      var feedTabPolls = document.getElementById('feedTabPolls');
+      var signInAgainButton = document.getElementById('signInAgainButton');
+      var signedOutTitle = document.getElementById('signedOutTitle');
+      var signedOutText = document.getElementById('signedOutText');
+      var editViewTitle = document.getElementById('editViewTitle');
+      var editViewSubtitle = document.getElementById('editViewSubtitle');
+      var statsViewTitle = document.getElementById('statsViewTitle');
+      var statsViewSubtitle = document.getElementById('statsViewSubtitle');
+      var themeViewTitle = document.getElementById('themeViewTitle');
+      var themeViewSubtitle = document.getElementById('themeViewSubtitle');
+      var languageViewTitle = document.getElementById('languageViewTitle');
+      var languageViewSubtitle = document.getElementById('languageViewSubtitle');
+      var logoutTitleEl = document.getElementById('logoutTitle');
+      var logoutSubtitleEl = document.getElementById('logoutSubtitle');
+
+      var miniModalOverlay = document.getElementById('miniModalOverlay');
+      var miniModalTitle = document.getElementById('miniModalTitle');
+      var miniModalList = document.getElementById('miniModalList');
+      var miniModalCloseButton = document.getElementById('miniModalCloseButton');
+      var unsavedOverlay = document.getElementById('unsavedOverlay');
+      var unsavedCancelButton = document.getElementById('unsavedCancelButton');
+      var unsavedDiscardButton = document.getElementById('unsavedDiscardButton');
+      var appToastHost = document.getElementById('appToastHost');
+
+      function normalizeAuthorHandle(handle) {
+        return String(handle || '').replace(/^@/, '').trim().toLowerCase();
+      }
+
+      function isFollowingAuthor(handle) {
+        var normalized = normalizeAuthorHandle(handle);
+        return FOLLOWING_USERS.some(function (followed) {
+          return normalizeAuthorHandle(followed) === normalized;
+        });
+      }
+
+      function buildPostMetadata(post, sourceFallback, index) {
+        var safePost = post || {};
+        var source = safePost.source || sourceFallback || 'initial';
+        var hasMedia = !!safePost.image || !!(safePost.repost && safePost.repost.image);
+        var hasPoll = !!safePost.poll;
+        var author = String(safePost.user || '@desconhecido').replace(/^@/, '');
+        var following = isFollowingAuthor(author);
+        var createdAt = Number(safePost.createdAt);
+
+        if (!Number.isFinite(createdAt)) {
+          createdAt = Date.now() - ((Number(index) || 0) * 60000);
+        }
+
+        return {
+          id: safePost.id,
+          author: author,
+          following: following,
+          hasMedia: hasMedia,
+          hasPoll: hasPoll,
+          createdAt: createdAt,
+          source: source,
+        };
+      }
+
+      function applyPostMetadata(post, sourceFallback, index) {
+        if (!post) {
+          return null;
+        }
+
+        var metadata = buildPostMetadata(post, sourceFallback, index);
+        post.author = metadata.author;
+        post.following = metadata.following;
+        post.hasMedia = metadata.hasMedia;
+        post.hasPoll = metadata.hasPoll;
+        post.createdAt = metadata.createdAt;
+        post.source = metadata.source;
+        return metadata;
+      }
+
+      function getPostById(postId) {
+        return postStore.find(function (item) {
+          return item.id === postId;
+        }) || null;
+      }
+
+      function getSearchTextForPost(post) {
+        return normalize([
+          post.user || '',
+          post.text || '',
+          post.threadNote || '',
+          (post.repost && post.repost.text) || ''
+        ].join(' '));
+      }
+
+      function decoratePostElement(postEl) {
+        if (!postEl) {
+          return;
+        }
+
+        var postId = postEl.getAttribute('data-post-id');
+        var post = getPostById(postId);
+
+        if (!post) {
+          return;
+        }
+
+        applyPostMetadata(post, post.source || 'initial');
+        postEl.setAttribute('data-author', String(post.author || ''));
+        postEl.setAttribute('data-following', post.following ? 'true' : 'false');
+        postEl.setAttribute('data-has-media', post.hasMedia ? 'true' : 'false');
+        postEl.setAttribute('data-has-poll', post.hasPoll ? 'true' : 'false');
+        postEl.setAttribute('data-created-at', String(post.createdAt || Date.now()));
+        postEl.setAttribute('data-source', String(post.source || 'initial'));
+        postEl.setAttribute('data-search-text', getSearchTextForPost(post));
+      }
+
+      postStore.forEach(function (post, index) {
+        applyPostMetadata(post, 'initial', index);
+      });
+
+      function createPostCardElement(post, index, options) {
+        var wrapper = document.createElement('div');
+        wrapper.innerHTML = renderPost(post, index || 0, options || {});
+        return wrapper.firstElementChild;
+      }
 
       function safeIconRefresh() {
         if (window.lucide && typeof window.lucide.createIcons === 'function') {
@@ -5054,11 +7014,14 @@
 
       function filteredPosts() {
         return postStore.filter(function (post) {
-          return passesTabFilter(post) && passesSearch(post);
+          return passesSearch(post);
         });
       }
 
       function renderPost(post, index, options) {
+        options = options || {};
+        applyPostMetadata(post, options.source || post.source || 'initial', index);
+
         var withStagger = !!options.withStagger;
         var isSearchMatch = !!state.query;
         var classes = ['post-card'];
@@ -5084,9 +7047,10 @@
         var repostHtml = renderRepost(post.repost);
         var threadNote = post.threadNote ? '<div class="thread-note">' + post.threadNote + '</div>' : '';
         var verified = post.verified ? '<span class="verified-dot" aria-hidden="true"></span>' : '';
+        var postSearchText = escapeHtml(getSearchTextForPost(post));
 
         return (
-          '<article class="' + classes.join(' ') + '" data-post-id="' + post.id + '" style="--stagger:' + (index * 80) + 'ms">' +
+          '<article class="' + classes.join(' ') + '" data-post-id="' + post.id + '" data-author="' + escapeHtml(post.author || '') + '" data-following="' + (post.following ? 'true' : 'false') + '" data-has-media="' + (post.hasMedia ? 'true' : 'false') + '" data-has-poll="' + (post.hasPoll ? 'true' : 'false') + '" data-created-at="' + post.createdAt + '" data-source="' + escapeHtml(post.source || 'initial') + '" data-search-text="' + postSearchText + '" style="--stagger:' + (index * 80) + 'ms">' +
             '<div class="post-avatar-wrap">' +
               threadLine +
               '<img class="post-avatar" src="' + post.avatar + '" alt="Avatar de ' + post.user + '">' +
@@ -5187,12 +7151,88 @@
         }
       }
 
+      function openProfileRouteFromHandle(handle) {
+        var profileHandle = String(handle || '@usuario').trim() || '@usuario';
+
+        if (ThreadModal && ThreadModal.isOpen && typeof ThreadModal.close === 'function') {
+          ThreadModal.close();
+        }
+
+        if (AppRouter && typeof AppRouter.navigate === 'function') {
+          AppRouter.navigate('profile');
+        }
+
+        if (typeof showAppToast === 'function') {
+          showAppToast('Abrindo perfil de ' + profileHandle + '.');
+        }
+      }
+
+      function openHashtagFeed(tag) {
+        var cleanTag = String(tag || '').replace(/^#/, '').trim().toLowerCase();
+
+        if (!cleanTag) {
+          return;
+        }
+
+        if (ThreadModal && ThreadModal.isOpen && typeof ThreadModal.close === 'function') {
+          ThreadModal.close();
+        }
+
+        if (searchInput) {
+          searchInput.value = '#' + cleanTag;
+          state.query = normalize(searchInput.value);
+        }
+
+        if (FeedFilters && FeedFilters.isInitialized) {
+          FeedFilters.setActiveTab('all');
+          FeedFilters.applyFilter('all', false);
+        } else {
+          renderFeed();
+        }
+
+        if (AppRouter && typeof AppRouter.navigate === 'function') {
+          AppRouter.navigate('feed');
+        }
+
+        if (typeof showAppToast === 'function') {
+          showAppToast('Filtrando por #' + cleanTag + '.');
+        }
+      }
+
+      function copyCurrentLinkToast(fallbackMessage) {
+        var done = false;
+
+        function notify(message) {
+          if (done) {
+            return;
+          }
+
+          done = true;
+          if (typeof showAppToast === 'function') {
+            showAppToast(message);
+          }
+        }
+
+        if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+          navigator.clipboard.writeText(window.location.href)
+            .then(function () {
+              notify('Link copiado para a area de transferencia.');
+            })
+            .catch(function () {
+              notify(fallbackMessage || 'Link pronto para compartilhar.');
+            });
+          return;
+        }
+
+        notify(fallbackMessage || 'Link pronto para compartilhar.');
+      }
+
       function onPostActionClick(event) {
         var profileLink = event.target.closest('.post-user-link');
         if (profileLink) {
           event.preventDefault();
           var profileHandle = profileLink.textContent || '@usuario';
-          alert('Abrindo perfil de ' + profileHandle + '...');
+          openProfileRouteFromHandle(profileHandle);
           return;
         }
 
@@ -5226,20 +7266,44 @@
         var postId = card.getAttribute('data-post-id');
         var post = postStore.find(function (item) { return item.id === postId; });
 
-        if (action === 'comment' || action === 'share') {
+        if (action === 'comment') {
           button.classList.add('pop');
           setTimeout(function () { button.classList.remove('pop'); }, 220);
+          ThreadModal.open(postId);
+          return;
+        }
+
+        if (action === 'share') {
+          button.classList.add('pop');
+          setTimeout(function () { button.classList.remove('pop'); }, 220);
+          copyCurrentLinkToast('Link do post pronto para compartilhar.');
           return;
         }
 
         toggleMetric(post, action);
-        renderFeed();
 
-        var refreshedButton = feedList.querySelector('[data-post-id="' + postId + '"] .action-btn[data-action="' + action + '"]');
-        if (refreshedButton) {
-          refreshedButton.classList.add('pop');
-          setTimeout(function () { refreshedButton.classList.remove('pop'); }, 220);
+        if (action === 'repost') {
+          button.classList.toggle('active', !!post.state.repost);
+          var repostCount = card.querySelector('.action-repost .action-count');
+          if (repostCount) {
+            repostCount.textContent = String(post.metrics.reposts);
+          }
         }
+
+        if (action === 'like') {
+          button.classList.toggle('active', !!post.state.like);
+          var likeCount = card.querySelector('.action-like .action-count');
+          if (likeCount) {
+            likeCount.textContent = String(post.metrics.likes);
+          }
+        }
+
+        if (action === 'bookmark') {
+          button.classList.toggle('active', !!post.state.bookmark);
+        }
+
+        button.classList.add('pop');
+        setTimeout(function () { button.classList.remove('pop'); }, 220);
       }
 
       function autoExpandComposer() {
@@ -5253,6 +7317,8 @@
 
       function addNewPost() {
         var text = composer.value.trim();
+        var newPost;
+        var newCard;
 
         if (!text) {
           return;
@@ -5260,23 +7326,36 @@
 
         var newId = 'new-' + Date.now();
 
-        postStore.unshift({
+        newPost = {
           id: newId,
-          user: '@Juvinho',
-          avatar: 'https://picsum.photos/seed/new-juvinho/80/80',
+          user: typeof getProfileHandleValue === 'function' ? getProfileHandleValue() : '@Juvinho',
+          avatar: (typeof AppState !== 'undefined' && AppState.profile && AppState.profile.avatar)
+            ? AppState.profile.avatar
+            : 'https://picsum.photos/seed/new-juvinho/80/80',
           time: 'agora',
           text: text,
           verified: true,
-          following: true,
+          source: 'composer',
           metrics: { comments: 0, reposts: 0, likes: 0 },
           state: { repost: false, like: false, bookmark: false }
-        });
+        };
+
+        applyPostMetadata(newPost, 'composer');
+        postStore.unshift(newPost);
 
         composer.value = '';
         composer.style.height = '54px';
         updatePublishState();
 
-        renderFeed({ newPostId: newId });
+        newCard = createPostCardElement(newPost, 0, { newPostId: newId, source: 'composer' });
+
+        if (newCard && feedList) {
+          feedList.prepend(newCard);
+          safeIconRefresh();
+          document.dispatchEvent(new CustomEvent('chrono:post-created', {
+            detail: { postEl: newCard }
+          }));
+        }
 
         var feedStart = document.querySelector('.feed-column');
         if (feedStart) {
@@ -5516,6 +7595,7 @@
           this.renderBookmarks();
           this.syncBadges(false);
           this.syncThemeRow();
+          this.setupFloatingDropdownPositioning();
 
           if (window.location.hash === '#settings') {
             this.openSettingsOverlay();
@@ -5558,6 +7638,66 @@
           this.logoutOverlay = document.getElementById('logoutOverlay');
           this.logoutCancelButton = document.getElementById('logoutCancelButton');
           this.logoutConfirmButton = document.getElementById('logoutConfirmButton');
+
+          if (this.notifDropdown) {
+            this.notifDropdown.setAttribute('data-open', 'false');
+          }
+
+          if (this.profileDropdown) {
+            this.profileDropdown.setAttribute('data-open', 'false');
+          }
+        },
+
+        positionFloatingDropdown: function (triggerBtn, dropdown, preferredWidth) {
+          if (!triggerBtn || !dropdown) {
+            return;
+          }
+
+          var rect = triggerBtn.getBoundingClientRect();
+          var viewportWidth = window.innerWidth || document.documentElement.clientWidth || 0;
+          var dropdownWidth = Number(preferredWidth) || dropdown.offsetWidth || 320;
+          var maxWidth = Math.max(0, viewportWidth - 32);
+
+          if (maxWidth > 0) {
+            dropdownWidth = Math.min(dropdownWidth, maxWidth);
+          }
+
+          var left = rect.right - dropdownWidth;
+          if (left < 16) {
+            left = 16;
+          }
+
+          if (left + dropdownWidth > viewportWidth - 16) {
+            left = viewportWidth - dropdownWidth - 16;
+          }
+
+          if (left < 16) {
+            left = 16;
+          }
+
+          dropdown.style.position = 'fixed';
+          dropdown.style.top = (rect.bottom + 8) + 'px';
+          dropdown.style.left = Math.round(left) + 'px';
+          dropdown.style.right = 'auto';
+          dropdown.style.width = Math.round(dropdownWidth) + 'px';
+        },
+
+        repositionOpenDropdowns: function () {
+          if (this.notifDropdown && this.notifDropdown.getAttribute('data-open') === 'true') {
+            this.positionFloatingDropdown(this.notifButton, this.notifDropdown, 320);
+          }
+
+          if (this.profileDropdown && this.profileDropdown.getAttribute('data-open') === 'true') {
+            this.positionFloatingDropdown(this.profileButton, this.profileDropdown, 200);
+          }
+        },
+
+        setupFloatingDropdownPositioning: function () {
+          var self = this;
+
+          window.addEventListener('resize', function () {
+            self.repositionOpenDropdowns();
+          });
         },
 
         setupTooltips: function () {
@@ -5697,7 +7837,10 @@
             this.settingsButton.addEventListener('click', function (event) {
               event.preventDefault();
               self.settingsRotateAnimation();
-              self.openSettingsOverlay();
+              self.closePanel();
+              if (AppRouter && typeof AppRouter.navigate === 'function') {
+                AppRouter.navigate('settings/theme');
+              }
             });
           }
 
@@ -5721,8 +7864,10 @@
           if (this.themeToggleButton) {
             this.themeToggleButton.addEventListener('click', function (event) {
               event.preventDefault();
-              self.themeMode = self.themeMode === 'dark' ? 'light' : 'dark';
-              self.syncThemeRow();
+              self.closePanel();
+              if (AppRouter && typeof AppRouter.navigate === 'function') {
+                AppRouter.navigate('settings/theme');
+              }
             });
           }
 
@@ -5760,6 +7905,9 @@
           if (this.logoutConfirmButton) {
             this.logoutConfirmButton.addEventListener('click', function () {
               self.hideLogoutOverlay();
+              if (AppRouter && typeof AppRouter.performLogout === 'function') {
+                AppRouter.performLogout();
+              }
             });
           }
         },
@@ -5837,13 +7985,17 @@
           }
 
           if (name === 'notifs' && this.notifDropdown) {
+            this.positionFloatingDropdown(this.notifButton, this.notifDropdown, 320);
             this.notifDropdown.classList.add('is-open');
+            this.notifDropdown.setAttribute('data-open', 'true');
             this.activePanel = 'notifs';
             return;
           }
 
           if (name === 'profile' && this.profileDropdown) {
+            this.positionFloatingDropdown(this.profileButton, this.profileDropdown, 200);
             this.profileDropdown.classList.add('is-open');
+            this.profileDropdown.setAttribute('data-open', 'true');
             if (this.profileButton) {
               this.profileButton.classList.add('is-open');
             }
@@ -5862,11 +8014,13 @@
 
           if (this.activePanel === 'notifs' && this.notifDropdown) {
             this.notifDropdown.classList.remove('is-open');
+            this.notifDropdown.setAttribute('data-open', 'false');
           }
 
           if (this.activePanel === 'profile') {
             if (this.profileDropdown) {
               this.profileDropdown.classList.remove('is-open');
+              this.profileDropdown.setAttribute('data-open', 'false');
             }
 
             if (this.profileButton) {
@@ -6042,15 +8196,14 @@
         openSettingsOverlay: function () {
           this.closePanel();
 
-          if (!this.settingsOverlay) {
+          if (AppRouter && typeof AppRouter.navigate === 'function') {
+            AppRouter.navigate('settings/theme');
             return;
           }
 
-          this.settingsOverlay.classList.add('is-open');
-          this.settingsOverlay.setAttribute('aria-hidden', 'false');
-
-          if (window.location.hash !== '#settings') {
-            window.location.hash = 'settings';
+          if (this.settingsOverlay) {
+            this.settingsOverlay.classList.add('is-open');
+            this.settingsOverlay.setAttribute('aria-hidden', 'false');
           }
         },
 
@@ -6097,14 +8250,21 @@
           }
 
           if (this.themeMode === 'dark') {
-            this.themeToggleLabel.textContent = 'Tema escuro';
+            this.themeToggleLabel.textContent = 'Tema: escuro';
             this.themeToggleIcon.setAttribute('data-lucide', 'moon');
-          } else {
-            this.themeToggleLabel.textContent = 'Tema claro';
+          } else if (this.themeMode === 'light') {
+            this.themeToggleLabel.textContent = 'Tema: claro';
             this.themeToggleIcon.setAttribute('data-lucide', 'sun');
+          } else {
+            this.themeToggleLabel.textContent = 'Tema: sistema';
+            this.themeToggleIcon.setAttribute('data-lucide', 'monitor');
           }
 
-          document.body.setAttribute('data-theme', this.themeMode);
+          if (this.themeMode === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+          } else {
+            document.documentElement.removeAttribute('data-theme');
+          }
           safeIconRefresh();
         },
 
@@ -6173,6 +8333,299 @@
           }
 
           this.incrementNotif();
+        }
+      };
+
+      var FeedFilters = {
+        current: 'all',
+        tabs: [],
+        posts: [],
+        emptyStateEl: null,
+        hideTimer: null,
+        animationToken: 0,
+        isInitialized: false,
+        emptyConfig: {
+          following: {
+            icon: 'users',
+            title: 'Nenhum post de quem voce segue',
+            text: 'Quando alguem que voce segue publicar, ele aparece aqui.'
+          },
+          media: {
+            icon: 'image',
+            title: 'Nenhuma midia por aqui',
+            text: 'Posts com imagens e conteudos visuais aparecerao nesta aba.'
+          },
+          polls: {
+            icon: 'bar-chart-3',
+            title: 'Nenhuma enquete encontrada',
+            text: 'Quando houver votacoes publicadas, elas aparecerao aqui.'
+          },
+          all: {
+            icon: 'search',
+            title: 'Nenhum post encontrado',
+            text: 'Tente ajustar os filtros ou a busca para encontrar mais conteudo.'
+          }
+        },
+
+        init: function () {
+          if (!feedList) {
+            return;
+          }
+
+          this.tabs = Array.prototype.slice.call(document.querySelectorAll('.feed-tab'));
+          this.normalizeTabFilters();
+          this.collectPosts();
+          this.bindEvents();
+          this.setActiveTab(this.current);
+          this.applyFilter(this.current, false);
+          this.isInitialized = true;
+        },
+
+        normalizeTabFilters: function () {
+          var map = {
+            todos: 'all',
+            seguindo: 'following',
+            midia: 'media',
+            enquetes: 'polls'
+          };
+
+          this.tabs.forEach(function (tab) {
+            var filter = tab.getAttribute('data-feed-filter');
+
+            if (!filter) {
+              var legacyTab = tab.getAttribute('data-tab') || 'todos';
+              filter = map[legacyTab] || 'all';
+              tab.setAttribute('data-feed-filter', filter);
+            }
+
+            if (tab.classList.contains('active')) {
+              this.current = filter;
+            }
+          }, this);
+        },
+
+        collectPosts: function () {
+          this.posts = Array.prototype.slice.call(feedList.querySelectorAll('.post-card'));
+          this.posts.forEach(function (postEl) {
+            decoratePostElement(postEl);
+          });
+        },
+
+        bindEvents: function () {
+          var self = this;
+
+          this.tabs.forEach(function (tab) {
+            tab.addEventListener('click', function () {
+              var filter = tab.getAttribute('data-feed-filter') || 'all';
+              if (filter === self.current) {
+                return;
+              }
+
+              self.setActiveTab(filter);
+              self.applyFilter(filter, true);
+              playFeedTransition('tab-animate');
+            });
+          });
+
+          document.addEventListener('chrono:post-created', function (event) {
+            if (!event || !event.detail || !event.detail.postEl) {
+              return;
+            }
+
+            self.registerPost(event.detail.postEl);
+          });
+        },
+
+        setActiveTab: function (filter) {
+          this.current = filter || 'all';
+
+          this.tabs.forEach(function (tab) {
+            tab.classList.toggle('active', tab.getAttribute('data-feed-filter') === this.current);
+          }, this);
+        },
+
+        matchesFilter: function (postEl, filter) {
+          var activeFilter = filter || this.current;
+
+          if (!postEl) {
+            return false;
+          }
+
+          if (activeFilter === 'following') {
+            return postEl.getAttribute('data-following') === 'true';
+          }
+
+          if (activeFilter === 'media') {
+            return postEl.getAttribute('data-has-media') === 'true';
+          }
+
+          if (activeFilter === 'polls') {
+            return postEl.getAttribute('data-has-poll') === 'true';
+          }
+
+          return true;
+        },
+
+        matchesSearch: function (postEl) {
+          if (!state.query) {
+            return true;
+          }
+
+          var haystack = normalize(postEl.getAttribute('data-search-text') || '');
+          return haystack.indexOf(state.query) !== -1;
+        },
+
+        shouldShowPost: function (postEl, filter) {
+          return this.matchesFilter(postEl, filter) && this.matchesSearch(postEl);
+        },
+
+        hidePostImmediately: function (postEl) {
+          postEl.classList.remove('is-hiding', 'is-showing', 'is-visible');
+          postEl.classList.add('is-hidden');
+          postEl.style.transitionDelay = '0ms';
+          postEl.classList.remove('search-match');
+        },
+
+        revealPost: function (postEl, delay) {
+          postEl.classList.remove('is-hidden', 'is-hiding', 'is-showing');
+          postEl.classList.add('is-showing');
+          postEl.style.transitionDelay = (Number(delay) || 0) + 'ms';
+
+          requestAnimationFrame(function () {
+            postEl.classList.add('is-visible');
+            postEl.classList.remove('is-showing');
+          });
+        },
+
+        applyFilter: function (filter, animated) {
+          var self = this;
+          var shouldAnimate = animated !== false;
+          var token;
+
+          if (filter) {
+            this.current = filter;
+          }
+
+          this.collectPosts();
+          token = ++this.animationToken;
+          clearTimeout(this.hideTimer);
+
+          function commitVisibility() {
+            var visibleCount = 0;
+            var visibleIndex = 0;
+
+            self.posts.forEach(function (postEl) {
+              var visible = self.shouldShowPost(postEl, self.current);
+
+              postEl.classList.toggle('search-match', !!state.query && visible);
+
+              if (visible) {
+                visibleCount += 1;
+                if (shouldAnimate) {
+                  self.revealPost(postEl, visibleIndex * 35);
+                } else {
+                  postEl.classList.remove('is-hidden', 'is-hiding', 'is-showing');
+                  postEl.classList.add('is-visible');
+                  postEl.style.transitionDelay = '0ms';
+                }
+                visibleIndex += 1;
+              } else {
+                self.hidePostImmediately(postEl);
+              }
+            });
+
+            self.updateEmptyState(visibleCount);
+          }
+
+          if (!shouldAnimate) {
+            commitVisibility();
+            return;
+          }
+
+          this.posts.forEach(function (postEl) {
+            if (!postEl.classList.contains('is-hidden')) {
+              postEl.classList.remove('is-showing', 'is-visible');
+              postEl.classList.add('is-hiding');
+              postEl.style.transitionDelay = '0ms';
+            }
+          });
+
+          this.hideTimer = setTimeout(function () {
+            if (token !== self.animationToken) {
+              return;
+            }
+
+            commitVisibility();
+          }, 140);
+        },
+
+        updateEmptyState: function (visibleCount) {
+          if (visibleCount > 0) {
+            this.hideEmptyState();
+            return;
+          }
+
+          this.showEmptyState(this.current);
+        },
+
+        showEmptyState: function (filter) {
+          var config = this.emptyConfig[filter] || this.emptyConfig.all;
+
+          if (!this.emptyStateEl) {
+            this.emptyStateEl = document.createElement('article');
+            this.emptyStateEl.id = 'feedFilterEmptyState';
+            this.emptyStateEl.className = 'feed-empty-state';
+          }
+
+          this.emptyStateEl.innerHTML = (
+            '<i data-lucide="' + config.icon + '"></i>' +
+            '<h3 class="feed-empty-title">' + config.title + '</h3>' +
+            '<p class="feed-empty-text">' + config.text + '</p>'
+          );
+
+          if (!this.emptyStateEl.parentNode && feedList) {
+            feedList.insertBefore(this.emptyStateEl, feedList.firstChild);
+          }
+
+          safeIconRefresh();
+        },
+
+        hideEmptyState: function () {
+          if (this.emptyStateEl && this.emptyStateEl.parentNode) {
+            this.emptyStateEl.parentNode.removeChild(this.emptyStateEl);
+          }
+        },
+
+        registerPost: function (postEl) {
+          if (!postEl) {
+            return;
+          }
+
+          decoratePostElement(postEl);
+          this.posts = [postEl].concat(this.posts.filter(function (item) {
+            return item !== postEl;
+          }));
+          this.syncCurrentView(postEl);
+        },
+
+        syncCurrentView: function (postEl) {
+          if (!postEl) {
+            return;
+          }
+
+          var visible = this.shouldShowPost(postEl, this.current);
+          postEl.classList.toggle('search-match', !!state.query && visible);
+
+          if (visible) {
+            postEl.classList.remove('is-hidden', 'is-hiding');
+            this.revealPost(postEl, 0);
+          } else {
+            this.hidePostImmediately(postEl);
+          }
+
+          this.updateEmptyState(this.posts.filter(function (item) {
+            return !item.classList.contains('is-hidden');
+          }).length);
         }
       };
 
@@ -7934,22 +10387,49 @@
 
         insertNewPost: function (payload) {
           var newId = 'sim-' + Date.now();
-
-          postStore.unshift({
+          var hasMedia = Math.random() < 0.25;
+          var hasPoll = !hasMedia && Math.random() < 0.15;
+          var newPost = {
             id: newId,
             user: payload.user,
             avatar: payload.avatar,
             time: payload.time,
             text: payload.text,
             verified: false,
-            following: true,
+            source: 'simulation',
             metrics: { comments: 0, reposts: 0, likes: 0 },
             state: { repost: false, like: false, bookmark: false }
-          });
+          };
 
-          renderFeed({ newPostId: newId });
+          if (hasMedia) {
+            newPost.image = 'https://picsum.photos/seed/' + newId + '-media/760/420';
+          }
 
-          var card = feedList.querySelector('[data-post-id="' + newId + '"]');
+          if (hasPoll) {
+            newPost.poll = {
+              options: [
+                { label: 'sim', pct: 52 },
+                { label: 'nao', pct: 33 },
+                { label: 'talvez', pct: 15 }
+              ],
+              votes: 23,
+              closed: false
+            };
+          }
+
+          applyPostMetadata(newPost, 'simulation');
+          postStore.unshift(newPost);
+
+          var card = createPostCardElement(newPost, 0, { newPostId: newId, source: 'simulation' });
+
+          if (card && feedList) {
+            feedList.prepend(card);
+            safeIconRefresh();
+            document.dispatchEvent(new CustomEvent('chrono:post-created', {
+              detail: { postEl: card }
+            }));
+          }
+
           if (card) {
             card.classList.add('timeline-new-highlight');
             setTimeout(function () {
@@ -8080,7 +10560,7 @@
 
           if (threadShareBtn) {
             threadShareBtn.addEventListener('click', function () {
-              alert('Link da thread copiado!');
+              copyCurrentLinkToast('Link da thread pronto para compartilhar.');
             });
           }
 
@@ -8407,28 +10887,30 @@
             link.addEventListener('click', function (event) {
               event.preventDefault();
               event.stopPropagation();
-              alert('Abrindo perfil de ' + (link.getAttribute('data-user') || 'usuario') + '...');
+              openProfileRouteFromHandle(link.getAttribute('data-user') || '@usuario');
             });
           });
 
           Array.prototype.slice.call(threadModalContent.querySelectorAll('[data-thread-link="tag"]')).forEach(function (link) {
             link.addEventListener('click', function (event) {
               event.preventDefault();
-              alert('Abrindo hashtag ' + (link.getAttribute('data-tag') || '') + '...');
+              openHashtagFeed(link.getAttribute('data-tag') || '');
             });
           });
 
           Array.prototype.slice.call(threadModalContent.querySelectorAll('[data-thread-link="mention"]')).forEach(function (link) {
             link.addEventListener('click', function (event) {
               event.preventDefault();
-              alert('Abrindo perfil de ' + (link.getAttribute('data-user') || '') + '...');
+              openProfileRouteFromHandle(link.getAttribute('data-user') || '@usuario');
             });
           });
 
           var parentBox = threadModalContent.querySelector('[data-thread-parent="true"]');
           if (parentBox) {
             parentBox.addEventListener('click', function () {
-              alert('Abrindo thread pai...');
+              if (typeof showAppToast === 'function') {
+                showAppToast('Thread pai indisponivel nesta demo.');
+              }
             });
           }
 
@@ -8589,7 +11071,7 @@
           Array.prototype.slice.call(list.querySelectorAll('.thread-profile-link')).forEach(function (link) {
             link.addEventListener('click', function (event) {
               event.preventDefault();
-              alert('Abrindo perfil de ' + (link.getAttribute('data-user') || 'usuario') + '...');
+              openProfileRouteFromHandle(link.getAttribute('data-user') || '@usuario');
             });
           });
         },
@@ -8697,7 +11179,7 @@
           }
 
           if (action === 'share') {
-            alert('Link da thread copiado!');
+            copyCurrentLinkToast('Link da thread pronto para compartilhar.');
             return;
           }
 
@@ -8793,18 +11275,1162 @@
         },
       };
 
-      function attachEvents() {
-        tabs.forEach(function (tab) {
-          tab.addEventListener('click', function () {
-            state.activeTab = tab.getAttribute('data-tab') || 'todos';
-            updateTabButtons();
-            renderFeed();
-            playFeedTransition('tab-animate');
+      var STATS_SERIES = {
+        '7d': {
+          bars: [34, 52, 61, 48, 75, 58, 63],
+          kpi: { views: 12480, boosts: 438, ecos: 119, replies: 92 },
+          trend: { views: 18, boosts: 12, ecos: 7, replies: 15 }
+        },
+        '30d': {
+          bars: [28, 36, 45, 38, 56, 62, 74],
+          kpi: { views: 48320, boosts: 1320, ecos: 442, replies: 314 },
+          trend: { views: 26, boosts: 17, ecos: 11, replies: 20 }
+        },
+        '90d': {
+          bars: [18, 24, 30, 36, 44, 52, 69],
+          kpi: { views: 129400, boosts: 3720, ecos: 1315, replies: 926 },
+          trend: { views: 41, boosts: 29, ecos: 22, replies: 33 }
+        }
+      };
+
+      var AppState = {
+        profile: {
+          displayName: 'Juvinho Silva',
+          username: 'Juvinho',
+          bio: 'Narrando a cidade em tempo real. Viciado em sinais, trens e fios soltos.',
+          location: 'Sao Paulo, Brasil',
+          website: 'https://chrono.local/@juvinho',
+          favoriteCordao: 'artedistopica',
+          avatar: 'https://picsum.photos/seed/juvinho/160/160',
+          cover: 'https://picsum.photos/seed/juvinho-cover/1200/320'
+        },
+        followers: [
+          '@cuberta_dobrada',
+          '@Sus_Bacon',
+          '@orbital_zero',
+          '@nebula_core',
+          '@pixel_ghost',
+          '@satelite_urbano'
+        ],
+        following: [
+          '@cuberta_dobrada',
+          '@Sus_Bacon',
+          '@orbital_zero',
+          '@linha_13',
+          '@padaria_quantica'
+        ],
+        profileTab: 'posts',
+        statsPeriod: '7d',
+        language: 'pt',
+        settings: {
+          theme: 'dark',
+          density: 'default',
+          reducedMotion: false,
+          particles: true,
+          cordaoHighlight: true
+        },
+        signedOut: false,
+        editSnapshot: ''
+      };
+
+      var I18N_PACKS = {
+        pt: {
+          menuProfile: 'Ver perfil',
+          menuEditProfile: 'Editar perfil',
+          menuStats: 'Estatisticas',
+          menuLogout: 'Sair',
+          languageMenu: 'Idioma: Portugues',
+          tabAll: 'Todos',
+          tabFollowing: 'Seguindo',
+          tabMedia: 'Midia',
+          tabPolls: 'Enquetes',
+          createThread: 'Criar Cordao',
+          notifViewAll: 'Ver todas as notificacoes ->',
+          editTitle: 'Editar Perfil',
+          editSubtitle: 'As alteracoes sao aplicadas apenas nesta sessao.',
+          statsTitle: 'Estatisticas',
+          statsSubtitle: 'Resumo dos seus posts e alcance no periodo.',
+          themeTitle: 'Tema e Aparencia',
+          themeSubtitle: 'Ajuste visual, densidade e motion para sua leitura.',
+          languageTitle: 'Idioma',
+          languageSubtitle: 'Escolha o idioma da interface desta sessao.',
+          logoutTitle: 'Deseja sair da Chrono?',
+          logoutSubtitle: 'Sua sessao atual sera encerrada.',
+          signedOutTitle: 'Sessao encerrada',
+          signedOutText: 'Voce saiu da Chrono. Seu estado local desta pagina foi preservado em memoria.',
+          signInAgain: 'Entrar novamente'
+        },
+        en: {
+          menuProfile: 'View profile',
+          menuEditProfile: 'Edit profile',
+          menuStats: 'Stats',
+          menuLogout: 'Log out',
+          languageMenu: 'Language: English',
+          tabAll: 'All',
+          tabFollowing: 'Following',
+          tabMedia: 'Media',
+          tabPolls: 'Polls',
+          createThread: 'Create Thread',
+          notifViewAll: 'View all notifications ->',
+          editTitle: 'Edit Profile',
+          editSubtitle: 'Changes are stored only in this in-memory session.',
+          statsTitle: 'Statistics',
+          statsSubtitle: 'A quick summary of your performance by period.',
+          themeTitle: 'Theme and Appearance',
+          themeSubtitle: 'Tune visuals, density, and motion preferences.',
+          languageTitle: 'Language',
+          languageSubtitle: 'Choose the interface language for this session.',
+          logoutTitle: 'Leave Chrono now?',
+          logoutSubtitle: 'Your current session will be closed.',
+          signedOutTitle: 'Session closed',
+          signedOutText: 'You are signed out. Local in-memory state is still available in this page.',
+          signInAgain: 'Sign in again'
+        },
+        es: {
+          menuProfile: 'Ver perfil',
+          menuEditProfile: 'Editar perfil',
+          menuStats: 'Estadisticas',
+          menuLogout: 'Salir',
+          languageMenu: 'Idioma: Espanol',
+          tabAll: 'Todos',
+          tabFollowing: 'Siguiendo',
+          tabMedia: 'Media',
+          tabPolls: 'Encuestas',
+          createThread: 'Crear Hilo',
+          notifViewAll: 'Ver todas las notificaciones ->',
+          editTitle: 'Editar Perfil',
+          editSubtitle: 'Los cambios se aplican solo en esta sesion en memoria.',
+          statsTitle: 'Estadisticas',
+          statsSubtitle: 'Resumen de rendimiento por periodo.',
+          themeTitle: 'Tema y Apariencia',
+          themeSubtitle: 'Ajusta visual, densidad y movimiento.',
+          languageTitle: 'Idioma',
+          languageSubtitle: 'Elige el idioma de la interfaz para esta sesion.',
+          logoutTitle: 'Deseas salir de Chrono?',
+          logoutSubtitle: 'Tu sesion actual sera cerrada.',
+          signedOutTitle: 'Sesion cerrada',
+          signedOutText: 'Has salido de Chrono. El estado local en memoria se mantiene en esta pagina.',
+          signInAgain: 'Entrar de nuevo'
+        }
+      };
+
+      var editMediaDraft = {
+        avatar: '',
+        cover: ''
+      };
+
+      function setNodeText(node, value) {
+        if (node) {
+          node.textContent = String(value || '');
+        }
+      }
+
+      function formatSignedPercent(value) {
+        var safe = Number(value) || 0;
+        return (safe >= 0 ? '+' : '') + safe + '%';
+      }
+
+      function showAppToast(message) {
+        if (!appToastHost) {
+          return;
+        }
+
+        var toast = document.createElement('div');
+        toast.className = 'app-toast';
+        toast.textContent = String(message || 'Atualizado com sucesso.');
+        appToastHost.appendChild(toast);
+
+        setTimeout(function () {
+          toast.style.opacity = '0';
+          toast.style.transform = 'translateY(-8px)';
+          setTimeout(function () {
+            if (toast.parentNode) {
+              toast.parentNode.removeChild(toast);
+            }
+          }, 180);
+        }, 2400);
+      }
+
+      function getProfileHandleValue() {
+        return '@' + String(AppState.profile.username || '').replace(/^@/, '');
+      }
+
+      function syncHeaderIdentity() {
+        var handle = getProfileHandleValue();
+        var displayName = AppState.profile.displayName || 'Perfil';
+        var avatar = AppState.profile.avatar;
+
+        setNodeText(profileNameLabel, handle);
+        setNodeText(profileMenuHandle, handle);
+        setNodeText(profileHandleEl, handle);
+        setNodeText(profileMenuDisplayName, displayName);
+        setNodeText(profileDisplayNameEl, displayName);
+
+        if (profileButtonAvatar) {
+          profileButtonAvatar.src = avatar;
+          profileButtonAvatar.alt = 'Avatar ' + handle;
+        }
+
+        if (profileDropdownAvatar) {
+          profileDropdownAvatar.src = avatar;
+          profileDropdownAvatar.alt = 'Avatar ' + handle;
+        }
+
+        if (composerAvatar) {
+          composerAvatar.src = avatar;
+          composerAvatar.alt = 'Avatar ' + handle;
+        }
+
+        if (profileAvatarLarge) {
+          profileAvatarLarge.src = avatar;
+          profileAvatarLarge.alt = 'Avatar ' + handle;
+        }
+
+        if (editAvatarPreview) {
+          editAvatarPreview.src = avatar;
+        }
+
+        if (profileCoverEl) {
+          profileCoverEl.style.backgroundImage = 'url("' + avatar.replace('/160/160', '/1200/320') + '")';
+          profileCoverEl.style.backgroundSize = 'cover';
+          profileCoverEl.style.backgroundPosition = 'center';
+        }
+      }
+
+      function getOwnPosts() {
+        var normalized = normalizeAuthorHandle(AppState.profile.username);
+        return postStore.filter(function (post) {
+          return normalizeAuthorHandle(post.user) === normalized;
+        });
+      }
+
+      function getProfilePostsForTab(tab) {
+        var ownPosts = getOwnPosts();
+
+        if (!ownPosts.length) {
+          ownPosts = postStore.slice(0, 4);
+        }
+
+        if (tab === 'media') {
+          return ownPosts.filter(function (post) {
+            return !!post.image || !!(post.repost && post.repost.image);
           });
+        }
+
+        if (tab === 'likes') {
+          return ownPosts.slice().sort(function (a, b) {
+            return (b.metrics.likes || 0) - (a.metrics.likes || 0);
+          });
+        }
+
+        if (tab === 'responses') {
+          return ownPosts.slice().sort(function (a, b) {
+            return (b.metrics.comments || 0) - (a.metrics.comments || 0);
+          });
+        }
+
+        return ownPosts;
+      }
+
+      function renderProfilePosts() {
+        if (!profilePostsList) {
+          return;
+        }
+
+        var posts = getProfilePostsForTab(AppState.profileTab).slice(0, 8);
+
+        if (!posts.length) {
+          profilePostsList.innerHTML = '<article class="top-post-item"><p>Nenhum post para este filtro ainda.</p></article>';
+          return;
+        }
+
+        profilePostsList.innerHTML = posts.map(function (post) {
+          return (
+            '<article class="top-post-item" data-profile-post-id="' + escapeHtml(post.id) + '">' +
+              '<p>' + escapeHtml(post.text || '') + '</p>' +
+              '<div class="top-post-metrics">' +
+                '<span>💬 ' + (post.metrics.comments || 0) + '</span>' +
+                '<span>🔁 ' + (post.metrics.reposts || 0) + '</span>' +
+                '<span>⚡ ' + (post.metrics.likes || 0) + '</span>' +
+              '</div>' +
+            '</article>'
+          );
+        }).join('');
+      }
+
+      function renderProfileView() {
+        setNodeText(profileBioEl, AppState.profile.bio || 'Sem bio por enquanto.');
+        setNodeText(profileMetaLocationEl, AppState.profile.location || 'Localizacao nao informada');
+        setNodeText(profileMetaCordaoEl, 'Cordao favorito: $' + String(AppState.profile.favoriteCordao || 'chrono').replace(/^\$/, ''));
+
+        if (profileFollowersCount) {
+          profileFollowersCount.textContent = String(AppState.followers.length);
+        }
+
+        if (profileFollowingCount) {
+          profileFollowingCount.textContent = String(AppState.following.length);
+        }
+
+        if (profilePostsCount) {
+          profilePostsCount.textContent = String(getOwnPosts().length || 0);
+        }
+
+        Array.prototype.slice.call(profileTabs ? profileTabs.querySelectorAll('.profile-tab') : []).forEach(function (btn) {
+          btn.classList.toggle('active', btn.getAttribute('data-profile-tab') === AppState.profileTab);
         });
 
+        renderProfilePosts();
+      }
+
+      function openMiniModal(title, items) {
+        if (!miniModalOverlay || !miniModalTitle || !miniModalList) {
+          return;
+        }
+
+        miniModalTitle.textContent = title;
+        miniModalList.innerHTML = (items || []).map(function (entry) {
+          return '<li>' + escapeHtml(entry) + '</li>';
+        }).join('');
+
+        miniModalOverlay.classList.add('is-open');
+        miniModalOverlay.setAttribute('aria-hidden', 'false');
+      }
+
+      function closeMiniModal() {
+        if (!miniModalOverlay) {
+          return;
+        }
+
+        miniModalOverlay.classList.remove('is-open');
+        miniModalOverlay.setAttribute('aria-hidden', 'true');
+      }
+
+      function readFileAsDataUrl(file, callback) {
+        if (!file || typeof FileReader === 'undefined') {
+          return;
+        }
+
+        var reader = new FileReader();
+        reader.onload = function (event) {
+          callback(String((event.target && event.target.result) || ''));
+        };
+        reader.readAsDataURL(file);
+      }
+
+      function updateEditBioCounter() {
+        if (!editBioInput || !editBioCounter) {
+          return;
+        }
+
+        var current = editBioInput.value.length;
+        editBioCounter.textContent = current + '/160';
+        editBioCounter.classList.remove('warn', 'danger');
+
+        if (current >= 130 && current < 150) {
+          editBioCounter.classList.add('warn');
+        }
+
+        if (current >= 150) {
+          editBioCounter.classList.add('danger');
+        }
+      }
+
+      function normalizeUsernameInput(value) {
+        return String(value || '').replace(/[^a-zA-Z0-9_]/g, '').toLowerCase();
+      }
+
+      function validateEditUsername() {
+        if (!editUsernameInput || !editUsernameError) {
+          return true;
+        }
+
+        var username = normalizeUsernameInput(editUsernameInput.value);
+        editUsernameInput.value = username;
+
+        if (!/^[a-z0-9_]{3,20}$/.test(username)) {
+          editUsernameError.textContent = 'Use 3-20 caracteres: letras, numeros ou _';
+          return false;
+        }
+
+        editUsernameError.textContent = '';
+        return true;
+      }
+
+      function getEditDraft() {
+        return {
+          displayName: String((editDisplayNameInput && editDisplayNameInput.value) || '').trim(),
+          username: normalizeUsernameInput((editUsernameInput && editUsernameInput.value) || ''),
+          bio: String((editBioInput && editBioInput.value) || '').slice(0, 160),
+          location: String((editLocationInput && editLocationInput.value) || '').trim(),
+          website: String((editWebsiteInput && editWebsiteInput.value) || '').trim(),
+          favoriteCordao: String((editFavoriteCordaoInput && editFavoriteCordaoInput.value) || '').replace(/^\$/, '').trim(),
+          avatar: editMediaDraft.avatar || AppState.profile.avatar,
+          cover: editMediaDraft.cover || AppState.profile.cover
+        };
+      }
+
+      function seedEditFormFromState() {
+        if (!editProfileForm) {
+          return;
+        }
+
+        editMediaDraft.avatar = '';
+        editMediaDraft.cover = '';
+
+        if (editDisplayNameInput) {
+          editDisplayNameInput.value = AppState.profile.displayName || '';
+        }
+        if (editUsernameInput) {
+          editUsernameInput.value = normalizeUsernameInput(AppState.profile.username || '');
+        }
+        if (editBioInput) {
+          editBioInput.value = AppState.profile.bio || '';
+        }
+        if (editLocationInput) {
+          editLocationInput.value = AppState.profile.location || '';
+        }
+        if (editWebsiteInput) {
+          editWebsiteInput.value = AppState.profile.website || '';
+        }
+        if (editFavoriteCordaoInput) {
+          editFavoriteCordaoInput.value = String(AppState.profile.favoriteCordao || '').replace(/^\$/, '');
+        }
+        if (editAvatarPreview) {
+          editAvatarPreview.src = AppState.profile.avatar;
+        }
+        if (editCoverPreview) {
+          editCoverPreview.src = AppState.profile.cover;
+        }
+
+        updateEditBioCounter();
+        validateEditUsername();
+        AppState.editSnapshot = JSON.stringify(getEditDraft());
+      }
+
+      function hasEditUnsavedChanges() {
+        if (!editProfileForm || !AppState.editSnapshot) {
+          return false;
+        }
+
+        return JSON.stringify(getEditDraft()) !== AppState.editSnapshot;
+      }
+
+      function commitProfileEdit(event) {
+        if (event) {
+          event.preventDefault();
+        }
+
+        if (!validateEditUsername()) {
+          return;
+        }
+
+        var next = getEditDraft();
+        if (!next.displayName) {
+          next.displayName = 'Chrono User';
+        }
+        if (!next.username) {
+          next.username = 'chrono_user';
+        }
+        if (!next.favoriteCordao) {
+          next.favoriteCordao = 'chrono';
+        }
+
+        AppState.profile = next;
+
+        syncHeaderIdentity();
+        renderProfileView();
+        seedEditFormFromState();
+        showAppToast('Perfil atualizado.');
+
+        if (AppRouter && typeof AppRouter.navigate === 'function') {
+          AppRouter.navigate('profile');
+        }
+      }
+
+      function renderStatsBars(series) {
+        if (!statsBars) {
+          return;
+        }
+
+        var labels = ['D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7'];
+        statsBars.innerHTML = (series || []).map(function (value, index) {
+          var height = Math.max(8, Math.min(100, Number(value) || 0));
+          return (
+            '<div class="stats-bar-col">' +
+              '<span class="stats-bar" style="height:' + height + '%"></span>' +
+              '<span class="stats-bar-label">' + labels[index] + '</span>' +
+            '</div>'
+          );
+        }).join('');
+      }
+
+      function getTopPosts(limit) {
+        return postStore.slice().sort(function (a, b) {
+          var scoreA = (a.metrics.likes || 0) + (a.metrics.reposts || 0) + (a.metrics.comments || 0);
+          var scoreB = (b.metrics.likes || 0) + (b.metrics.reposts || 0) + (b.metrics.comments || 0);
+          return scoreB - scoreA;
+        }).slice(0, limit || 3);
+      }
+
+      function renderStatsTopPosts() {
+        if (!statsTopPosts) {
+          return;
+        }
+
+        statsTopPosts.innerHTML = getTopPosts(3).map(function (post) {
+          return (
+            '<article class="top-post-item" data-stats-post-id="' + escapeHtml(post.id) + '">' +
+              '<p>' + escapeHtml(post.text || '') + '</p>' +
+              '<div class="top-post-metrics">' +
+                '<span>Views ~ ' + formatCompactCount((post.metrics.likes + post.metrics.reposts + post.metrics.comments + 1) * 42) + '</span>' +
+                '<span>Boosts ' + (post.metrics.likes || 0) + '</span>' +
+                '<span>Ecos ' + (post.metrics.reposts || 0) + '</span>' +
+              '</div>' +
+            '</article>'
+          );
+        }).join('');
+      }
+
+      function renderStatsView() {
+        var current = STATS_SERIES[AppState.statsPeriod] || STATS_SERIES['7d'];
+
+        setNodeText(kpiViews, formatCompactCount(current.kpi.views));
+        setNodeText(kpiBoosts, formatCompactCount(current.kpi.boosts));
+        setNodeText(kpiEcos, formatCompactCount(current.kpi.ecos));
+        setNodeText(kpiReplies, formatCompactCount(current.kpi.replies));
+
+        setNodeText(kpiViewsTrend, formatSignedPercent(current.trend.views));
+        setNodeText(kpiBoostsTrend, formatSignedPercent(current.trend.boosts));
+        setNodeText(kpiEcosTrend, formatSignedPercent(current.trend.ecos));
+        setNodeText(kpiRepliesTrend, formatSignedPercent(current.trend.replies));
+
+        Array.prototype.slice.call(statsPeriodTabs ? statsPeriodTabs.querySelectorAll('.stats-tab') : []).forEach(function (tab) {
+          tab.classList.toggle('active', tab.getAttribute('data-stats-period') === AppState.statsPeriod);
+        });
+
+        renderStatsBars(current.bars);
+        renderStatsTopPosts();
+      }
+
+      function setSwitchState(button, active) {
+        if (!button) {
+          return;
+        }
+
+        button.classList.toggle('active', !!active);
+        button.setAttribute('aria-pressed', active ? 'true' : 'false');
+      }
+
+      function renderThemeView() {
+        Array.prototype.slice.call(themeModeChoices ? themeModeChoices.querySelectorAll('.choice-card') : []).forEach(function (card) {
+          card.classList.toggle('active', card.getAttribute('data-theme-mode') === AppState.settings.theme);
+        });
+
+        Array.prototype.slice.call(densityChoices ? densityChoices.querySelectorAll('.choice-card') : []).forEach(function (card) {
+          card.classList.toggle('active', card.getAttribute('data-density') === AppState.settings.density);
+        });
+
+        setSwitchState(toggleReducedMotion, AppState.settings.reducedMotion);
+        setSwitchState(toggleParticles, AppState.settings.particles);
+        setSwitchState(toggleCordaoHighlight, AppState.settings.cordaoHighlight);
+      }
+
+      function applyThemeSettings() {
+        var theme = AppState.settings.theme;
+        var resolvedTheme = theme;
+
+        if (theme === 'system') {
+          resolvedTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+
+        if (resolvedTheme === 'light') {
+          document.documentElement.setAttribute('data-theme', 'light');
+        } else {
+          document.documentElement.removeAttribute('data-theme');
+        }
+
+        if (AppState.settings.density === 'default') {
+          document.body.removeAttribute('data-density');
+        } else {
+          document.body.setAttribute('data-density', AppState.settings.density);
+        }
+
+        document.body.classList.toggle('reduced-motion', !!AppState.settings.reducedMotion);
+        document.body.classList.toggle('no-cordao-highlight', !AppState.settings.cordaoHighlight);
+
+        var particles = document.querySelector('.bg-particles');
+        if (particles) {
+          particles.classList.toggle('is-hidden', !AppState.settings.particles);
+        }
+
+        if (HeaderModule) {
+          HeaderModule.themeMode = AppState.settings.theme;
+          HeaderModule.syncThemeRow();
+        }
+      }
+
+      function renderLanguageSelection() {
+        Array.prototype.slice.call(languageList ? languageList.querySelectorAll('.language-card') : []).forEach(function (card) {
+          card.classList.toggle('active', card.getAttribute('data-language') === AppState.language);
+        });
+      }
+
+      function applyLanguagePack() {
+        var pack = I18N_PACKS[AppState.language] || I18N_PACKS.pt;
+
+        setNodeText(document.getElementById('menuProfileLabel'), pack.menuProfile);
+        setNodeText(document.getElementById('menuEditProfileLabel'), pack.menuEditProfile);
+        setNodeText(document.getElementById('menuStatsLabel'), pack.menuStats);
+        setNodeText(document.getElementById('menuLogoutLabel'), pack.menuLogout);
+        setNodeText(languageMenuLabel, pack.languageMenu);
+
+        setNodeText(feedTabAll, pack.tabAll);
+        setNodeText(feedTabFollowing, pack.tabFollowing);
+        setNodeText(feedTabMedia, pack.tabMedia);
+        setNodeText(feedTabPolls, pack.tabPolls);
+
+        setNodeText(createThreadBtn, pack.createThread);
+        setNodeText(notifViewAllButton, pack.notifViewAll);
+
+        setNodeText(editViewTitle, pack.editTitle);
+        setNodeText(editViewSubtitle, pack.editSubtitle);
+        setNodeText(statsViewTitle, pack.statsTitle);
+        setNodeText(statsViewSubtitle, pack.statsSubtitle);
+        setNodeText(themeViewTitle, pack.themeTitle);
+        setNodeText(themeViewSubtitle, pack.themeSubtitle);
+        setNodeText(languageViewTitle, pack.languageTitle);
+        setNodeText(languageViewSubtitle, pack.languageSubtitle);
+
+        setNodeText(logoutTitleEl, pack.logoutTitle);
+        setNodeText(logoutSubtitleEl, pack.logoutSubtitle);
+        setNodeText(signedOutTitle, pack.signedOutTitle);
+        setNodeText(signedOutText, pack.signedOutText);
+        setNodeText(signInAgainButton, pack.signInAgain);
+
+        renderLanguageSelection();
+      }
+
+      var AppRouter = {
+        currentView: 'feed',
+        pendingRoute: '',
+
+        normalizeRoute: function (route) {
+          var normalized = String(route || '').replace(/^#/, '').replace(/^\/+/, '').trim().toLowerCase();
+          return normalized || 'feed';
+        },
+
+        routeToView: function (route) {
+          var normalized = this.normalizeRoute(route);
+
+          if (normalized === 'profile') {
+            return 'profile';
+          }
+
+          if (normalized === 'edit-profile') {
+            return 'edit-profile';
+          }
+
+          if (normalized === 'stats') {
+            return 'stats';
+          }
+
+          if (normalized === 'settings/theme') {
+            return 'theme';
+          }
+
+          if (normalized === 'settings/language') {
+            return 'language';
+          }
+
+          if (normalized === 'signed-out') {
+            return 'signed-out';
+          }
+
+          return 'feed';
+        },
+
+        navigate: function (route, options) {
+          var target = this.normalizeRoute(route);
+          var targetHash = '#' + target;
+
+          if (options && options.replace && window.history && typeof window.history.replaceState === 'function') {
+            window.history.replaceState(null, '', targetHash);
+            this.requestRoute(target, true);
+            return;
+          }
+
+          if (window.location.hash === targetHash) {
+            this.requestRoute(target, true);
+            return;
+          }
+
+          window.location.hash = target;
+        },
+
+        setActiveView: function (viewName) {
+          if (!appViewContainer) {
+            return;
+          }
+
+          var current = appViewContainer.querySelector('.app-view.is-active');
+          var next = appViewContainer.querySelector('[data-view="' + viewName + '"]');
+
+          if (!next) {
+            return;
+          }
+
+          if (current && current !== next) {
+            current.classList.remove('is-entering');
+            current.classList.add('is-leaving');
+            setTimeout(function () {
+              current.classList.remove('is-active', 'is-leaving');
+            }, 140);
+          }
+
+          next.classList.add('is-active');
+          next.classList.remove('is-leaving');
+          next.classList.add('is-entering');
+          setTimeout(function () {
+            next.classList.remove('is-entering');
+          }, 180);
+        },
+
+        applyLayout: function (viewName) {
+          var isInternal = viewName !== 'feed';
+          document.body.classList.toggle('layout-internal', isInternal);
+          document.body.classList.toggle('layout-hide-timeline', viewName === 'signed-out');
+        },
+
+        closeUnsavedPrompt: function () {
+          if (!unsavedOverlay) {
+            return;
+          }
+
+          unsavedOverlay.classList.remove('is-open');
+          unsavedOverlay.setAttribute('aria-hidden', 'true');
+          this.pendingRoute = '';
+        },
+
+        promptUnsaved: function (route) {
+          if (!unsavedOverlay) {
+            return false;
+          }
+
+          this.pendingRoute = route;
+          unsavedOverlay.classList.add('is-open');
+          unsavedOverlay.setAttribute('aria-hidden', 'false');
+          return true;
+        },
+
+        confirmUnsavedDiscard: function () {
+          var target = this.pendingRoute || 'profile';
+          this.closeUnsavedPrompt();
+          seedEditFormFromState();
+          this.navigate(target, { replace: true });
+        },
+
+        requestRoute: function (route, force) {
+          var normalized = this.normalizeRoute(route);
+          var nextView = this.routeToView(normalized);
+
+          if (AppState.signedOut && nextView !== 'signed-out') {
+            this.navigate('signed-out', { replace: true });
+            return;
+          }
+
+          if (this.currentView === 'edit-profile' && nextView !== 'edit-profile' && hasEditUnsavedChanges()) {
+            if (force) {
+              seedEditFormFromState();
+            } else if (this.promptUnsaved(normalized)) {
+              return;
+            }
+          }
+
+          this.currentView = nextView;
+          this.setActiveView(nextView);
+          this.applyLayout(nextView);
+
+          if (nextView === 'profile') {
+            renderProfileView();
+          }
+
+          if (nextView === 'edit-profile') {
+            seedEditFormFromState();
+          }
+
+          if (nextView === 'stats') {
+            renderStatsView();
+          }
+
+          if (nextView === 'theme') {
+            renderThemeView();
+          }
+
+          if (nextView === 'language') {
+            renderLanguageSelection();
+          }
+
+          if (HeaderModule) {
+            HeaderModule.closePanel();
+          }
+
+          safeIconRefresh();
+        },
+
+        performLogout: function () {
+          var self = this;
+          AppState.signedOut = true;
+          document.body.classList.add('logout-fade');
+
+          setTimeout(function () {
+            document.body.classList.remove('logout-fade');
+            self.navigate('signed-out', { replace: true });
+            showAppToast('Sessao encerrada.');
+          }, 220);
+        },
+
+        restoreSession: function () {
+          AppState.signedOut = false;
+          this.navigate('feed', { replace: true });
+          showAppToast('Sessao restaurada.');
+        },
+
+        bindEvents: function () {
+          var self = this;
+
+          window.addEventListener('hashchange', function () {
+            self.requestRoute(window.location.hash, false);
+          });
+
+          if (profileViewButton) {
+            profileViewButton.addEventListener('click', function (event) {
+              event.preventDefault();
+              self.navigate('profile');
+            });
+          }
+
+          if (profileEditButton) {
+            profileEditButton.addEventListener('click', function (event) {
+              event.preventDefault();
+              self.navigate('edit-profile');
+            });
+          }
+
+          if (profileStatsButton) {
+            profileStatsButton.addEventListener('click', function (event) {
+              event.preventDefault();
+              self.navigate('stats');
+            });
+          }
+
+          if (languageSettingsButton) {
+            languageSettingsButton.addEventListener('click', function (event) {
+              event.preventDefault();
+              self.navigate('settings/language');
+            });
+          }
+
+          if (profileEditCta) {
+            profileEditCta.addEventListener('click', function () {
+              self.navigate('edit-profile');
+            });
+          }
+
+          if (profileBackToFeedCta) {
+            profileBackToFeedCta.addEventListener('click', function () {
+              self.navigate('feed');
+            });
+          }
+
+          if (createThreadBtn) {
+            createThreadBtn.addEventListener('click', function () {
+              self.navigate('feed');
+              showAppToast('Composer aberto para iniciar um novo cordao.');
+              if (composer) {
+                composer.focus();
+              }
+            });
+          }
+
+          if (notifViewAllButton) {
+            notifViewAllButton.addEventListener('click', function () {
+              self.navigate('stats');
+            });
+          }
+
+          if (profileFollowersBtn) {
+            profileFollowersBtn.addEventListener('click', function () {
+              openMiniModal('Seguidores', AppState.followers.length ? AppState.followers : ['Nenhum seguidor ainda.']);
+            });
+          }
+
+          if (profileFollowingBtn) {
+            profileFollowingBtn.addEventListener('click', function () {
+              openMiniModal('Seguindo', AppState.following.length ? AppState.following : ['Voce ainda nao segue ninguem.']);
+            });
+          }
+
+          if (profileTabs) {
+            profileTabs.addEventListener('click', function (event) {
+              var tab = event.target.closest('.profile-tab');
+              if (!tab) {
+                return;
+              }
+
+              AppState.profileTab = tab.getAttribute('data-profile-tab') || 'posts';
+              renderProfileView();
+            });
+          }
+
+          if (profileTabPanels) {
+            profileTabPanels.addEventListener('click', function (event) {
+              var profilePostCard = event.target.closest('[data-profile-post-id]');
+              if (profilePostCard) {
+                ThreadModal.open(profilePostCard.getAttribute('data-profile-post-id'));
+                return;
+              }
+
+              var temporalGo = event.target.closest('#profileTemporalGo');
+              if (temporalGo) {
+                runTemporalSearch();
+                return;
+              }
+
+              var bioLink = event.target.closest('[data-bio-handle]');
+              if (bioLink) {
+                event.preventDefault();
+                openProfileRouteFromHandle(bioLink.getAttribute('data-bio-handle') || '@Chrono');
+              }
+            });
+
+            profileTabPanels.addEventListener('keydown', function (event) {
+              if (event.key !== 'Enter') {
+                return;
+              }
+
+              var temporalInput = event.target.closest('#profileTemporalDate');
+              if (!temporalInput) {
+                return;
+              }
+
+              event.preventDefault();
+              runTemporalSearch();
+            });
+          }
+
+          if (editProfileForm) {
+            editProfileForm.addEventListener('submit', commitProfileEdit);
+          }
+
+          if (editCancelButton) {
+            editCancelButton.addEventListener('click', function () {
+              self.navigate('profile');
+            });
+          }
+
+          if (editBioInput) {
+            editBioInput.addEventListener('input', updateEditBioCounter);
+          }
+
+          if (editUsernameInput) {
+            editUsernameInput.addEventListener('input', validateEditUsername);
+          }
+
+          if (editAvatarButton && editAvatarInput) {
+            editAvatarButton.addEventListener('click', function () {
+              editAvatarInput.click();
+            });
+
+            editAvatarInput.addEventListener('change', function () {
+              var file = editAvatarInput.files && editAvatarInput.files[0];
+              readFileAsDataUrl(file, function (dataUrl) {
+                editMediaDraft.avatar = dataUrl;
+                if (editAvatarPreview) {
+                  editAvatarPreview.src = dataUrl;
+                }
+              });
+            });
+          }
+
+          if (editCoverButton && editCoverInput) {
+            editCoverButton.addEventListener('click', function () {
+              editCoverInput.click();
+            });
+
+            editCoverInput.addEventListener('change', function () {
+              var file = editCoverInput.files && editCoverInput.files[0];
+              readFileAsDataUrl(file, function (dataUrl) {
+                editMediaDraft.cover = dataUrl;
+                if (editCoverPreview) {
+                  editCoverPreview.src = dataUrl;
+                }
+              });
+            });
+          }
+
+          if (statsPeriodTabs) {
+            statsPeriodTabs.addEventListener('click', function (event) {
+              var button = event.target.closest('.stats-tab');
+              if (!button) {
+                return;
+              }
+
+              AppState.statsPeriod = button.getAttribute('data-stats-period') || '7d';
+              renderStatsView();
+            });
+          }
+
+          if (statsTopPosts) {
+            statsTopPosts.addEventListener('click', function (event) {
+              var card = event.target.closest('[data-stats-post-id]');
+              if (!card) {
+                return;
+              }
+
+              ThreadModal.open(card.getAttribute('data-stats-post-id'));
+            });
+          }
+
+          if (themeModeChoices) {
+            themeModeChoices.addEventListener('click', function (event) {
+              var card = event.target.closest('.choice-card');
+              if (!card) {
+                return;
+              }
+
+              AppState.settings.theme = card.getAttribute('data-theme-mode') || 'dark';
+              renderThemeView();
+            });
+          }
+
+          if (densityChoices) {
+            densityChoices.addEventListener('click', function (event) {
+              var card = event.target.closest('.choice-card');
+              if (!card) {
+                return;
+              }
+
+              AppState.settings.density = card.getAttribute('data-density') || 'default';
+              renderThemeView();
+            });
+          }
+
+          if (toggleReducedMotion) {
+            toggleReducedMotion.addEventListener('click', function () {
+              AppState.settings.reducedMotion = !AppState.settings.reducedMotion;
+              renderThemeView();
+            });
+          }
+
+          if (toggleParticles) {
+            toggleParticles.addEventListener('click', function () {
+              AppState.settings.particles = !AppState.settings.particles;
+              renderThemeView();
+            });
+          }
+
+          if (toggleCordaoHighlight) {
+            toggleCordaoHighlight.addEventListener('click', function () {
+              AppState.settings.cordaoHighlight = !AppState.settings.cordaoHighlight;
+              renderThemeView();
+            });
+          }
+
+          if (applyThemeSettingsButton) {
+            applyThemeSettingsButton.addEventListener('click', function () {
+              applyThemeSettings();
+              showAppToast('Configuracoes de aparencia aplicadas.');
+            });
+          }
+
+          if (languageList) {
+            languageList.addEventListener('click', function (event) {
+              var card = event.target.closest('.language-card');
+              if (!card) {
+                return;
+              }
+
+              AppState.language = card.getAttribute('data-language') || 'pt';
+              applyLanguagePack();
+              showAppToast('Idioma atualizado.');
+            });
+          }
+
+          if (signInAgainButton) {
+            signInAgainButton.addEventListener('click', function () {
+              self.restoreSession();
+            });
+          }
+
+          if (miniModalCloseButton) {
+            miniModalCloseButton.addEventListener('click', closeMiniModal);
+          }
+
+          if (miniModalOverlay) {
+            miniModalOverlay.addEventListener('click', function (event) {
+              if (event.target === miniModalOverlay) {
+                closeMiniModal();
+              }
+            });
+          }
+
+          if (unsavedCancelButton) {
+            unsavedCancelButton.addEventListener('click', function () {
+              self.closeUnsavedPrompt();
+            });
+          }
+
+          if (unsavedDiscardButton) {
+            unsavedDiscardButton.addEventListener('click', function () {
+              self.confirmUnsavedDiscard();
+            });
+          }
+
+          if (unsavedOverlay) {
+            unsavedOverlay.addEventListener('click', function (event) {
+              if (event.target === unsavedOverlay) {
+                self.closeUnsavedPrompt();
+              }
+            });
+          }
+
+          document.addEventListener('keydown', function (event) {
+            if (event.key !== 'Escape') {
+              return;
+            }
+
+            if (miniModalOverlay && miniModalOverlay.classList.contains('is-open')) {
+              closeMiniModal();
+            }
+
+            if (unsavedOverlay && unsavedOverlay.classList.contains('is-open')) {
+              self.closeUnsavedPrompt();
+            }
+          });
+        },
+
+        init: function () {
+          syncHeaderIdentity();
+          renderProfileView();
+          seedEditFormFromState();
+          renderStatsView();
+          renderThemeView();
+          applyThemeSettings();
+          applyLanguagePack();
+          this.bindEvents();
+          this.requestRoute(window.location.hash, true);
+        }
+      };
+
+      function attachEvents() {
         searchInput.addEventListener('input', function () {
           state.query = normalize(searchInput.value.trim());
+
+          if (FeedFilters.isInitialized) {
+            FeedFilters.applyFilter(FeedFilters.current, false);
+            return;
+          }
+
           renderFeed();
         });
 
@@ -8822,6 +12448,7 @@
         HeaderModule.init();
         ChronoTimeline.init();
         ThreadModal.init();
+        AppRouter.init();
         attachEvents();
         AutocompleteSystem.init();
         autoExpandComposer();
@@ -8831,6 +12458,7 @@
           feedSkeleton.style.display = 'none';
           feedList.classList.remove('hidden');
           renderFeed({ withStagger: true });
+          FeedFilters.init();
         }, 800);
       }
 
@@ -8839,5 +12467,85 @@
   </script>
 </body>
 </html>
+
+          if (unsavedOverlay) {
+            unsavedOverlay.addEventListener('click', function (event) {
+              if (event.target === unsavedOverlay) {
+                self.closeUnsavedPrompt();
+              }
+            });
+          }
+
+          document.addEventListener('keydown', function (event) {
+            if (event.key !== 'Escape') {
+              return;
+            }
+
+            if (miniModalOverlay && miniModalOverlay.classList.contains('is-open')) {
+              closeMiniModal();
+            }
+
+            if (unsavedOverlay && unsavedOverlay.classList.contains('is-open')) {
+              self.closeUnsavedPrompt();
+            }
+          });
+        },
+
+        init: function () {
+          syncHeaderIdentity();
+          renderProfileView();
+          seedEditFormFromState();
+          renderStatsView();
+          renderThemeView();
+          applyThemeSettings();
+          applyLanguagePack();
+          this.bindEvents();
+          this.requestRoute(window.location.hash, true);
+        }
+      };
+
+      function attachEvents() {
+        searchInput.addEventListener('input', function () {
+          state.query = normalize(searchInput.value.trim());
+
+          if (FeedFilters.isInitialized) {
+            FeedFilters.applyFilter(FeedFilters.current, false);
+            return;
+          }
+
+          renderFeed();
+        });
+
+        composer.addEventListener('input', function () {
+          autoExpandComposer();
+          updatePublishState();
+        });
+
+        publishBtn.addEventListener('click', addNewPost);
+        feedList.addEventListener('click', onPostActionClick);
+      }
+
+      function boot() {
+        safeIconRefresh();
+        HeaderModule.init();
+        ChronoTimeline.init();
+        ThreadModal.init();
+        AppRouter.init();
+        attachEvents();
+        AutocompleteSystem.init();
+        autoExpandComposer();
+        updatePublishState();
+
+        setTimeout(function () {
+          feedSkeleton.style.display = 'none';
+          feedList.classList.remove('hidden');
+          renderFeed({ withStagger: true });
+          FeedFilters.init();
+        }, 800);
+      }
+
+      document.addEventListener('DOMContentLoaded', boot);
+    })();
+  </script>
 </body>
 </html>
