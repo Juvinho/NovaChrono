@@ -1,0 +1,183 @@
+.thread-back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 0;
+      background: transparent;
+      color: var(--color-text);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 8px;
+      padding: 6px 10px;
+      transition: background 150ms ease;
+      font-family: var(--font-display);
+    }
+
+.thread-back-btn:hover {
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+.thread-back-btn i,
+    .thread-back-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+.thread-share-btn:hover {
+      color: var(--color-text);
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+.thread-share-btn i,
+    .thread-share-btn svg {
+      width: 17px;
+      height: 17px;
+    }
+
+.thread-parent-box {
+      padding: 16px 16px 0;
+      display: flex;
+      gap: 12px;
+      cursor: pointer;
+      transition: opacity 150ms ease;
+    }
+
+.thread-parent-box:hover {
+      opacity: 0.75;
+    }
+
+.thread-parent-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      object-fit: cover;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+.thread-parent-line {
+      width: 2px;
+      background: rgba(255, 255, 255, 0.12);
+      height: 62px;
+      border-radius: 99px;
+    }
+
+.thread-parent-head {
+      font-size: 13px;
+      color: var(--color-text-faint);
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+.thread-parent-head .handle {
+      color: var(--color-text);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+.thread-parent-text {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: 14px;
+      line-height: 1.45;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+.thread-main-post {
+      padding: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+.thread-main-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+.thread-main-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      border: 2px solid rgba(124, 90, 240, 0.4);
+      object-fit: cover;
+      flex-shrink: 0;
+      background: #101325;
+    }
+
+.thread-main-user-line {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--color-text);
+    }
+
+.thread-display-name {
+      font-size: 13px;
+      color: var(--color-text-muted);
+    }
+
+.thread-follow-btn {
+      margin-left: auto;
+      border-radius: 999px;
+      border: 0;
+      background: var(--color-primary);
+      color: #fff;
+      padding: 6px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 150ms ease;
+      font-family: var(--font-display);
+      white-space: nowrap;
+    }
+
+.thread-follow-btn:hover {
+      background: var(--color-primary-hover);
+    }
+
+.thread-follow-btn.is-following {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: var(--color-text-muted);
+    }
+
+.thread-follow-btn.is-following:hover {
+      border-color: rgba(255, 75, 90, 0.5);
+      color: #ff4d6d;
+      background: rgba(255, 77, 109, 0.08);
+    }
+
+.thread-main-text {
+      margin: 0 0 14px;
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--color-text);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+.thread-main-text a {
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+.thread-main-text .thread-hashtag {
+      color: var(--color-primary);
+    }
+
+.thread-main-text .thread-mention {
+      color: var(--color-accent-teal);
+    }
+
+.thread-main-text a:hover {
+      text-decoration: underline;
+    }

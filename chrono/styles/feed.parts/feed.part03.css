@@ -1,0 +1,107 @@
+.feed-empty-state {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 14px;
+      padding: 24px;
+      text-align: center;
+      margin-top: 12px;
+      color: var(--color-text-muted);
+      display: grid;
+      gap: 8px;
+      justify-items: center;
+    }
+
+.feed-empty-state i,
+    .feed-empty-state svg {
+      width: 20px;
+      height: 20px;
+      color: var(--color-text-faint);
+    }
+
+.feed-empty-title {
+      margin: 0;
+      font-size: 15px;
+      color: var(--color-text);
+      font-weight: 700;
+      font-family: var(--font-display);
+    }
+
+.feed-empty-text {
+      margin: 0;
+      font-size: 13px;
+      color: var(--color-text-muted);
+      line-height: 1.45;
+    }
+
+.feed-day-banner {
+      margin: 0 0 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(124, 90, 240, 0.25);
+      background: rgba(124, 90, 240, 0.12);
+      color: var(--color-text-muted);
+      font-size: 13px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      animation: feedBannerIn 250ms ease;
+    }
+
+.feed-day-banner .close-banner {
+      border: 0;
+      background: transparent;
+      color: var(--color-text-muted);
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 1;
+      border-radius: 6px;
+    }
+
+.feed-day-banner .close-banner:hover {
+      color: var(--color-text);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+.thread-main-user-line .verified-dot {
+      width: 8px;
+      height: 8px;
+    }
+
+.thread-action-repost:hover {
+      background: rgba(0, 196, 204, 0.1);
+      color: #00c4cc;
+    }
+
+.thread-action-bookmark:hover {
+      background: rgba(124, 90, 240, 0.08);
+      color: #7c5af0;
+    }
+
+.thread-action-btn.is-active.thread-action-bookmark {
+      color: #7c5af0;
+    }
+
+.thread-action-btn.is-active.thread-action-bookmark svg {
+      fill: currentColor;
+      stroke: currentColor;
+    }
+
+.thread-action-btn.is-active.thread-action-repost {
+      color: #00c4cc;
+    }
+
+.thread-action-btn.bookmark-pop {
+      animation: threadBookmarkPop 250ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+.thread-action-btn.repost-spin svg {
+      animation: threadRepostSpin 300ms ease;
+    }
+
+.poll-card-interactive {
+      cursor: pointer;
+      position: relative;
+    }

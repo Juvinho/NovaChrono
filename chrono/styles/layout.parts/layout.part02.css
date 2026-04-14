@@ -1,0 +1,185 @@
+.columns {
+      max-width: 1340px;
+      margin: 0 auto;
+      padding: 14px 16px 28px;
+      display: grid;
+      grid-template-columns: 260px minmax(0, 640px) 280px;
+      justify-content: center;
+      gap: 16px;
+    }
+
+.left-sidebar,
+    .right-sidebar {
+      position: sticky;
+      top: var(--header-h);
+      max-height: calc(100vh - 124px);
+      overflow-y: auto;
+      padding-right: 2px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
+    }
+
+.left-sidebar::-webkit-scrollbar,
+    .right-sidebar::-webkit-scrollbar {
+      width: 7px;
+    }
+
+.left-sidebar::-webkit-scrollbar-thumb,
+    .right-sidebar::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+    }
+
+.popular-post {
+      padding: 12px;
+      display: grid;
+      gap: 8px;
+    }
+
+.mini-poll {
+      display: grid;
+      gap: 5px;
+    }
+
+.tabs-row {
+      position: sticky;
+      top: var(--header-h);
+      z-index: 90;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px;
+      margin-bottom: 12px;
+      border: 1px solid var(--color-border);
+      border-bottom-color: var(--color-divider);
+      border-radius: 14px;
+      background: rgba(15, 17, 32, 0.94);
+      backdrop-filter: blur(10px);
+    }
+
+#app-view-container {
+      position: relative;
+      min-height: 420px;
+    }
+
+.app-view {
+      display: none;
+      opacity: 0;
+      transform: translateY(8px);
+      pointer-events: none;
+    }
+
+.app-view.is-active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+.app-view.is-entering {
+      animation: appViewIn 180ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+.app-view.is-leaving {
+      animation: appViewOut 140ms ease forwards;
+    }
+
+body.layout-internal .left-sidebar,
+    body.layout-internal .right-sidebar {
+      display: none;
+    }
+
+body.layout-internal .columns {
+      grid-template-columns: minmax(0, 900px);
+      max-width: 980px;
+    }
+
+.view-head {
+      padding: 20px 22px 0;
+      display: grid;
+      gap: 5px;
+    }
+
+.profile-info-card {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 18px;
+      padding: 16px 24px 22px;
+      background: rgba(10, 11, 20, 0.96);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 0;
+      border-radius: 0 0 20px 20px;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.34);
+      position: relative;
+    }
+
+.profile-main-info {
+      min-width: 0;
+      display: grid;
+      gap: 10px;
+      padding-top: 2px;
+    }
+
+.profile-meta-list {
+      margin: 2px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 8px;
+      color: var(--color-text-muted);
+      font-size: 13px;
+    }
+
+.profile-counter {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 10px;
+      padding: 8px 11px;
+      min-width: 106px;
+      display: grid;
+      gap: 2px;
+      cursor: pointer;
+      transition: border-color 150ms ease, background 150ms ease;
+    }
+
+.profile-side-actions {
+      display: grid;
+      gap: 9px;
+      justify-items: end;
+      align-content: start;
+      min-width: 172px;
+      padding-top: 2px;
+    }
+
+.profile-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      min-height: 52px;
+    }
+
+.profile-post-stream {
+      display: grid;
+      gap: 12px;
+    }
+
+.profile-media-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+.profile-media-body {
+      padding: 10px;
+      display: grid;
+      gap: 6px;
+    }
+
+.profile-temporal-card {
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.02);
+      padding: 14px;
+      display: grid;
+      gap: 12px;
+    }

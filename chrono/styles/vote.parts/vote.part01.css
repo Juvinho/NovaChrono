@@ -1,0 +1,188 @@
+.vote-cluster {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.03);
+      padding: 4px 6px;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+.vote-cluster::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      box-shadow: inset 0 0 0 1px rgba(124, 90, 240, 0.06);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 160ms ease;
+    }
+
+.vote-cluster:hover::after {
+      opacity: 1;
+    }
+
+.vote-cluster.vote-cluster-flash {
+      animation: voteClusterFlash 280ms ease;
+    }
+
+.vote-quick {
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      border: 0;
+      background: transparent;
+      color: var(--color-text-faint);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 140ms ease, color 140ms ease, transform 140ms ease;
+      position: relative;
+      z-index: 1;
+    }
+
+.vote-quick i,
+    .vote-quick svg {
+      width: 14px;
+      height: 14px;
+    }
+
+.vote-quick:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--color-text);
+      transform: translateY(-1px);
+    }
+
+.vote-quick.is-active.vote-up { color: #ff8a3d; }
+
+.vote-quick.is-active.vote-stable { color: #7c5af0; }
+
+.vote-quick.is-active.vote-down { color: #4da3ff; }
+
+.vote-center-hit {
+      border: 0;
+      background: transparent;
+      color: var(--color-text-muted);
+      border-radius: 999px;
+      min-width: 56px;
+      height: 24px;
+      padding: 0 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: background 140ms ease, color 140ms ease;
+      position: relative;
+      z-index: 1;
+    }
+
+.vote-center-hit:hover {
+      background: rgba(255, 255, 255, 0.07);
+      color: var(--color-text);
+    }
+
+.vote-score-value {
+      font-size: 12px;
+      font-weight: 700;
+      font-family: var(--font-display);
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+      transition: color 160ms ease;
+    }
+
+.vote-score-value.positive { color: #ff8a3d; }
+
+.vote-score-value.negative { color: #4da3ff; }
+
+.vote-score-value.neutral { color: var(--color-text-muted); }
+
+.vote-score-label {
+      font-size: 10px;
+      color: var(--color-text-faint);
+      letter-spacing: 0.02em;
+    }
+
+.vote-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 900;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 180ms ease;
+    }
+
+.vote-modal-overlay.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+.vote-modal-overlay.is-closing {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 140ms ease;
+    }
+
+.vote-modal-overlay.is-hidden {
+      display: none;
+    }
+
+.vote-modal {
+      width: min(460px, calc(100vw - 24px));
+      max-width: 460px;
+      background: rgba(10, 11, 20, 0.98);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(124, 90, 240, 0.12);
+      overflow: hidden;
+      transform: translateY(18px) scale(0.96);
+      opacity: 0;
+      transition: transform 240ms cubic-bezier(0.34, 1.56, 0.64, 1), opacity 240ms cubic-bezier(0.34, 1.56, 0.64, 1);
+      max-height: min(85vh, 720px);
+      display: flex;
+      flex-direction: column;
+    }
+
+.vote-modal-overlay.is-open .vote-modal {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+
+.vote-modal-overlay.is-closing .vote-modal {
+      transform: translateY(10px) scale(0.98);
+      opacity: 0;
+      transition: transform 160ms ease-in, opacity 160ms ease-in;
+    }
+
+.vote-modal-header {
+      padding: 16px 18px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+.vote-modal-title {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--color-text);
+      font-family: var(--font-display);
+    }
+
+.vote-modal-subtitle {
+      margin: 2px 0 0;
+      font-size: 12px;
+      color: var(--color-text-muted);
+    }

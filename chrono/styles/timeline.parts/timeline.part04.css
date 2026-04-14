@@ -1,0 +1,186 @@
+.calendar-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      margin-bottom: 6px;
+    }
+
+.calendar-weekdays span {
+      text-align: center;
+      font-size: 10px;
+      color: var(--color-text-faint);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+.calendar-jump-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      gap: 6px;
+      margin-bottom: 8px;
+      align-items: center;
+    }
+
+.calendar-jump-input {
+      height: 30px;
+      border-radius: 8px;
+      border: 1px solid var(--color-border);
+      background: var(--color-surface-2);
+      color: var(--color-text);
+      font-size: 12px;
+      padding: 0 8px;
+      min-width: 0;
+    }
+
+.calendar-jump-input::placeholder {
+      color: var(--color-text-faint);
+    }
+
+.calendar-jump-input.is-invalid {
+      border-color: rgba(255, 92, 96, 0.75);
+      box-shadow: 0 0 0 1px rgba(255, 92, 96, 0.25);
+    }
+
+.calendar-jump-btn {
+      height: 30px;
+      border-radius: 8px;
+      border: 1px solid rgba(124, 90, 240, 0.35);
+      background: rgba(124, 90, 240, 0.12);
+      color: #cfc4ff;
+      padding: 0 10px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
+      font-family: var(--font-display);
+    }
+
+.calendar-jump-btn:hover {
+      background: rgba(124, 90, 240, 0.24);
+      border-color: rgba(124, 90, 240, 0.55);
+      color: #fff;
+    }
+
+.calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+
+.calendar-day {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--color-text-muted);
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      transition: background 150ms ease, color 150ms ease, border-color 150ms ease;
+    }
+
+.calendar-day:hover {
+      background: rgba(255, 255, 255, 0.07);
+      color: var(--color-text);
+    }
+
+.calendar-day.has-activity::before {
+      content: '';
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      border-radius: 999px;
+      background: var(--color-primary);
+      bottom: 4px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+.calendar-day.today {
+      background: var(--color-primary);
+      color: #fff;
+      font-weight: 800;
+    }
+
+.calendar-day.today::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 8px;
+      animation: today-pulse 2s infinite;
+    }
+
+.calendar-day.selected {
+      background: rgba(124, 90, 240, 0.25);
+      border-color: rgba(124, 90, 240, 0.5);
+      color: #9370ff;
+    }
+
+.calendar-day.future {
+      color: var(--color-text-faint);
+    }
+
+.calendar-day.outside-month {
+      opacity: 0.3;
+    }
+
+.calendar-day.disabled {
+      cursor: default;
+      opacity: 0.2;
+    }
+
+.calendar-popup-footer {
+      margin-top: 10px;
+      text-align: center;
+      font-size: 10px;
+      color: var(--color-text-faint);
+    }
+
+.feed-list.timeline-react {
+      animation: feedReact 400ms ease;
+    }
+
+.post-card.timeline-new-highlight {
+      background: rgba(124, 90, 240, 0.08);
+      transition: background 2s ease;
+    }
+
+.timeline-toast-host {
+      position: fixed;
+      top: 64px;
+      right: 16px;
+      z-index: 1000;
+      display: grid;
+      gap: 10px;
+      pointer-events: none;
+    }
+
+.timeline-toast {
+      min-width: 280px;
+      max-width: 340px;
+      border-radius: 12px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(15, 17, 32, 0.96);
+      border: 1px solid rgba(124, 90, 240, 0.3);
+      border-left: 3px solid var(--color-primary);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      transform: translateX(120%);
+      opacity: 0;
+      pointer-events: auto;
+      cursor: pointer;
+    }
+
+.timeline-toast.show {
+      animation: toastIn 300ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+.timeline-toast.hide {
+      animation: toastOut 250ms ease-in forwards;
+    }

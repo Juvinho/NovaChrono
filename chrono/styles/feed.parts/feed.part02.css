@@ -1,0 +1,192 @@
+.post-card {
+      border: 1px solid var(--color-border);
+      background: var(--color-surface);
+      border-radius: 14px;
+      padding: 13px;
+      display: grid;
+      grid-template-columns: 40px minmax(0, 1fr);
+      gap: 11px;
+      transition: border-color 0.2s ease, background 0.2s ease, opacity 180ms ease, transform 180ms ease, filter 180ms ease;
+      position: relative;
+      opacity: 1;
+      transform: translateY(0);
+      cursor: pointer;
+    }
+
+.post-card.is-hiding {
+      opacity: 0;
+      transform: translateY(8px);
+      filter: blur(0.25px);
+      pointer-events: none;
+    }
+
+.post-card.is-hidden {
+      display: none !important;
+    }
+
+.post-card.is-showing {
+      opacity: 0;
+      transform: translateY(8px);
+      filter: blur(0.25px);
+      pointer-events: none;
+    }
+
+.post-card.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+      filter: none;
+      pointer-events: auto;
+    }
+
+.post-card.search-match {
+      border-color: rgba(124, 90, 240, 0.42);
+      background: linear-gradient(180deg, rgba(124, 90, 240, 0.08), rgba(15, 17, 32, 0.96));
+    }
+
+.post-card.stagger-in {
+      opacity: 0;
+      transform: translateY(10px);
+      animation: postReveal 420ms ease forwards;
+      animation-delay: var(--stagger, 0ms);
+    }
+
+.post-card.post-new {
+      overflow: hidden;
+      animation: postSlideDown 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+.post-avatar-wrap {
+      position: relative;
+      width: 40px;
+    }
+
+.post-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      object-fit: cover;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      position: relative;
+      z-index: 1;
+      background: #101325;
+    }
+
+.post-main {
+      min-width: 0;
+    }
+
+.post-head {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--color-text-muted);
+    }
+
+.post-handle {
+      font-weight: 600;
+      color: var(--color-text);
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+.post-handle:hover {
+      text-decoration: underline;
+    }
+
+.verified-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #ff7a50, #ff4d4f);
+      box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.18);
+      display: inline-block;
+      transform: translateY(-1px);
+    }
+
+.post-repost-info {
+      margin-top: 2px;
+      margin-bottom: 5px;
+      font-size: 11px;
+      color: var(--color-text-faint);
+    }
+
+.post-text {
+      margin: 0;
+      font-size: 14px;
+      color: var(--color-text);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+.post-image {
+      margin-top: 10px;
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      display: block;
+      max-height: 320px;
+      object-fit: cover;
+      background: var(--color-surface-2);
+    }
+
+.poll-card {
+      margin-top: 10px;
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      padding: 10px;
+      display: grid;
+      gap: 8px;
+      background: rgba(22, 25, 41, 0.35);
+    }
+
+.nested-repost {
+      margin-top: 10px;
+      border: 1px solid var(--color-border);
+      background: rgba(22, 25, 41, 0.28);
+      border-radius: 12px;
+      padding: 10px;
+      display: grid;
+      gap: 6px;
+    }
+
+.thread-note {
+      margin-top: 7px;
+      font-size: 12px;
+      color: var(--color-text-muted);
+      border-left: 2px solid rgba(124, 90, 240, 0.55);
+      padding-left: 8px;
+    }
+
+.post-actions {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 4px 12px;
+    }
+
+.post-actions-main {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 4px 12px;
+      min-width: 0;
+    }
+
+.action-repost:hover,
+    .action-repost.active {
+      color: var(--color-accent-teal);
+    }
+
+.action-bookmark:hover,
+    .action-bookmark.active {
+      color: var(--color-primary);
+    }
+
+.action-bookmark.active svg {
+      fill: currentColor;
+      stroke: currentColor;
+    }

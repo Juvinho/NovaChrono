@@ -1,0 +1,182 @@
+.bg-particles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+.bg-particles span {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+.bg-particles span:nth-child(1) { top: 12%; left: 14%; }
+
+.bg-particles span:nth-child(2) { top: 22%; left: 65%; }
+
+.bg-particles span:nth-child(3) { top: 36%; left: 31%; }
+
+.bg-particles span:nth-child(4) { top: 52%; left: 86%; }
+
+.bg-particles span:nth-child(5) { top: 62%; left: 44%; }
+
+.bg-particles span:nth-child(6) { top: 74%; left: 11%; }
+
+.bg-particles span:nth-child(7) { top: 80%; left: 70%; }
+
+.bg-particles span:nth-child(8) { top: 28%; left: 90%; }
+
+.brand-link {
+      display: inline-flex;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+.chrono-logo {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      text-decoration: none;
+      flex-shrink: 0;
+      border-radius: 12px;
+    }
+
+.chrono-logo-stack {
+      --chrono-logo-bg: none;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      isolation: isolate;
+      line-height: 0;
+    }
+
+.chrono-logo-img {
+      display: block;
+      height: 38px;
+      width: auto;
+      object-fit: contain;
+      filter: brightness(1.05) contrast(1.05);
+      transition:
+        transform 180ms ease,
+        filter 180ms ease,
+        opacity 180ms ease;
+      user-select: none;
+      pointer-events: none;
+      will-change: transform, filter;
+    }
+
+.chrono-logo-glitch {
+      position: absolute;
+      inset: 0;
+      background-image: var(--chrono-logo-bg);
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+      opacity: 0;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      will-change: transform, opacity, clip-path;
+    }
+
+.chrono-logo-glitch--red {
+      filter: drop-shadow(-1px 0 0 rgba(255, 51, 90, 0.9));
+    }
+
+.chrono-logo-glitch--cyan {
+      filter: drop-shadow(1px 0 0 rgba(0, 216, 255, 0.9));
+    }
+
+.chrono-logo.is-route-active .chrono-logo-img {
+      animation: chronoLogoPulse 2.8s ease-in-out infinite;
+    }
+
+.chrono-logo.is-glitching .chrono-logo-glitch--red {
+      animation: chronoLogoGlitch 420ms steps(2, end);
+    }
+
+.chrono-logo.is-glitching .chrono-logo-glitch--cyan {
+      animation: chronoLogoGlitch 420ms steps(2, end) reverse;
+    }
+
+@media (max-width: 768px) {
+      .chrono-logo-img {
+        height: 30px;
+      }
+
+      .chrono-logo.is-glitching .chrono-logo-glitch--red,
+      .chrono-logo.is-glitching .chrono-logo-glitch--cyan {
+        animation-duration: 360ms;
+      }
+    }
+
+.search-slot {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      min-width: 0;
+      padding: 0 14px;
+    }
+
+.search-input {
+      display: block;
+      width: 100%;
+      height: 36px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 20px;
+      padding: 0 40px 0 16px;
+      font-size: 13px;
+      color: var(--color-text);
+      outline: none;
+      transition: border-color 150ms ease, background 150ms ease;
+    }
+
+.search-input::placeholder {
+      color: var(--color-text-faint);
+    }
+
+.search-input:focus {
+      background: rgba(255, 255, 255, 0.10);
+      border-color: rgba(124, 90, 240, 0.5);
+    }
+
+.search-icon-btn {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: var(--color-text-muted);
+      padding: 0;
+      width: 16px;
+      height: 16px;
+      pointer-events: none;
+    }
+
+.search-icon-btn svg {
+      width: 15px;
+      height: 15px;
+      stroke-width: 2;
+      display: block;
+    }
+
+.search-icon-btn i {
+      width: 15px;
+      height: 15px;
+      display: block;
+    }
+
+.autocomplete-highlight-wrap {
+      position: relative;
+      width: 100%;
+    }

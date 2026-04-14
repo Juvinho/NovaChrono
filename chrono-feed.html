@@ -8224,7 +8224,7 @@
       var profileMetaCordaoEl = document.getElementById('profileMetaCordao');
       var profileAvatarLarge = document.getElementById('profileAvatarLarge');
       var profileCoverEl = document.getElementById('profileCover');
-      var profilePostsList = document.getElementById('profilePostsList');
+      var profileTabPanels = document.getElementById('profileTabPanels');
       var profileTabs = document.getElementById('profileTabs');
 
       var profileViewButton = document.getElementById('profileViewButton');
@@ -14160,27 +14160,116 @@
         return ownPosts;
       }
 
-      function renderProfilePosts() {
-        if (!profilePostsList) {
-          return;
+      function renderProfileTabContent(tab) {
+        var posts = getProfilePostsForTab(tab);
+
+        if (tab === 'media') {
+          var mediaPosts = posts.filter(function (p) { return !!p.image; });
+          if (!mediaPosts.length) {
+            return '<div class="profile-tab-panel"><p style="color:var(--color-text-muted);font-size:13px;padding:8px 0">Nenhuma midia publicada.</p></div>';
+          }
+          return (
+            '<div class="profile-tab-panel">' +
+              '<div class="profile-media-grid">' +
+                mediaPosts.slice(0, 12).map(function (post) {
+                  return (
+                    '<article class="profile-media-item" data-profile-post-id="' + escapeHtml(post.id) + '">' +
+                      '<img src="' + post.image + '" alt="Midia de ' + escapeHtml(post.user) + '" loading="lazy" style="width:100%;display:block;aspect-ratio:16/9;object-fit:cover">' +
+                    '</article>'
+                  );
+                }).join('') +
+              '</div>' +
+            '</div>'
+          );
         }
 
-        var posts = getProfilePostsForTab(AppState.profileTab).slice(0, 8);
+        if (tab === 'temporal') {
+          return (
+            '<div class="profile-tab-panel">' +
+              '<div class="profile-temporal-card">' +
+                '<h3 class="profile-temporal-title">Busca Temporal</h3>' +
+                '<div class="profile-temporal-row">' +
+                  '<input id="profileTemporalDate" class="profile-temporal-input" type="month" aria-label="Selecione ano e mes">' +
+                  '<button id="profileTemporalGo" class="profile-temporal-go" type="button">Buscar</button>' +
+                '</div>' +
+                '<div id="profileTemporalResults" class="profile-temporal-results"></div>' +
+              '</div>' +
+            '</div>'
+          );
+        }
 
+        // posts tab (default)
         if (!posts.length) {
-          profilePostsList.innerHTML = '<article class="top-post-item"><p>Nenhum post para este filtro ainda.</p></article>';
+          return '<div class="profile-tab-panel"><p style="color:var(--color-text-muted);font-size:13px;padding:8px 0">Nenhum post ainda.</p></div>';
+        }
+
+        return (
+          '<div class="profile-tab-panel">' +
+            '<div class="profile-post-stream">' +
+              posts.slice(0, 8).map(function (post) {
+                return (
+                  '<article class="top-post-item" data-profile-post-id="' + escapeHtml(post.id) + '">' +
+                    '<p>' + escapeHtml(post.text || '') + '</p>' +
+                    '<div class="top-post-metrics">' +
+                      '<span>' + (post.metrics.comments || 0) + ' respostas</span>' +
+                      '<span>' + (post.metrics.reposts || 0) + ' ecos</span>' +
+                    '</div>' +
+                  '</article>'
+                );
+              }).join('') +
+            '</div>' +
+          '</div>'
+        );
+      }
+
+      function renderProfilePosts() {
+        if (!profileTabPanels) {
           return;
         }
 
-        profilePostsList.innerHTML = posts.map(function (post) {
+        var tab = AppState.profileTab || 'posts';
+        profileTabPanels.classList.add('is-switching');
+
+        setTimeout(function () {
+          profileTabPanels.innerHTML = renderProfileTabContent(tab);
+          profileTabPanels.classList.remove('is-switching');
+          safeIconRefresh();
+        }, 80);
+      }
+
+      function runTemporalSearch() {
+        var dateInput = profileTabPanels ? profileTabPanels.querySelector('#profileTemporalDate') : null;
+        var resultsEl = profileTabPanels ? profileTabPanels.querySelector('#profileTemporalResults') : null;
+
+        if (!dateInput || !resultsEl) {
+          return;
+        }
+
+        var value = dateInput.value;
+        if (!value) {
+          resultsEl.innerHTML = '<p style="color:var(--color-text-muted);font-size:13px">Selecione um periodo para buscar.</p>';
+          return;
+        }
+
+        var parts = value.split('-');
+        var year = parseInt(parts[0], 10);
+        var month = parseInt(parts[1], 10);
+
+        var ownPosts = getProfilePostsForTab('posts');
+        var filtered = ownPosts.filter(function (post) {
+          var d = new Date(post.createdAt || 0);
+          return d.getFullYear() === year && (d.getMonth() + 1) === month;
+        });
+
+        if (!filtered.length) {
+          resultsEl.innerHTML = '<p style="color:var(--color-text-muted);font-size:13px">Nenhum post encontrado neste periodo.</p>';
+          return;
+        }
+
+        resultsEl.innerHTML = filtered.map(function (post) {
           return (
             '<article class="top-post-item" data-profile-post-id="' + escapeHtml(post.id) + '">' +
               '<p>' + escapeHtml(post.text || '') + '</p>' +
-              '<div class="top-post-metrics">' +
-                '<span>­ƒÆ¼ ' + (post.metrics.comments || 0) + '</span>' +
-                '<span>­ƒöü ' + (post.metrics.reposts || 0) + '</span>' +
-                '<span>ÔÜí ' + (post.metrics.likes || 0) + '</span>' +
-              '</div>' +
             '</article>'
           );
         }).join('');
