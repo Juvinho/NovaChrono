@@ -11,28 +11,29 @@ bindEvents: function () {
           if (profileViewButton) {
             profileViewButton.addEventListener('click', function (event) {
               event.preventDefault();
-              self.navigate('profile');
+              self.navigate('perfil/' + getCurrentHandle());
             });
           }
 
           if (profileEditButton) {
             profileEditButton.addEventListener('click', function (event) {
               event.preventDefault();
-              self.navigate('edit-profile');
+              self.navigate('configuracoes/conta');
             });
           }
 
           if (profileStatsButton) {
             profileStatsButton.addEventListener('click', function (event) {
               event.preventDefault();
-              self.navigate('stats');
+              AppState.profileTab = 'posts';
+              self.navigate('perfil/' + getCurrentHandle());
             });
           }
 
           if (languageSettingsButton) {
             languageSettingsButton.addEventListener('click', function (event) {
               event.preventDefault();
-              self.navigate('settings/language');
+              self.navigate('configuracoes/aparencia');
             });
           }
 

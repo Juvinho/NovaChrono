@@ -137,7 +137,7 @@ openSettingsOverlay: function () {
           this.closePanel();
 
           if (AppRouter && typeof AppRouter.navigate === 'function') {
-            AppRouter.navigate('settings/theme');
+            AppRouter.navigate('configuracoes');
             return;
           }
 
@@ -154,7 +154,7 @@ closeSettingsOverlay: function () {
           this.settingsOverlay.classList.remove('is-open');
           this.settingsOverlay.setAttribute('aria-hidden', 'true');
 
-          if (window.location.hash === '#settings') {
+          if (String(window.location.hash || '').indexOf('#configuracoes') === 0) {
             if (window.history && typeof window.history.replaceState === 'function') {
               window.history.replaceState(null, '', window.location.pathname + window.location.search);
             } else {

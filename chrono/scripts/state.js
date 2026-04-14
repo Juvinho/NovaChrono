@@ -288,3 +288,7 @@ var postStore = [
       var cordaoModalUserName = document.getElementById('cordaoModalUserName');
       var cordaoModalUserHandle = document.getElementById('cordaoModalUserHandle');
       var appToastHost = document.getElementById('appToastHost');
+
+      postStore.forEach(function (post, index) {
+        applyPostMetadata(post, 'initial', index);
+      });

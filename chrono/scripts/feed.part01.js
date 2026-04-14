@@ -215,6 +215,14 @@ function toggleMetric(post, action) {
 function openProfileRouteFromHandle(handle) {
         var profileHandle = String(handle || '@usuario').trim() || '@usuario';
 
+        if (typeof window !== 'undefined') {
+          window.__chronoLastProfileHandle = profileHandle;
+        }
+
+        if (typeof AppState !== 'undefined' && AppState && typeof AppState === 'object') {
+          AppState.lastProfileHandle = profileHandle;
+        }
+
         if (ThreadModal && ThreadModal.isOpen && typeof ThreadModal.close === 'function') {
           ThreadModal.close();
         }

@@ -35,6 +35,10 @@ function boot() {
           CordaoModal.init();
         }
 
+        if (typeof DMPage !== 'undefined' && DMPage && typeof DMPage.init === 'function') {
+          DMPage.init();
+        }
+
         if (typeof AppRouter !== 'undefined' && AppRouter && typeof AppRouter.init === 'function') {
           AppRouter.init();
         }
@@ -42,6 +46,10 @@ function boot() {
         if (typeof HeaderModule !== 'undefined' && HeaderModule && typeof HeaderModule.init === 'function') {
           HeaderModule.init();
         }
+        
+          if (typeof SettingsPage !== 'undefined' && SettingsPage && typeof SettingsPage.init === 'function') {
+            SettingsPage.init();
+          }
 
         if (typeof ChronoTimeline !== 'undefined' && ChronoTimeline && typeof ChronoTimeline.init === 'function') {
           ChronoTimeline.init();

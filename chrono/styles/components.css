@@ -12,3 +12,16 @@
 @import url('./components.parts/components.part12.css');
 @import url('./components.parts/components.part13.css');
 @import url('./components.parts/components.part14.css');
+
+.sr-only {
+	position: absolute;
+	left: -9999px;
+}
+
+.mini-poll-fill-38 {
+	width: 38%;
+}
+
+.mini-poll-fill-24 {
+	width: 24%;
+}

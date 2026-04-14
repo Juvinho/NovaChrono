@@ -14,7 +14,11 @@ routeToView: function (route) {
             return 'cordao';
           }
 
-          if (normalized === 'profile') {
+          if (normalized === 'mensagens' || normalized.indexOf('mensagens/') === 0) {
+            return 'mensagens';
+          }
+
+          if (normalized === 'profile' || normalized === 'perfil' || normalized.indexOf('perfil/') === 0) {
             return 'profile';
           }
 
@@ -26,15 +30,15 @@ routeToView: function (route) {
             return 'stats';
           }
 
-          if (normalized === 'settings/theme') {
-            return 'theme';
-          }
-
-          if (normalized === 'settings/language') {
-            return 'language';
+          if (normalized === 'configuracoes' || normalized.indexOf('configuracoes/') === 0 || normalized === 'settings' || normalized.indexOf('settings/') === 0) {
+            return 'settings';
           }
 
           if (normalized === 'signed-out') {
+            return 'signed-out';
+          }
+
+          if (normalized === 'login') {
             return 'signed-out';
           }
 
@@ -87,6 +91,7 @@ setActiveView: function (viewName) {
 applyLayout: function (viewName) {
           var isInternal = viewName !== 'feed';
           document.body.classList.toggle('layout-internal', isInternal);
+          document.body.classList.toggle('layout-settings', viewName === 'settings');
           document.body.classList.toggle('layout-hide-timeline', viewName === 'signed-out');
         },
 closeUnsavedPrompt: function () {
@@ -145,8 +150,19 @@ requestRoute: function (route, force) {
             SidebarCordoes.setActiveSlug('');
           }
 
+          if (nextView === 'mensagens' && typeof DMPage !== 'undefined' && DMPage && typeof DMPage.handleRoute === 'function') {
+            DMPage.handleRoute(normalized);
+          }
+
           if (nextView === 'profile') {
             renderProfileView();
+          }
+
+          if (nextView === 'settings' && typeof SettingsPage !== 'undefined' && SettingsPage && typeof SettingsPage.render === 'function') {
+            var settingsRoute = typeof SettingsPage.parseRoute === 'function'
+              ? SettingsPage.parseRoute(normalized)
+              : { section: 'conta', isRoot: normalized === 'configuracoes' || normalized === 'settings' };
+            SettingsPage.render(settingsRoute.section, settingsRoute.isRoot);
           }
 
           if (nextView === 'edit-profile') {
@@ -185,7 +201,7 @@ performLogout: function () {
 
           setTimeout(function () {
             document.body.classList.remove('logout-fade');
-            self.navigate('signed-out', { replace: true });
+            self.navigate('login', { replace: true });
             showAppToast('Sessao encerrada.');
           }, 220);
         },

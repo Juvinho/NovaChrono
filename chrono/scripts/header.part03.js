@@ -13,21 +13,37 @@ setupLogoutButton: function () {
               setTimeout(function () {
                 self.logoutButton.classList.remove('is-leaving');
               }, 220);
+
+              if (typeof LogoutDialog !== 'undefined' && LogoutDialog && typeof LogoutDialog.open === 'function') {
+                LogoutDialog.open();
+                return;
+              }
+
               self.showLogoutOverlay();
             });
           }
 
           if (this.logoutCancelButton) {
             this.logoutCancelButton.addEventListener('click', function () {
+              if (typeof LogoutDialog !== 'undefined' && LogoutDialog && typeof LogoutDialog.close === 'function') {
+                LogoutDialog.close();
+                return;
+              }
+
               self.hideLogoutOverlay();
             });
           }
 
           if (this.logoutConfirmButton) {
             this.logoutConfirmButton.addEventListener('click', function () {
+              if (typeof LogoutDialog !== 'undefined' && LogoutDialog && typeof LogoutDialog.confirm === 'function') {
+                LogoutDialog.confirm();
+                return;
+              }
+
               self.hideLogoutOverlay();
-              if (AppRouter && typeof AppRouter.performLogout === 'function') {
-                AppRouter.performLogout();
+              if (AppRouter && typeof AppRouter.navigate === 'function') {
+                AppRouter.navigate('login', { replace: true });
               }
             });
           }
@@ -46,12 +62,6 @@ setupOutsideClickClose: function () {
 
             if (self.activePanel === 'notifs') {
               if (!target.closest('#notifButton') && !target.closest('#notifDropdown')) {
-                self.closePanel();
-              }
-            }
-
-            if (self.activePanel === 'profile') {
-              if (!target.closest('#profileButton') && !target.closest('#profileDropdown')) {
                 self.closePanel();
               }
             }
@@ -148,6 +158,11 @@ closePanel: function () {
 
           if (this.headerOverlay && this.activePanel !== 'dms' && this.activePanel !== 'bookmarks') {
             this.headerOverlay.classList.remove('is-visible');
+          }
+
+          if (typeof this._unbindProfileOutside === 'function') {
+            this._unbindProfileOutside();
+            this._unbindProfileOutside = null;
           }
 
           this.activePanel = null;

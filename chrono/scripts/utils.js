@@ -87,10 +87,6 @@ function normalizeAuthorHandle(handle) {
         postEl.setAttribute('data-search-text', getSearchTextForPost(post));
       }
 
-      postStore.forEach(function (post, index) {
-        applyPostMetadata(post, 'initial', index);
-      });
-
       function createPostCardElement(post, index, options) {
         var wrapper = document.createElement('div');
         wrapper.innerHTML = renderPost(post, index || 0, options || {});
@@ -101,6 +97,49 @@ function normalizeAuthorHandle(handle) {
         if (window.lucide && typeof window.lucide.createIcons === 'function') {
           window.lucide.createIcons();
         }
+      }
+
+      function bindClickOutside(element, callback, options) {
+        if (!element || typeof callback !== 'function') {
+          return function () {};
+        }
+
+        var opts = options || {};
+        var ignoreSelectors = Array.isArray(opts.ignoreSelectors) ? opts.ignoreSelectors : [];
+        var active = false;
+
+        requestAnimationFrame(function () {
+          active = true;
+        });
+
+        function handler(event) {
+          if (!active) {
+            return;
+          }
+
+          var target = event.target;
+          if (!target) {
+            return;
+          }
+
+          if (element.contains(target)) {
+            return;
+          }
+
+          for (var i = 0; i < ignoreSelectors.length; i += 1) {
+            if (target.closest(ignoreSelectors[i])) {
+              return;
+            }
+          }
+
+          callback(event);
+        }
+
+        document.addEventListener('pointerdown', handler, true);
+
+        return function unbind() {
+          document.removeEventListener('pointerdown', handler, true);
+        };
       }
 
       function formatMonthPt(date) {

@@ -51,7 +51,7 @@ init: function () {
           this.syncThemeRow();
           this.setupFloatingDropdownPositioning();
 
-          if (window.location.hash === '#settings') {
+          if (String(window.location.hash || '').indexOf('#configuracoes') === 0) {
             this.openSettingsOverlay();
           }
         },

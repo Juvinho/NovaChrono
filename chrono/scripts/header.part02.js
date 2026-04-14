@@ -39,7 +39,11 @@ setupSendButton: function () {
             this.dmButton.addEventListener('click', function (event) {
               event.preventDefault();
               self.sendButtonFlyAnimation();
-              self.openPanel('dms');
+              self.closePanel();
+
+              if (typeof AppRouter !== 'undefined' && AppRouter && typeof AppRouter.navigate === 'function') {
+                AppRouter.navigate('mensagens');
+              }
             });
           }
 
@@ -136,7 +140,7 @@ setupSettingsButton: function () {
               self.settingsRotateAnimation();
               self.closePanel();
               if (AppRouter && typeof AppRouter.navigate === 'function') {
-                AppRouter.navigate('settings/theme');
+                AppRouter.navigate('configuracoes');
               }
             });
           }
@@ -153,7 +157,27 @@ setupProfileButton: function () {
           if (this.profileButton) {
             this.profileButton.addEventListener('click', function (event) {
               event.preventDefault();
+
+              if (self.activePanel === 'profile') {
+                self.closePanel();
+                return;
+              }
+
               self.openPanel('profile');
+
+              if (typeof bindClickOutside === 'function' && self.profileDropdown) {
+                if (typeof self._unbindProfileOutside === 'function') {
+                  self._unbindProfileOutside();
+                }
+
+                self._unbindProfileOutside = bindClickOutside(self.profileDropdown, function () {
+                  if (self.activePanel === 'profile') {
+                    self.closePanel();
+                  }
+                }, {
+                  ignoreSelectors: ['#profileButton']
+                });
+              }
             });
           }
 
@@ -162,7 +186,7 @@ setupProfileButton: function () {
               event.preventDefault();
               self.closePanel();
               if (AppRouter && typeof AppRouter.navigate === 'function') {
-                AppRouter.navigate('settings/theme');
+                AppRouter.navigate('configuracoes/aparencia');
               }
             });
           }
@@ -170,7 +194,12 @@ setupProfileButton: function () {
           if (this.profileLogoutButton) {
             this.profileLogoutButton.addEventListener('click', function (event) {
               event.preventDefault();
-              self.closePanel();
+
+              if (typeof LogoutDialog !== 'undefined' && LogoutDialog && typeof LogoutDialog.open === 'function') {
+                LogoutDialog.open({ keepDropdown: true });
+                return;
+              }
+
               self.showLogoutOverlay();
             });
           }
