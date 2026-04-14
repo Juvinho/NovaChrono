@@ -8768,6 +8768,14 @@
         animatePollBars();
         safeIconRefresh();
         VoteSystem.syncAllCards();
+
+        if (typeof setupPollVoting === 'function') {
+          Array.prototype.slice.call(feedList.querySelectorAll('[data-post-id]')).forEach(function (card) {
+            if (card.querySelector('.poll-card-interactive')) {
+              setupPollVoting(card);
+            }
+          });
+        }
       }
 
       function updateTabButtons() {
@@ -13232,14 +13240,12 @@
           this.following = !!post.following;
           this.actionState = {
             repost: !!post.state.repost,
-            boost: !!post.state.like,
             bookmark: !!post.state.bookmark,
           };
           this.metrics = {
             ecos: post.metrics.reposts,
-            boosts: post.metrics.likes,
             respostas: Math.max(post.metrics.comments, this.responses.length),
-            views: (post.metrics.comments + post.metrics.reposts + post.metrics.likes + 1) * 40,
+            views: (post.metrics.comments + post.metrics.reposts + 1) * 40,
           };
 
           this.render();
@@ -13366,10 +13372,18 @@
         },
 
         renderMetricsHtml: function () {
+          var postId = this.currentPost ? this.currentPost.id : '';
+          var counts = (postId && typeof VoteSystem !== 'undefined') ? VoteSystem.getCounts(postId) : { up: 0, stable: 0, down: 0 };
+          var score = (postId && typeof VoteSystem !== 'undefined') ? VoteSystem.getScore(postId) : 0;
+          var scoreStr = score > 0 ? '+' + score : String(score);
+          var scoreColor = score > 0 ? '#ff8a3d' : score < 0 ? '#4da3ff' : 'var(--color-text-muted)';
           return (
             '<section class="thread-metrics-bar">' +
               '<a href="#" class="thread-metric" title="Ver quem ecoou"><span class="metric-value" data-metric-key="ecos">' + this.metrics.ecos + '</span><span class="metric-label">Ecos</span></a>' +
-              '<a href="#" class="thread-metric" title="Ver quem deu boost"><span class="metric-value" data-metric-key="boosts">' + this.metrics.boosts + '</span><span class="metric-label">Boosts</span></a>' +
+              '<span class="thread-metric"><span class="metric-value thread-vote-ups" style="color:#ff8a3d">' + counts.up + '</span><span class="metric-label">Upvotos</span></span>' +
+              '<span class="thread-metric"><span class="metric-value thread-vote-stables" style="color:#7c5af0">' + counts.stable + '</span><span class="metric-label">Estavel</span></span>' +
+              '<span class="thread-metric"><span class="metric-value thread-vote-downs" style="color:#4da3ff">' + counts.down + '</span><span class="metric-label">Downvotos</span></span>' +
+              '<span class="thread-metric"><span class="metric-value thread-vote-score" style="color:' + scoreColor + '">' + scoreStr + '</span><span class="metric-label">Pontuacao</span></span>' +
               '<a href="#" class="thread-metric" title="Ver respostas"><span class="metric-value" data-metric-key="respostas">' + this.metrics.respostas + '</span><span class="metric-label">Respostas</span></a>' +
               '<a href="#" class="thread-metric" title="Visualizacoes"><span class="metric-value" data-metric-key="views">' + this.metrics.views + '</span><span class="metric-label">Visualizacoes</span></a>' +
             '</section>'
@@ -13377,15 +13391,25 @@
         },
 
         renderActionsHtml: function () {
-          var boostLabel = this.actionState.boost ? 'Boostado' : 'Boost';
           var repostLabel = this.actionState.repost ? 'Ecoado' : 'Ecoar';
           var bookmarkLabel = this.actionState.bookmark ? 'Salvo' : 'Salvar';
+          var postId = this.currentPost ? this.currentPost.id : '';
+          var voteState = (postId && typeof VoteSystem !== 'undefined') ? VoteSystem.getState(postId) : null;
+          var currentVote = voteState ? voteState.userVote : null;
+          var score = (postId && typeof VoteSystem !== 'undefined') ? VoteSystem.getScore(postId) : 0;
+          var scoreStr = score > 0 ? '+' + score : String(score);
+          var scoreClass = score > 0 ? 'positive' : score < 0 ? 'negative' : 'neutral';
 
           return (
             '<section class="thread-actions-bar">' +
               '<button type="button" class="thread-action-btn thread-action-comment" data-thread-action="comment"><i data-lucide="message-circle"></i><span>Comentar</span></button>' +
               '<button type="button" class="thread-action-btn thread-action-repost ' + (this.actionState.repost ? 'is-active' : '') + '" data-thread-action="repost"><i data-lucide="repeat-2"></i><span>' + repostLabel + '</span></button>' +
-              '<button type="button" class="thread-action-btn thread-action-boost ' + (this.actionState.boost ? 'is-active' : '') + '" data-thread-action="boost"><i data-lucide="zap"></i><span>' + boostLabel + '</span></button>' +
+              '<div class="vote-cluster vote-cluster-thread" data-vote-cluster="true" data-post-id="' + postId + '">' +
+                '<button class="vote-quick vote-up' + (currentVote === 'up' ? ' is-active' : '') + '" data-vote-quick="up" type="button" aria-label="Upvote"><i data-lucide="chevron-up"></i></button>' +
+                '<span class="vote-score-value ' + scoreClass + '" data-vote-score="true">' + scoreStr + '</span>' +
+                '<button class="vote-quick vote-stable' + (currentVote === 'stable' ? ' is-active' : '') + '" data-vote-quick="stable" type="button" aria-label="Estavel"><i data-lucide="minus"></i></button>' +
+                '<button class="vote-quick vote-down' + (currentVote === 'down' ? ' is-active' : '') + '" data-vote-quick="down" type="button" aria-label="Downvote"><i data-lucide="chevron-down"></i></button>' +
+              '</div>' +
               '<button type="button" class="thread-action-btn thread-action-share" data-thread-action="share"><i data-lucide="share-2"></i><span>Compartilhar</span></button>' +
               '<button type="button" class="thread-action-btn thread-action-bookmark ' + (this.actionState.bookmark ? 'is-active' : '') + '" data-thread-action="bookmark"><i data-lucide="bookmark"></i><span>' + bookmarkLabel + '</span></button>' +
             '</section>'
@@ -13747,9 +13771,7 @@
 
           var commentsCount = card.querySelector('.action-comment .action-count');
           var repostCount = card.querySelector('.action-repost .action-count');
-          var likeCount = card.querySelector('.action-like .action-count');
           var repostBtn = card.querySelector('.action-repost');
-          var likeBtn = card.querySelector('.action-like');
           var bookmarkBtn = card.querySelector('.action-bookmark');
 
           if (commentsCount) {
@@ -13760,21 +13782,35 @@
             repostCount.textContent = String(this.currentPost.metrics.reposts);
           }
 
-          if (likeCount) {
-            likeCount.textContent = String(this.currentPost.metrics.likes);
-          }
-
           if (repostBtn) {
             repostBtn.classList.toggle('active', !!this.currentPost.state.repost);
-          }
-
-          if (likeBtn) {
-            likeBtn.classList.toggle('active', !!this.currentPost.state.like);
           }
 
           if (bookmarkBtn) {
             bookmarkBtn.classList.toggle('active', !!this.currentPost.state.bookmark);
           }
+        },
+
+        syncVoteMetrics: function () {
+          if (!this.currentPost || !threadModalContent || typeof VoteSystem === 'undefined') {
+            return;
+          }
+
+          var postId = this.currentPost.id;
+          var counts = VoteSystem.getCounts(postId);
+          var score = VoteSystem.getScore(postId);
+          var scoreStr = score > 0 ? '+' + score : String(score);
+          var scoreColor = score > 0 ? '#ff8a3d' : score < 0 ? '#4da3ff' : 'var(--color-text-muted)';
+
+          var upsEl = threadModalContent.querySelector('.thread-vote-ups');
+          var stablesEl = threadModalContent.querySelector('.thread-vote-stables');
+          var downsEl = threadModalContent.querySelector('.thread-vote-downs');
+          var scoreEl = threadModalContent.querySelector('.thread-vote-score');
+
+          if (upsEl) { upsEl.textContent = String(counts.up); }
+          if (stablesEl) { stablesEl.textContent = String(counts.stable); }
+          if (downsEl) { downsEl.textContent = String(counts.down); }
+          if (scoreEl) { scoreEl.textContent = scoreStr; scoreEl.style.color = scoreColor; }
         },
 
         toggleThreadAction: function (button) {
@@ -13814,28 +13850,6 @@
             this.metrics.ecos = Math.max(0, this.metrics.ecos);
             this.currentPost.metrics.reposts = this.metrics.ecos;
             this.updateMetricValue('ecos', this.metrics.ecos, false);
-            this.syncPostCardUi();
-            return;
-          }
-
-          if (action === 'boost') {
-            this.actionState.boost = !this.actionState.boost;
-            this.currentPost.state.like = this.actionState.boost;
-            button.classList.toggle('is-active', this.actionState.boost);
-            button.classList.add('boost-pop');
-            setTimeout(function () {
-              button.classList.remove('boost-pop');
-            }, 290);
-
-            var boostLabel = button.querySelector('span');
-            if (boostLabel) {
-              boostLabel.textContent = this.actionState.boost ? 'Boostado' : 'Boost';
-            }
-
-            this.metrics.boosts += this.actionState.boost ? 1 : -1;
-            this.metrics.boosts = Math.max(0, this.metrics.boosts);
-            this.currentPost.metrics.likes = this.metrics.boosts;
-            this.updateMetricValue('boosts', this.metrics.boosts, false);
             this.syncPostCardUi();
             return;
           }

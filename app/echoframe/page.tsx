@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { type MouseEvent as ReactMouseEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
 import {
   BarChart3,
@@ -68,6 +68,42 @@ type Post = {
   threadNote?: string
   metrics: PostMetrics
   state: PostState
+}
+
+type HeaderPanel = 'none' | 'bookmarks' | 'notifications' | 'settings' | 'profile' | 'logout'
+
+type HeaderAction =
+  | 'grid'
+  | 'bookmarks'
+  | 'notifications'
+  | 'settings'
+  | 'profile'
+  | 'logout'
+  | 'profile-view'
+  | 'profile-edit'
+  | 'profile-posts'
+  | 'profile-logout'
+  | 'notifications-mark-read'
+
+type ViewMode = 'feed' | 'profile' | 'signedOut'
+
+type SavedItemKind = 'posts' | 'midia' | 'enquetes'
+
+type SavedItem = {
+  id: string
+  user: string
+  avatar: string
+  text: string
+  type: SavedItemKind
+  source: 'post' | 'mock'
+}
+
+type HeaderNotification = {
+  id: string
+  user: string
+  message: string
+  time: string
+  unread: boolean
 }
 
 type TimelineDay = {
@@ -241,6 +277,64 @@ const tabs: Array<{ key: TabKey; label: string }> = [
   { key: 'enquetes', label: 'Enquetes' },
 ]
 
+const bookmarkTabs: Array<{ key: 'todos' | SavedItemKind; label: string }> = [
+  { key: 'todos', label: 'Todos' },
+  { key: 'posts', label: 'Posts' },
+  { key: 'midia', label: 'Midia' },
+  { key: 'enquetes', label: 'Enquetes' },
+]
+
+const initialHeaderNotifications: HeaderNotification[] = [
+  {
+    id: 'notif-1',
+    user: '@Sus_Bacon',
+    message: 'reagiu ao seu post',
+    time: '2min',
+    unread: true,
+  },
+  {
+    id: 'notif-2',
+    user: '@orbital_zero',
+    message: 'comentou: "isso mesmo"',
+    time: '8min',
+    unread: true,
+  },
+  {
+    id: 'notif-3',
+    user: '@nebula_core',
+    message: 'ecoou seu post',
+    time: '23min',
+    unread: false,
+  },
+]
+
+const fallbackSavedItems: SavedItem[] = [
+  {
+    id: 'mock-bookmark-1',
+    user: '@cuberta_dobrada',
+    avatar: 'https://picsum.photos/seed/book-cuberta/56/56',
+    text: 'Nunca vi a rua principal tao vazia e tao bonita ao mesmo tempo...',
+    type: 'posts',
+    source: 'mock',
+  },
+  {
+    id: 'mock-bookmark-2',
+    user: '@Sus_Bacon',
+    avatar: 'https://picsum.photos/seed/book-susbacon/56/56',
+    text: 'A ponte de aco no fim da avenida acendeu sozinha de novo...',
+    type: 'midia',
+    source: 'mock',
+  },
+  {
+    id: 'mock-bookmark-3',
+    user: '@padaria_quantica',
+    avatar: 'https://picsum.photos/seed/book-padaria/56/56',
+    text: 'os logs do servidor antigo ainda estao la intactos',
+    type: 'enquetes',
+    source: 'mock',
+  },
+]
+
 function toDateKey(date: Date) {
   const year = date.getFullYear()
   const month = String(date.getMonth() + 1).padStart(2, '0')
@@ -268,10 +362,44 @@ function normalized(value: string) {
   return value.toLowerCase().trim()
 }
 
+function bindClickOutside(
+  element: HTMLElement,
+  onClose: () => void,
+  shouldIgnore?: (target: EventTarget | null) => boolean,
+) {
+  function handler(event: MouseEvent) {
+    const target = event.target as Node | null
+
+    if (!target) {
+      return
+    }
+
+    if (element.contains(target)) {
+      return
+    }
+
+    if (shouldIgnore?.(event.target)) {
+      return
+    }
+
+    onClose()
+    document.removeEventListener('click', handler)
+  }
+
+  window.requestAnimationFrame(() => {
+    document.addEventListener('click', handler)
+  })
+
+  return () => {
+    document.removeEventListener('click', handler)
+  }
+}
+
 export default function EchoFramePage() {
   const [posts, setPosts] = useState<Post[]>(initialPosts)
   const [activeTab, setActiveTab] = useState<TabKey>('todos')
   const [searchTerm, setSearchTerm] = useState('')
+  const [activeView, setActiveView] = useState<ViewMode>('feed')
   const [composerText, setComposerText] = useState('')
   const [showSkeleton, setShowSkeleton] = useState(true)
   const [showStagger, setShowStagger] = useState(false)
@@ -281,9 +409,18 @@ export default function EchoFramePage() {
   const [feedFlashing, setFeedFlashing] = useState(false)
   const [popKey, setPopKey] = useState('')
   const [pollBarsReady, setPollBarsReady] = useState(false)
+  const [isCompactFeed, setIsCompactFeed] = useState(false)
+  const [activeHeaderPanel, setActiveHeaderPanel] = useState<HeaderPanel>('none')
+  const [bookmarkTab, setBookmarkTab] = useState<'todos' | SavedItemKind>('todos')
+  const [notifications, setNotifications] = useState<HeaderNotification[]>(initialHeaderNotifications)
+  const [dismissedMockBookmarkIds, setDismissedMockBookmarkIds] = useState<string[]>([])
 
   const composerRef = useRef<HTMLTextAreaElement | null>(null)
   const todayRef = useRef<HTMLButtonElement | null>(null)
+  const notificationsButtonRef = useRef<HTMLButtonElement | null>(null)
+  const notificationsPanelRef = useRef<HTMLElement | null>(null)
+  const profileButtonRef = useRef<HTMLButtonElement | null>(null)
+  const profilePanelRef = useRef<HTMLElement | null>(null)
 
   const nowBase = useMemo(() => {
     const date = new Date()
@@ -380,6 +517,248 @@ export default function EchoFramePage() {
       return haystack.includes(query)
     })
   }, [activeTab, posts, searchTerm])
+
+  const myPosts = useMemo(() => posts.filter((post) => normalized(post.user) === '@juvinho'), [posts])
+
+  const savedPosts = useMemo<SavedItem[]>(() => {
+    return posts
+      .filter((post) => post.state.bookmark)
+      .map((post) => ({
+        id: post.id,
+        user: post.user,
+        avatar: post.avatar,
+        text: post.text,
+        type: post.poll ? 'enquetes' : post.image || post.repost?.image ? 'midia' : 'posts',
+        source: 'post',
+      }))
+  }, [posts])
+
+  const savedItems = useMemo<SavedItem[]>(() => {
+    if (savedPosts.length > 0) {
+      return savedPosts
+    }
+
+    return fallbackSavedItems.filter((item) => !dismissedMockBookmarkIds.includes(item.id))
+  }, [dismissedMockBookmarkIds, savedPosts])
+
+  const visibleSavedItems = useMemo(() => {
+    if (bookmarkTab === 'todos') {
+      return savedItems
+    }
+
+    return savedItems.filter((item) => item.type === bookmarkTab)
+  }, [bookmarkTab, savedItems])
+
+  const notificationCount = useMemo(
+    () => notifications.reduce((total, item) => total + (item.unread ? 1 : 0), 0),
+    [notifications],
+  )
+
+  const isBookmarksOpen = activeHeaderPanel === 'bookmarks'
+  const isNotificationsOpen = activeHeaderPanel === 'notifications'
+  const isSettingsOpen = activeHeaderPanel === 'settings'
+  const isProfileMenuOpen = activeHeaderPanel === 'profile'
+  const isLogoutOpen = activeHeaderPanel === 'logout'
+
+  useEffect(() => {
+    document.body.classList.toggle('feed--compact', isCompactFeed)
+
+    return () => {
+      document.body.classList.remove('feed--compact')
+    }
+  }, [isCompactFeed])
+
+  useEffect(() => {
+    if (!isNotificationsOpen || !notificationsPanelRef.current) {
+      return
+    }
+
+    return bindClickOutside(
+      notificationsPanelRef.current,
+      () => {
+        setActiveHeaderPanel((current) => (current === 'notifications' ? 'none' : current))
+      },
+      (target) => notificationsButtonRef.current?.contains(target as Node) ?? false,
+    )
+  }, [isNotificationsOpen])
+
+  useEffect(() => {
+    if (!isProfileMenuOpen || !profilePanelRef.current) {
+      return
+    }
+
+    return bindClickOutside(
+      profilePanelRef.current,
+      () => {
+        setActiveHeaderPanel((current) => (current === 'profile' ? 'none' : current))
+      },
+      (target) => profileButtonRef.current?.contains(target as Node) ?? false,
+    )
+  }, [isProfileMenuOpen])
+
+  useEffect(() => {
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key !== 'Escape') {
+        return
+      }
+
+      setActiveHeaderPanel('none')
+    }
+
+    document.addEventListener('keydown', handleEscape)
+    return () => document.removeEventListener('keydown', handleEscape)
+  }, [])
+
+  const logHeader = useCallback((message: string, action?: string) => {
+    if (process.env.NODE_ENV === 'production') {
+      return
+    }
+
+    if (action) {
+      console.log(`[HeaderActions] ${message}:`, action)
+      return
+    }
+
+    console.log(`[HeaderActions] ${message}`)
+  }, [])
+
+  const markNotificationsRead = useCallback(() => {
+    setNotifications((current) =>
+      current.map((item) => {
+        if (!item.unread) {
+          return item
+        }
+
+        return { ...item, unread: false }
+      }),
+    )
+  }, [])
+
+  const handleHeaderActionsClick = useCallback(
+    (event: ReactMouseEvent<HTMLElement>) => {
+      const trigger = (event.target as HTMLElement | null)?.closest<HTMLElement>('[data-action]')
+
+      if (!trigger) {
+        return
+      }
+
+      const action = trigger.dataset.action as HeaderAction | undefined
+
+      if (!action) {
+        return
+      }
+
+      event.preventDefault()
+      logHeader('click action', action)
+
+      switch (action) {
+        case 'grid':
+          setIsCompactFeed((current) => !current)
+          setActiveView('feed')
+          return
+
+        case 'bookmarks':
+          setActiveView('feed')
+          setActiveHeaderPanel((current) => (current === 'bookmarks' ? 'none' : 'bookmarks'))
+          return
+
+        case 'notifications':
+          setActiveHeaderPanel((current) => {
+            const next = current === 'notifications' ? 'none' : 'notifications'
+            if (next === 'notifications') {
+              logHeader('notifications open')
+            }
+            return next
+          })
+          markNotificationsRead()
+          return
+
+        case 'notifications-mark-read':
+          markNotificationsRead()
+          return
+
+        case 'settings':
+          setActiveHeaderPanel((current) => (current === 'settings' ? 'none' : 'settings'))
+          return
+
+        case 'profile':
+          setActiveHeaderPanel((current) => {
+            const next = current === 'profile' ? 'none' : 'profile'
+            if (next === 'profile') {
+              logHeader('profile toggle')
+            }
+            return next
+          })
+          return
+
+        case 'profile-view':
+          setActiveView('profile')
+          setActiveHeaderPanel('none')
+          return
+
+        case 'profile-edit':
+          setActiveView('feed')
+          setActiveHeaderPanel('settings')
+          return
+
+        case 'profile-posts':
+          setActiveView('feed')
+          setSearchTerm('@Juvinho')
+          setActiveHeaderPanel('none')
+          return
+
+        case 'profile-logout':
+        case 'logout':
+          logHeader('logout open')
+          setActiveHeaderPanel('logout')
+          return
+
+        default:
+          return
+      }
+    },
+    [logHeader, markNotificationsRead],
+  )
+
+  const closeHeaderPanels = useCallback(() => {
+    setActiveHeaderPanel('none')
+  }, [])
+
+  const handleRemoveSavedItem = useCallback((item: SavedItem) => {
+    if (item.source === 'post') {
+      setPosts((current) =>
+        current.map((post) => {
+          if (post.id !== item.id) {
+            return post
+          }
+
+          return {
+            ...post,
+            state: { ...post.state, bookmark: false },
+          }
+        }),
+      )
+      return
+    }
+
+    setDismissedMockBookmarkIds((current) => {
+      if (current.includes(item.id)) {
+        return current
+      }
+      return [...current, item.id]
+    })
+  }, [])
+
+  const handleConfirmLogout = useCallback(() => {
+    setActiveHeaderPanel('none')
+    setActiveView('signedOut')
+  }, [])
+
+  const handleRestoreSession = useCallback(() => {
+    setActiveView('feed')
+    setSearchTerm('')
+    setActiveHeaderPanel('none')
+  }, [])
 
   function triggerPop(key: string) {
     setPopKey(key)
@@ -501,7 +880,7 @@ export default function EchoFramePage() {
         <span />
       </div>
 
-      <header className="top-header">
+      <header className="top-header" data-role="top-header">
         <div className="header-inner">
           <a href="#" className="brand-link" aria-label="Chrono Home">
             <svg className="logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -529,31 +908,190 @@ export default function EchoFramePage() {
             </label>
           </div>
 
-          <div className="header-actions">
-            <button className="icon-btn mobile-hide" aria-label="Visualizacao em grade" type="button">
+          <div className="header-actions" data-role="top-header-actions" onClick={handleHeaderActionsClick}>
+            <button
+              className={`icon-btn mobile-hide header-action-btn${isCompactFeed ? ' is-active' : ''}`}
+              aria-label="Visualizacao em grade"
+              type="button"
+              data-action="grid"
+            >
               <LayoutGrid />
             </button>
-            <button className="icon-btn mobile-hide" aria-label="Bookmarks" type="button">
+
+            <button
+              className={`icon-btn mobile-hide header-action-btn${isBookmarksOpen ? ' is-active' : ''}`}
+              aria-label="Bookmarks"
+              type="button"
+              data-action="bookmarks"
+            >
               <Bookmark />
             </button>
-            <button className="icon-btn" aria-label="Notificacoes" type="button">
-              <Bell />
-              <span className="notif-badge">1</span>
-            </button>
-            <button className="icon-btn mobile-hide" aria-label="Configuracoes" type="button">
+
+            <div className="header-action-wrap">
+              <button
+                ref={notificationsButtonRef}
+                className={`icon-btn header-action-btn${isNotificationsOpen ? ' is-active' : ''}`}
+                aria-label="Notificacoes"
+                type="button"
+                data-action="notifications"
+              >
+                <Bell />
+                {notificationCount > 0 ? <span className="notif-badge">{notificationCount}</span> : null}
+              </button>
+
+              <section
+                ref={notificationsPanelRef}
+                className={`header-dropdown notif-dropdown${isNotificationsOpen ? ' is-open' : ''}`}
+                aria-label="Painel de notificacoes"
+                aria-hidden={!isNotificationsOpen}
+              >
+                <header className="notif-dropdown-head">
+                  <h4>Notificacoes</h4>
+                  <button className="mark-read-btn" type="button" data-action="notifications-mark-read">
+                    Marcar todas como lidas
+                  </button>
+                </header>
+
+                <ul className="notif-dropdown-list">
+                  {notifications.map((item) => (
+                    <li key={item.id} className={`notif-dropdown-item${item.unread ? ' unread' : ''}`}>
+                      <div className="notif-dropdown-body">
+                        <strong>{item.user}</strong> {item.message}
+                      </div>
+                      <span className="notif-dropdown-time">{item.time}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            </div>
+
+            <button
+              className={`icon-btn mobile-hide header-action-btn${isSettingsOpen ? ' is-active' : ''}`}
+              aria-label="Configuracoes"
+              type="button"
+              data-action="settings"
+            >
               <Settings />
             </button>
-            <button className="profile-chip" aria-label="Perfil do usuario" type="button">
-              <img src="https://picsum.photos/seed/juvinho-profile/32/32" alt="Avatar @Juvinho" />
-              <span>@Juvinho</span>
-              <ChevronDown />
-            </button>
-            <button className="icon-btn" aria-label="Logout" type="button">
+
+            <div className="header-action-wrap profile-wrap">
+              <button
+                ref={profileButtonRef}
+                className={`profile-chip header-profile-btn${isProfileMenuOpen ? ' is-open' : ''}`}
+                aria-label="Perfil do usuario"
+                type="button"
+                data-action="profile"
+              >
+                <img src="https://picsum.photos/seed/juvinho-profile/32/32" alt="Avatar @Juvinho" />
+                <span>@Juvinho</span>
+                <ChevronDown />
+              </button>
+
+              <section
+                ref={profilePanelRef}
+                className={`header-dropdown profile-menu-dropdown${isProfileMenuOpen ? ' is-open' : ''}`}
+                aria-label="Menu de perfil"
+                aria-hidden={!isProfileMenuOpen}
+              >
+                <button type="button" className="profile-menu-item" data-action="profile-view">
+                  Ver perfil
+                </button>
+                <button type="button" className="profile-menu-item" data-action="profile-edit">
+                  Editar perfil
+                </button>
+                <button type="button" className="profile-menu-item" data-action="profile-posts">
+                  Meus posts
+                </button>
+                <button type="button" className="profile-menu-item logout-item" data-action="profile-logout">
+                  Sair
+                </button>
+              </section>
+            </div>
+
+            <button className="icon-btn header-action-btn" aria-label="Logout" type="button" data-action="logout">
               <LogOut />
             </button>
           </div>
         </div>
       </header>
+
+      <div className={`header-overlay${isBookmarksOpen ? ' is-visible' : ''}`} aria-hidden={!isBookmarksOpen} onClick={closeHeaderPanels} />
+
+      <aside className={`header-drawer bookmark-drawer${isBookmarksOpen ? ' is-open' : ''}`} aria-label="Painel de salvos" aria-hidden={!isBookmarksOpen}>
+        <header className="drawer-head">
+          <h3>Salvos</h3>
+          <button type="button" className="drawer-close-btn" onClick={closeHeaderPanels} aria-label="Fechar salvos">
+            ×
+          </button>
+        </header>
+
+        <div className="bookmark-tabs" role="tablist" aria-label="Filtros de salvos">
+          {bookmarkTabs.map((tab) => (
+            <button
+              key={tab.key}
+              type="button"
+              className={`bookmark-tab${bookmarkTab === tab.key ? ' active' : ''}`}
+              onClick={() => setBookmarkTab(tab.key)}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {visibleSavedItems.length === 0 ? (
+          <div className="saved-empty">Nenhum item salvo neste filtro.</div>
+        ) : (
+          <ul className="saved-list">
+            {visibleSavedItems.map((item) => (
+              <li key={item.id} className="saved-item">
+                <img src={item.avatar} alt={`Avatar ${item.user}`} />
+                <div className="saved-copy">
+                  <strong>{item.user}</strong>
+                  <p>{item.text}</p>
+                </div>
+                <button type="button" className="saved-remove-btn" onClick={() => handleRemoveSavedItem(item)}>
+                  Remover
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </aside>
+
+      <section
+        className={`settings-overlay${isSettingsOpen ? ' is-open' : ''}`}
+        aria-hidden={!isSettingsOpen}
+        onClick={closeHeaderPanels}
+      >
+        <div className="settings-card" role="dialog" aria-modal="true" aria-label="Configuracoes" onClick={(event) => event.stopPropagation()}>
+          <h3>Configuracoes</h3>
+          <p>Ajustes principais da conta e experiencia.</p>
+          <ul className="settings-grid" aria-label="Categorias de configuracao">
+            <li>Conta</li>
+            <li>Aparencia</li>
+            <li>Privacidade</li>
+            <li>Notificacoes</li>
+          </ul>
+          <button type="button" className="settings-back-btn" onClick={closeHeaderPanels}>
+            Fechar
+          </button>
+        </div>
+      </section>
+
+      <section className={`logout-overlay${isLogoutOpen ? ' is-open' : ''}`} aria-hidden={!isLogoutOpen} onClick={closeHeaderPanels}>
+        <div className="logout-dialog" role="dialog" aria-modal="true" aria-label="Confirmar logout" onClick={(event) => event.stopPropagation()}>
+          <p>Deseja sair da Chrono?</p>
+          <span className="logout-subtitle">Sua sessao atual sera encerrada.</span>
+          <div className="logout-actions">
+            <button type="button" className="logout-cancel" onClick={closeHeaderPanels}>
+              Cancelar
+            </button>
+            <button type="button" className="logout-confirm" onClick={handleConfirmLogout}>
+              Sair
+            </button>
+          </div>
+        </div>
+      </section>
 
       <main className="app-main" id="echoframe-feed-start">
         <div className="columns">
@@ -600,8 +1138,55 @@ export default function EchoFramePage() {
             </section>
           </aside>
 
-          <section className="feed-column" aria-label="Feed principal">
-            <nav className="tabs-row" aria-label="Filtros do feed">
+          <section className={`feed-column${isCompactFeed ? ' feed--compact' : ' feed--default'}`} aria-label="Feed principal">
+            {activeView === 'signedOut' ? (
+              <section className="view-card signed-out-card" aria-label="Sessao encerrada">
+                <h3>Sessao encerrada</h3>
+                <p>Voce saiu da Chrono. Entre novamente para voltar ao feed principal.</p>
+                <div className="view-card-actions">
+                  <button type="button" className="publish-btn" onClick={handleRestoreSession}>
+                    Entrar novamente
+                  </button>
+                </div>
+              </section>
+            ) : null}
+
+            {activeView === 'profile' ? (
+              <section className="view-card profile-view-card" aria-label="Visao de perfil">
+                <h3>@Juvinho</h3>
+                <p>Perfil mockado para navegacao pelo menu superior.</p>
+                <p className="profile-view-meta">Posts encontrados: {myPosts.length}</p>
+
+                <ul className="profile-view-list">
+                  {(myPosts.length ? myPosts : posts.slice(0, 3)).slice(0, 3).map((post) => (
+                    <li key={post.id}>{post.text}</li>
+                  ))}
+                </ul>
+
+                <div className="view-card-actions">
+                  <button
+                    type="button"
+                    className="ghost-btn"
+                    onClick={() => {
+                      setSearchTerm('@Juvinho')
+                      setActiveView('feed')
+                    }}
+                  >
+                    Meus posts
+                  </button>
+                  <button type="button" className="ghost-btn" onClick={() => setActiveHeaderPanel('settings')}>
+                    Editar perfil
+                  </button>
+                  <button type="button" className="publish-btn" onClick={() => setActiveView('feed')}>
+                    Voltar ao feed
+                  </button>
+                </div>
+              </section>
+            ) : null}
+
+            {activeView === 'feed' ? (
+              <>
+                <nav className="tabs-row" aria-label="Filtros do feed">
               {tabs.map((tab) => (
                 <button
                   key={tab.key}
@@ -617,7 +1202,7 @@ export default function EchoFramePage() {
                   {tab.label}
                 </button>
               ))}
-            </nav>
+                </nav>
 
             <section className="composer" aria-label="Novo post">
               <div className="composer-top">
@@ -794,6 +1379,8 @@ export default function EchoFramePage() {
                 )}
               </section>
             )}
+              </>
+            ) : null}
           </section>
 
           <aside className="right-sidebar" aria-label="Hub de cordoes">
@@ -1133,6 +1720,510 @@ export default function EchoFramePage() {
         .echoframe-page .profile-chip svg {
           width: 14px;
           height: 14px;
+          transition: transform 0.2s ease;
+        }
+
+        .echoframe-page .top-header,
+        .echoframe-page .top-header * {
+          pointer-events: auto;
+        }
+
+        .echoframe-page .header-action-wrap {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+        }
+
+        .echoframe-page .header-action-btn,
+        .echoframe-page .header-profile-btn {
+          position: relative;
+          z-index: 2;
+          cursor: pointer;
+        }
+
+        .echoframe-page .icon-btn.is-active,
+        .echoframe-page .profile-chip.is-open {
+          color: var(--color-text);
+          border-color: rgba(255, 255, 255, 0.16);
+          background: var(--color-surface-2);
+        }
+
+        .echoframe-page .profile-chip.is-open svg {
+          transform: rotate(180deg);
+        }
+
+        .echoframe-page .header-dropdown {
+          position: absolute;
+          top: calc(100% + 8px);
+          right: 0;
+          border: 1px solid var(--color-border);
+          background: rgba(10, 12, 24, 0.98);
+          border-radius: 12px;
+          box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5);
+          opacity: 0;
+          pointer-events: none;
+          transform: translateY(8px) scale(0.98);
+          transition: opacity 0.18s ease, transform 0.18s ease;
+          z-index: 240;
+        }
+
+        .echoframe-page .header-dropdown.is-open {
+          opacity: 1;
+          pointer-events: auto;
+          transform: translateY(0) scale(1);
+        }
+
+        .echoframe-page .notif-dropdown {
+          width: min(320px, calc(100vw - 24px));
+          right: -80px;
+          overflow: hidden;
+        }
+
+        .echoframe-page .notif-dropdown-head {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 8px;
+          padding: 12px 12px 10px;
+          border-bottom: 1px solid var(--color-divider);
+        }
+
+        .echoframe-page .notif-dropdown-head h4 {
+          margin: 0;
+          font-size: 14px;
+          color: var(--color-text);
+        }
+
+        .echoframe-page .mark-read-btn {
+          border: 0;
+          background: transparent;
+          color: var(--color-primary-hover);
+          font-size: 11px;
+          cursor: pointer;
+        }
+
+        .echoframe-page .notif-dropdown-list {
+          margin: 0;
+          padding: 6px;
+          list-style: none;
+          max-height: 290px;
+          overflow-y: auto;
+          display: grid;
+          gap: 4px;
+        }
+
+        .echoframe-page .notif-dropdown-item {
+          display: grid;
+          gap: 3px;
+          padding: 8px;
+          border-radius: 8px;
+          border: 1px solid transparent;
+          background: rgba(255, 255, 255, 0.02);
+        }
+
+        .echoframe-page .notif-dropdown-item.unread {
+          border-color: rgba(124, 90, 240, 0.35);
+          background: rgba(124, 90, 240, 0.09);
+        }
+
+        .echoframe-page .notif-dropdown-body {
+          color: var(--color-text-muted);
+          font-size: 12px;
+          line-height: 1.4;
+        }
+
+        .echoframe-page .notif-dropdown-body strong {
+          color: var(--color-text);
+        }
+
+        .echoframe-page .notif-dropdown-time {
+          color: var(--color-text-faint);
+          font-size: 11px;
+        }
+
+        .echoframe-page .profile-wrap {
+          margin-left: 2px;
+        }
+
+        .echoframe-page .profile-menu-dropdown {
+          width: 220px;
+          padding: 6px;
+          right: 0;
+          display: grid;
+          gap: 4px;
+        }
+
+        .echoframe-page .profile-menu-item {
+          border: 0;
+          background: transparent;
+          color: var(--color-text-muted);
+          border-radius: 8px;
+          text-align: left;
+          padding: 9px 10px;
+          font-size: 13px;
+          cursor: pointer;
+          transition: background 0.18s ease, color 0.18s ease;
+        }
+
+        .echoframe-page .profile-menu-item:hover {
+          background: rgba(255, 255, 255, 0.07);
+          color: var(--color-text);
+        }
+
+        .echoframe-page .profile-menu-item.logout-item {
+          color: #ff8e92;
+        }
+
+        .echoframe-page .header-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.35);
+          opacity: 0;
+          pointer-events: none;
+          z-index: 145;
+          transition: opacity 0.16s ease;
+        }
+
+        .echoframe-page .header-overlay.is-visible {
+          opacity: 1;
+          pointer-events: auto;
+        }
+
+        .echoframe-page .header-drawer {
+          position: fixed;
+          top: var(--header-h);
+          right: 0;
+          width: min(360px, 100vw);
+          height: calc(100vh - var(--header-h) - var(--timeline-h));
+          border-left: 1px solid var(--color-border);
+          background: rgba(8, 10, 18, 0.98);
+          backdrop-filter: blur(22px);
+          transform: translateX(108%);
+          pointer-events: none;
+          transition: transform 0.24s ease;
+          z-index: 160;
+          display: grid;
+          grid-template-rows: auto auto minmax(0, 1fr);
+        }
+
+        .echoframe-page .header-drawer.is-open {
+          transform: translateX(0);
+          pointer-events: auto;
+        }
+
+        .echoframe-page .drawer-head {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 8px;
+          padding: 14px 14px 10px;
+          border-bottom: 1px solid var(--color-divider);
+        }
+
+        .echoframe-page .drawer-head h3 {
+          margin: 0;
+          font-size: 14px;
+          color: var(--color-text);
+        }
+
+        .echoframe-page .drawer-close-btn {
+          width: 28px;
+          height: 28px;
+          border-radius: 8px;
+          border: 0;
+          background: transparent;
+          color: var(--color-text-muted);
+          cursor: pointer;
+        }
+
+        .echoframe-page .drawer-close-btn:hover {
+          color: var(--color-text);
+          background: rgba(255, 255, 255, 0.08);
+        }
+
+        .echoframe-page .bookmark-tabs {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          padding: 10px 12px;
+          border-bottom: 1px solid var(--color-divider);
+          overflow-x: auto;
+        }
+
+        .echoframe-page .bookmark-tab {
+          height: 30px;
+          border-radius: 999px;
+          border: 1px solid var(--color-border);
+          background: transparent;
+          color: var(--color-text-muted);
+          padding: 0 12px;
+          font-size: 12px;
+          cursor: pointer;
+          white-space: nowrap;
+        }
+
+        .echoframe-page .bookmark-tab.active {
+          background: rgba(124, 90, 240, 0.2);
+          color: var(--color-text);
+          border-color: rgba(124, 90, 240, 0.5);
+        }
+
+        .echoframe-page .saved-list {
+          margin: 0;
+          padding: 10px;
+          list-style: none;
+          overflow-y: auto;
+          display: grid;
+          gap: 8px;
+        }
+
+        .echoframe-page .saved-item {
+          border: 1px solid var(--color-border);
+          border-radius: 10px;
+          background: rgba(255, 255, 255, 0.03);
+          padding: 8px;
+          display: grid;
+          grid-template-columns: 36px minmax(0, 1fr) auto;
+          gap: 8px;
+          align-items: center;
+        }
+
+        .echoframe-page .saved-item img {
+          width: 36px;
+          height: 36px;
+          border-radius: 999px;
+          object-fit: cover;
+          border: 1px solid rgba(255, 255, 255, 0.16);
+        }
+
+        .echoframe-page .saved-copy {
+          min-width: 0;
+        }
+
+        .echoframe-page .saved-copy strong {
+          display: block;
+          color: var(--color-text);
+          font-size: 12px;
+        }
+
+        .echoframe-page .saved-copy p {
+          margin: 2px 0 0;
+          color: var(--color-text-muted);
+          font-size: 12px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .echoframe-page .saved-remove-btn {
+          border: 0;
+          background: transparent;
+          color: var(--color-text-faint);
+          font-size: 11px;
+          cursor: pointer;
+        }
+
+        .echoframe-page .saved-remove-btn:hover {
+          color: #ff8e92;
+        }
+
+        .echoframe-page .saved-empty {
+          padding: 16px;
+          color: var(--color-text-muted);
+          font-size: 12px;
+          text-align: center;
+        }
+
+        .echoframe-page .settings-overlay,
+        .echoframe-page .logout-overlay {
+          position: fixed;
+          inset: 0;
+          z-index: 300;
+          display: grid;
+          place-items: center;
+          padding: 16px;
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.18s ease;
+        }
+
+        .echoframe-page .settings-overlay {
+          background: rgba(8, 10, 18, 0.86);
+        }
+
+        .echoframe-page .logout-overlay {
+          background: rgba(8, 10, 18, 0.52);
+        }
+
+        .echoframe-page .settings-overlay.is-open,
+        .echoframe-page .logout-overlay.is-open {
+          opacity: 1;
+          pointer-events: auto;
+        }
+
+        .echoframe-page .settings-card,
+        .echoframe-page .logout-dialog {
+          width: min(420px, calc(100vw - 24px));
+          border: 1px solid var(--color-border);
+          border-radius: 14px;
+          background: rgba(12, 14, 26, 0.98);
+          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+          padding: 16px;
+          display: grid;
+          gap: 10px;
+        }
+
+        .echoframe-page .settings-card h3,
+        .echoframe-page .logout-dialog p {
+          margin: 0;
+          color: var(--color-text);
+          font-size: 18px;
+          font-family: var(--font-display);
+        }
+
+        .echoframe-page .settings-card p,
+        .echoframe-page .logout-subtitle {
+          color: var(--color-text-muted);
+          font-size: 13px;
+        }
+
+        .echoframe-page .settings-grid {
+          margin: 0;
+          padding: 0;
+          list-style: none;
+          display: grid;
+          gap: 6px;
+        }
+
+        .echoframe-page .settings-grid li {
+          border: 1px solid var(--color-border);
+          border-radius: 8px;
+          padding: 8px 10px;
+          font-size: 12px;
+          color: var(--color-text-muted);
+          background: rgba(255, 255, 255, 0.03);
+        }
+
+        .echoframe-page .settings-back-btn {
+          justify-self: end;
+          border: 1px solid var(--color-border);
+          border-radius: 999px;
+          background: transparent;
+          color: var(--color-text);
+          padding: 6px 12px;
+          cursor: pointer;
+        }
+
+        .echoframe-page .settings-back-btn:hover {
+          background: rgba(255, 255, 255, 0.08);
+        }
+
+        .echoframe-page .logout-actions {
+          display: flex;
+          justify-content: flex-end;
+          gap: 8px;
+        }
+
+        .echoframe-page .logout-actions button {
+          border: 0;
+          border-radius: 999px;
+          padding: 7px 14px;
+          cursor: pointer;
+          font-size: 12px;
+          font-weight: 600;
+        }
+
+        .echoframe-page .logout-cancel {
+          background: rgba(255, 255, 255, 0.08);
+          color: var(--color-text);
+        }
+
+        .echoframe-page .logout-confirm {
+          background: #ff5c60;
+          color: #fff;
+        }
+
+        .echoframe-page .view-card {
+          border: 1px solid var(--color-border);
+          border-radius: 14px;
+          background: var(--color-surface);
+          padding: 16px;
+          display: grid;
+          gap: 12px;
+          margin-bottom: 12px;
+        }
+
+        .echoframe-page .view-card h3 {
+          margin: 0;
+          color: var(--color-text);
+          font-family: var(--font-display);
+        }
+
+        .echoframe-page .view-card p {
+          margin: 0;
+          color: var(--color-text-muted);
+          font-size: 13px;
+        }
+
+        .echoframe-page .profile-view-meta {
+          color: var(--color-text-faint);
+          font-size: 12px;
+        }
+
+        .echoframe-page .profile-view-list {
+          margin: 0;
+          padding: 0;
+          list-style: none;
+          display: grid;
+          gap: 6px;
+        }
+
+        .echoframe-page .profile-view-list li {
+          padding: 8px;
+          border-radius: 8px;
+          background: rgba(255, 255, 255, 0.04);
+          color: var(--color-text-muted);
+          font-size: 12px;
+        }
+
+        .echoframe-page .view-card-actions {
+          display: flex;
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+
+        .echoframe-page .ghost-btn {
+          border: 1px solid var(--color-border);
+          border-radius: 999px;
+          background: transparent;
+          color: var(--color-text);
+          font-size: 12px;
+          padding: 7px 12px;
+          cursor: pointer;
+        }
+
+        .echoframe-page .ghost-btn:hover {
+          background: rgba(255, 255, 255, 0.08);
+        }
+
+        .echoframe-page .feed-column.feed--compact .composer {
+          padding: 10px;
+        }
+
+        .echoframe-page .feed-column.feed--compact .post-card {
+          grid-template-columns: 34px minmax(0, 1fr);
+          padding: 10px;
+          gap: 8px;
+        }
+
+        .echoframe-page .feed-column.feed--compact .post-avatar,
+        .echoframe-page .feed-column.feed--compact .post-avatar-wrap {
+          width: 34px;
+          height: 34px;
+        }
+
+        .echoframe-page .feed-column.feed--compact .post-text {
+          font-size: 13px;
         }
 
         .echoframe-page .app-main {
@@ -2041,6 +3132,25 @@ export default function EchoFramePage() {
           .echoframe-page .header-inner {
             padding: 0 10px;
             gap: 8px;
+          }
+
+          .echoframe-page .notif-dropdown {
+            right: -22px;
+            width: min(92vw, 320px);
+          }
+
+          .echoframe-page .profile-menu-dropdown {
+            right: 0;
+            width: min(86vw, 220px);
+          }
+
+          .echoframe-page .header-drawer {
+            width: 100%;
+          }
+
+          .echoframe-page .view-card-actions {
+            flex-direction: column;
+            align-items: stretch;
           }
 
           .echoframe-page .tabs-row {

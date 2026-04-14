@@ -27,3 +27,7 @@ Thumbs.db
 
 # nested repo artifact
 NovaChrono/
+
+# playwright artifacts
+playwright-report/
+test-results/

@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(node -e ':*)"
+      "Bash(node -e ':*)",
+      "Bash(sed 's/id=\"//')",
+      "Bash(sed 's/\"//')",
+      "Bash(awk '$1 > 1')"
     ]
   }
 }
