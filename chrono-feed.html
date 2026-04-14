@@ -132,22 +132,141 @@
     .brand-link {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
       flex-shrink: 0;
     }
 
-    .brand-link span {
-      font-family: var(--font-display);
-      font-size: 14px;
-      letter-spacing: 0.03em;
-      color: var(--color-text);
+    .chrono-logo {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      text-decoration: none;
+      flex-shrink: 0;
+      border-radius: 12px;
     }
 
-    .logo-mark {
-      width: 28px;
-      height: 28px;
+    .chrono-logo-stack {
+      --chrono-logo-bg: none;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      isolation: isolate;
+      line-height: 0;
+    }
+
+    .chrono-logo-img {
       display: block;
-      flex-shrink: 0;
+      height: 38px;
+      width: auto;
+      object-fit: contain;
+      filter: brightness(1.05) contrast(1.05);
+      transition:
+        transform 180ms ease,
+        filter 180ms ease,
+        opacity 180ms ease;
+      user-select: none;
+      pointer-events: none;
+      will-change: transform, filter;
+    }
+
+    .chrono-logo-glitch {
+      position: absolute;
+      inset: 0;
+      background-image: var(--chrono-logo-bg);
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+      opacity: 0;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      will-change: transform, opacity, clip-path;
+    }
+
+    .chrono-logo-glitch--red {
+      filter: drop-shadow(-1px 0 0 rgba(255, 51, 90, 0.9));
+    }
+
+    .chrono-logo-glitch--cyan {
+      filter: drop-shadow(1px 0 0 rgba(0, 216, 255, 0.9));
+    }
+
+    @keyframes chronoLogoPulse {
+      0%,
+      100% {
+        transform: scale(1);
+        filter: brightness(1.02) drop-shadow(0 0 0 rgba(124, 90, 240, 0));
+      }
+
+      50% {
+        transform: scale(1.025);
+        filter: brightness(1.08) drop-shadow(0 0 10px rgba(124, 90, 240, 0.18));
+      }
+    }
+
+    @keyframes chronoLogoGlitch {
+      0% { opacity: 0; transform: translate(0, 0); clip-path: inset(0 0 0 0); }
+      10% { opacity: .55; transform: translate(-2px, 0); clip-path: inset(10% 0 72% 0); }
+      20% { opacity: .35; transform: translate(2px, -1px); clip-path: inset(65% 0 12% 0); }
+      30% { opacity: .6; transform: translate(-3px, 1px); clip-path: inset(32% 0 38% 0); }
+      40% { opacity: .2; transform: translate(1px, 0); clip-path: inset(80% 0 5% 0); }
+      50% { opacity: .5; transform: translate(-2px, 0); clip-path: inset(18% 0 56% 0); }
+      60% { opacity: .3; transform: translate(3px, 0); clip-path: inset(48% 0 24% 0); }
+      70% { opacity: .45; transform: translate(-1px, -1px); clip-path: inset(8% 0 78% 0); }
+      80% { opacity: .25; transform: translate(2px, 1px); clip-path: inset(58% 0 20% 0); }
+      100% { opacity: 0; transform: translate(0, 0); clip-path: inset(0 0 0 0); }
+    }
+
+    .chrono-logo.is-route-active .chrono-logo-img {
+      animation: chronoLogoPulse 2.8s ease-in-out infinite;
+    }
+
+    .chrono-logo:hover .chrono-logo-img,
+    .chrono-logo:focus-visible .chrono-logo-img {
+      transform: scale(1.03);
+      filter: brightness(1.12) contrast(1.08);
+    }
+
+    .chrono-logo.is-glitching .chrono-logo-glitch--red {
+      animation: chronoLogoGlitch 420ms steps(2, end);
+    }
+
+    .chrono-logo.is-glitching .chrono-logo-glitch--cyan {
+      animation: chronoLogoGlitch 420ms steps(2, end) reverse;
+    }
+
+    .chrono-logo:focus-visible {
+      outline: 2px solid rgba(124, 90, 240, 0.5);
+      outline-offset: 4px;
+      border-radius: 12px;
+    }
+
+    @media (max-width: 768px) {
+      .chrono-logo-img {
+        height: 30px;
+      }
+
+      .chrono-logo.is-glitching .chrono-logo-glitch--red,
+      .chrono-logo.is-glitching .chrono-logo-glitch--cyan {
+        animation-duration: 360ms;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .chrono-logo.is-route-active .chrono-logo-img {
+        animation: none;
+        filter: brightness(1.05) drop-shadow(0 0 6px rgba(124, 90, 240, 0.12));
+      }
+
+      .chrono-logo .chrono-logo-glitch {
+        display: none;
+      }
+
+      .chrono-logo:hover .chrono-logo-img,
+      .chrono-logo:focus-visible .chrono-logo-img {
+        transform: scale(1.01);
+        filter: brightness(1.08) contrast(1.06);
+      }
     }
 
     .search-slot {
@@ -4008,6 +4127,34 @@
       100% { transform: scale(1); }
     }
 
+    @keyframes voteBtnUp {
+      0% { transform: scale(1) translateY(0); }
+      40% { transform: scale(1.35) translateY(-3px); }
+      100% { transform: scale(1) translateY(0); }
+    }
+
+    @keyframes voteBtnStable {
+      0% { transform: scale(1); }
+      40% { transform: scale(1.35); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes voteBtnDown {
+      0% { transform: scale(1) translateY(0); }
+      40% { transform: scale(1.35) translateY(3px); }
+      100% { transform: scale(1) translateY(0); }
+    }
+
+    .vote-quick.vote-pop-up { animation: voteBtnUp 300ms cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .vote-quick.vote-pop-stable { animation: voteBtnStable 300ms cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .vote-quick.vote-pop-down { animation: voteBtnDown 300ms cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+    .vote-cluster-thread {
+      padding: 6px 10px;
+      gap: 10px;
+      border-radius: 12px;
+    }
+
     .action-btn {
       border: 0;
       background: transparent;
@@ -4239,6 +4386,476 @@
       background: rgba(124, 90, 240, 0.15);
       border: 1px solid rgba(124, 90, 240, 0.35);
       color: #d7cdfc;
+    }
+
+    .thread-item.is-active {
+      border-color: rgba(124, 90, 240, 0.55);
+      background: rgba(124, 90, 240, 0.16);
+      color: var(--color-text);
+      box-shadow: inset 0 0 0 1px rgba(124, 90, 240, 0.26), 0 0 0 1px rgba(124, 90, 240, 0.24), 0 10px 24px rgba(0, 0, 0, 0.22);
+    }
+
+    .thread-item.is-active .tag {
+      color: #fff;
+    }
+
+    .thread-item.is-active .count {
+      background: rgba(124, 90, 240, 0.24);
+      border-color: rgba(147, 112, 255, 0.65);
+      color: #ede8ff;
+      box-shadow: 0 0 14px rgba(124, 90, 240, 0.38);
+    }
+
+    .cordao-view {
+      padding-top: 6px;
+    }
+
+    .cordao-view-shell {
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+    }
+
+    .cordao-sidebar {
+      border: 1px solid var(--color-border);
+      background: rgba(15, 17, 32, 0.95);
+      border-radius: 16px;
+      padding: 12px;
+      position: sticky;
+      top: calc(var(--header-h) + 10px);
+      max-height: calc(100vh - var(--header-h) - 128px);
+      overflow-y: auto;
+    }
+
+    .cordao-sidebar-title {
+      margin: 0 0 10px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-text-muted);
+      font-weight: 600;
+    }
+
+    .cordao-main {
+      display: grid;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .cordao-header-card {
+      border: 1px solid var(--color-border);
+      border-radius: 18px;
+      background: linear-gradient(160deg, rgba(15, 17, 32, 0.98), rgba(16, 20, 36, 0.94));
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+      padding: 16px 18px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .cordao-breadcrumb {
+      margin: 0;
+      font-size: 12px;
+      color: var(--color-text-faint);
+      letter-spacing: 0.02em;
+    }
+
+    .cordao-title {
+      margin: 0;
+      font-size: 30px;
+      line-height: 1.1;
+      font-family: var(--font-display);
+      color: #f0f2ff;
+    }
+
+    .cordao-subtitle {
+      margin: 0;
+      font-size: 13px;
+      color: var(--color-text-muted);
+    }
+
+    .cordao-metrics {
+      margin-top: 2px;
+      font-size: 12px;
+      color: #b7bbd8;
+    }
+
+    .cordao-composer {
+      border: 1px solid var(--color-border);
+      border-radius: 16px;
+      background: rgba(15, 17, 32, 0.95);
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .cordao-composer-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .cordao-composer-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      object-fit: cover;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      flex-shrink: 0;
+    }
+
+    .cordao-composer-textarea {
+      width: 100%;
+      min-height: 100px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      padding: 12px 13px;
+      background: rgba(6, 8, 16, 0.82);
+      color: var(--color-text);
+      line-height: 1.45;
+      resize: none;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .cordao-composer-textarea:focus {
+      border-color: rgba(124, 90, 240, 0.58);
+      box-shadow: 0 0 0 3px rgba(124, 90, 240, 0.2);
+    }
+
+    .cordao-composer-textarea.is-error {
+      border-color: rgba(255, 92, 96, 0.74);
+      box-shadow: 0 0 0 3px rgba(255, 92, 96, 0.15);
+    }
+
+    .cordao-composer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .cordao-pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 0 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #efe9ff;
+      border: 1px solid rgba(124, 90, 240, 0.5);
+      background: rgba(124, 90, 240, 0.18);
+      letter-spacing: 0.01em;
+    }
+
+    .cordao-feed-block {
+      border: 1px solid var(--color-border);
+      border-radius: 16px;
+      background: rgba(15, 17, 32, 0.95);
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .cordao-feed-title {
+      margin: 0;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--color-text-muted);
+      font-weight: 600;
+    }
+
+    .cordao-feed-list {
+      margin-top: 0;
+    }
+
+    .cordao-card-tag {
+      margin-left: auto;
+      border-radius: 999px;
+      border: 1px solid rgba(124, 90, 240, 0.45);
+      background: rgba(124, 90, 240, 0.17);
+      color: #e9e4ff;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      line-height: 1.3;
+    }
+
+    .cordao-empty {
+      border: 1px dashed rgba(255, 255, 255, 0.14);
+      border-radius: 14px;
+      padding: 18px;
+      text-align: center;
+      display: grid;
+      gap: 8px;
+      background: rgba(10, 12, 22, 0.72);
+    }
+
+    .cordao-empty h4 {
+      margin: 0;
+      font-size: 16px;
+      color: #f1f3ff;
+      font-family: var(--font-display);
+    }
+
+    .cordao-empty p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--color-text-muted);
+    }
+
+    .cordao-modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 560;
+      background: rgba(0, 0, 0, 0.74);
+      backdrop-filter: blur(10px);
+      display: grid;
+      place-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 170ms ease;
+      padding: 12px;
+    }
+
+    .cordao-modal-overlay.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .cordao-modal-overlay.is-hidden {
+      display: none;
+    }
+
+    .cordao-modal {
+      width: min(560px, calc(100vw - 24px));
+      max-height: calc(100vh - 24px);
+      overflow: auto;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(10, 11, 20, 0.98);
+      box-shadow: 0 28px 64px rgba(0, 0, 0, 0.52);
+      transform: translateY(20px) scale(0.96);
+      opacity: 0;
+      transition: transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1), opacity 180ms ease;
+    }
+
+    .cordao-modal-overlay.is-open .cordao-modal {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+
+    .cordao-modal-header {
+      padding: 18px 20px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .cordao-modal-title {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 22px;
+      color: #f2f4ff;
+      line-height: 1.15;
+    }
+
+    .cordao-modal-subtitle {
+      margin: 4px 0 0;
+      color: var(--color-text-muted);
+      font-size: 13px;
+    }
+
+    .cordao-modal-close {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--color-text-muted);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .cordao-modal-close:hover {
+      color: var(--color-text);
+      border-color: rgba(255, 255, 255, 0.24);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .cordao-modal-close i,
+    .cordao-modal-close svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .cordao-modal-body {
+      padding: 16px 20px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .cordao-modal-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .cordao-modal-user img {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      object-fit: cover;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      flex-shrink: 0;
+    }
+
+    .cordao-modal-user-meta {
+      min-width: 0;
+      display: grid;
+      gap: 2px;
+    }
+
+    .cordao-modal-user-name {
+      margin: 0;
+      font-size: 14px;
+      color: #eff1ff;
+      font-weight: 600;
+    }
+
+    .cordao-modal-user-handle {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: 12px;
+    }
+
+    .cordao-modal-field {
+      display: grid;
+      gap: 7px;
+    }
+
+    .cordao-modal-label {
+      font-size: 12px;
+      color: #bfc3de;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .cordao-modal-textarea,
+    .cordao-modal-input {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(6, 8, 16, 0.82);
+      color: var(--color-text);
+      padding: 11px 12px;
+      line-height: 1.45;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .cordao-modal-textarea {
+      min-height: 120px;
+      resize: none;
+    }
+
+    .cordao-modal-textarea:focus,
+    .cordao-modal-input:focus {
+      border-color: rgba(124, 90, 240, 0.6);
+      box-shadow: 0 0 0 3px rgba(124, 90, 240, 0.2);
+    }
+
+    .cordao-modal-textarea.is-error,
+    .cordao-modal-input.is-error {
+      border-color: rgba(255, 92, 96, 0.76);
+      box-shadow: 0 0 0 3px rgba(255, 92, 96, 0.16);
+    }
+
+    .cordao-modal-counter {
+      margin: 0;
+      font-size: 11px;
+      color: var(--color-text-faint);
+      justify-self: end;
+    }
+
+    .cordao-chip-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .cordao-chip {
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.04);
+      color: #d6d9ef;
+      font-size: 12px;
+      min-height: 30px;
+      padding: 0 10px;
+      cursor: pointer;
+      transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+    }
+
+    .cordao-chip:hover {
+      border-color: rgba(124, 90, 240, 0.55);
+      color: #f0ebff;
+      background: rgba(124, 90, 240, 0.16);
+    }
+
+    .cordao-modal-error {
+      min-height: 18px;
+      margin: 0;
+      font-size: 12px;
+      color: #ff7f86;
+    }
+
+    .cordao-modal-footer {
+      padding: 12px 20px 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .cordao-modal-btn {
+      min-height: 36px;
+      border-radius: 10px;
+      border: 0;
+      padding: 0 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .cordao-modal-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .cordao-modal-btn.cancel {
+      color: var(--color-text);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .cordao-modal-btn.cancel:hover {
+      background: rgba(255, 255, 255, 0.13);
+    }
+
+    .cordao-modal-btn.publish {
+      color: #fff;
+      background: var(--color-primary);
+    }
+
+    .cordao-modal-btn.publish:hover {
+      background: var(--color-primary-hover);
     }
 
     .timeline-bar {
@@ -6039,11 +6656,77 @@
       .left-sidebar {
         display: none;
       }
+
+      .cordao-view-shell {
+        grid-template-columns: 230px minmax(0, 1fr);
+      }
     }
 
     @media (max-width: 767px) {
       .autocomplete-dropdown {
         width: min(92vw, 280px);
+      }
+
+      .cordao-view-shell {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 10px;
+      }
+
+      .cordao-sidebar {
+        position: static;
+        top: auto;
+        max-height: none;
+        border-radius: 14px;
+        padding: 10px;
+      }
+
+      .cordao-sidebar-title {
+        margin-bottom: 8px;
+      }
+
+      .cordao-thread-list {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        scroll-snap-type: x proximity;
+      }
+
+      .cordao-thread-list .thread-item {
+        min-width: max-content;
+        scroll-snap-align: start;
+      }
+
+      .cordao-header-card {
+        padding: 14px;
+      }
+
+      .cordao-title {
+        font-size: 24px;
+      }
+
+      .cordao-composer {
+        padding: 10px;
+      }
+
+      .cordao-composer-textarea {
+        min-height: 92px;
+      }
+
+      .cordao-feed-block {
+        padding: 10px;
+      }
+
+      .cordao-modal {
+        width: min(560px, calc(100vw - 12px));
+        max-height: calc(100vh - 12px);
+      }
+
+      .cordao-modal-header,
+      .cordao-modal-body,
+      .cordao-modal-footer {
+        padding-left: 14px;
+        padding-right: 14px;
       }
 
       .kpi-grid {
@@ -6141,7 +6824,6 @@
         display: none;
       }
 
-      .brand-link span,
       .profile-name,
       .profile-chevron,
       .header-divider,
@@ -6227,6 +6909,345 @@
         margin-right: 10px;
       }
     }
+
+    /* ===== COMPOSER ENHANCEMENTS ===== */
+
+    .composer-tool {
+      display: none;
+    }
+
+    .composer-tools .icon-btn {
+      position: relative;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+    }
+
+    .composer-tools .icon-btn:hover {
+      background: rgba(124, 90, 240, 0.08);
+      color: var(--color-primary-hover);
+      border-color: rgba(124, 90, 240, 0.2);
+    }
+
+    .composer-tools .icon-btn.active {
+      background: rgba(124, 90, 240, 0.12);
+      color: var(--color-primary);
+      border-color: rgba(124, 90, 240, 0.4);
+      box-shadow: 0 0 8px rgba(124, 90, 240, 0.3);
+    }
+
+    /* Image Preview */
+    .composer-image-preview {
+      margin-top: 12px;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--color-border);
+      background: var(--color-surface-2);
+      position: relative;
+      animation: slideUp 240ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .composer-image-preview img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: cover;
+    }
+
+    .composer-image-remove {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 32px;
+      height: 32px;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      transition: all 0.2s ease;
+    }
+
+    .composer-image-remove:hover {
+      background: rgba(255, 59, 48, 0.8);
+      border-color: rgba(255, 59, 48, 0.4);
+    }
+
+    /* Emoji Picker */
+    .emoji-picker {
+      position: absolute;
+      bottom: 48px;
+      left: 4px;
+      width: 260px;
+      background: rgba(10, 11, 20, 0.98);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 12px;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      animation: popUp 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .emoji-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 6px;
+    }
+
+    .emoji-btn {
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 18px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .emoji-btn:hover {
+      background: rgba(124, 90, 240, 0.15);
+      transform: scale(1.1);
+    }
+
+    /* Poll Builder */
+    .poll-builder {
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      animation: slideUp 240ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .poll-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .poll-question-input,
+    .poll-option-input {
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 8px;
+      padding: 8px 10px;
+      color: var(--color-text);
+      font-size: 13px;
+      margin-bottom: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .poll-question-input:focus,
+    .poll-option-input:focus {
+      outline: none;
+      border-color: rgba(124, 90, 240, 0.4);
+      background: rgba(124, 90, 240, 0.08);
+    }
+
+    .poll-question-input::placeholder,
+    .poll-option-input::placeholder {
+      color: var(--color-text-faint);
+    }
+
+    .poll-options-container {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .poll-option-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .poll-option-input {
+      flex: 1;
+      margin-bottom: 0;
+    }
+
+    .poll-option-remove {
+      width: 30px;
+      height: 30px;
+      border: 1px solid rgba(255, 59, 48, 0.3);
+      background: rgba(255, 59, 48, 0.08);
+      border-radius: 6px;
+      color: #ff3b30;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      font-size: 14px;
+    }
+
+    .poll-option-remove:hover {
+      background: rgba(255, 59, 48, 0.2);
+      border-color: rgba(255, 59, 48, 0.6);
+    }
+
+    .poll-add-option-btn {
+      width: 100%;
+      border: 1px dashed rgba(124, 90, 240, 0.3);
+      background: transparent;
+      padding: 8px;
+      border-radius: 8px;
+      color: var(--color-primary);
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-bottom: 12px;
+    }
+
+    .poll-add-option-btn:hover {
+      background: rgba(124, 90, 240, 0.08);
+      border-color: rgba(124, 90, 240, 0.5);
+    }
+
+    .poll-add-option-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .poll-auto-close {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--color-text-muted);
+      margin-bottom: 12px;
+    }
+
+    .poll-auto-close input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      accent-color: var(--color-primary);
+    }
+
+    .poll-remove-btn {
+      width: 100%;
+      border: 1px solid rgba(255, 59, 48, 0.3);
+      background: transparent;
+      padding: 6px;
+      border-radius: 8px;
+      color: #ff3b30;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .poll-remove-btn:hover {
+      background: rgba(255, 59, 48, 0.1);
+      border-color: rgba(255, 59, 48, 0.6);
+    }
+
+    /* Poll Cards in Feed (Votable) */
+    .poll-card-interactive {
+      cursor: pointer;
+      position: relative;
+    }
+
+    .poll-option-interactive {
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      border-radius: 8px;
+      padding: 10px;
+      transition: all 0.2s ease;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .poll-option-interactive:hover {
+      background: rgba(124, 90, 240, 0.1);
+    }
+
+    .poll-option-interactive.voted {
+      background: rgba(124, 90, 240, 0.15);
+      border: 1px solid rgba(124, 90, 240, 0.4);
+    }
+
+    .poll-option-fill {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(124, 90, 240, 0.12), rgba(147, 112, 255, 0.08));
+      border-radius: 8px;
+      z-index: 0;
+      width: 0;
+      transition: width 280ms cubic-bezier(0.2, 0.9, 0.3, 1);
+    }
+
+    .poll-option-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .poll-option-text {
+      flex: 1;
+    }
+
+    .poll-option-percent {
+      font-weight: 600;
+      color: var(--color-primary);
+      font-size: 13px;
+    }
+
+    .poll-status-text {
+      font-size: 11px;
+      color: var(--color-text-faint);
+      margin-top: 8px;
+    }
+
+    /* Animations */
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes popUp {
+      from {
+        opacity: 0;
+        transform: scale(0.92) translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.7;
+      }
+    }
+
+    .poll-option.voted-pulse {
+      animation: pulse 300ms ease;
+    }
   </style>
 </head>
 <body>
@@ -6238,13 +7259,12 @@
   <header class="top-header">
     <div class="header-inner">
       <div class="header-left">
-        <a href="#" class="brand-link" aria-label="Chrono Home">
-          <svg class="logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <circle cx="16" cy="16" r="14" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/>
-            <path d="M20.8 11.3C19.7 9.95 18.1 9.2 16.1 9.2C12.4 9.2 9.6 12 9.6 15.8C9.6 19.6 12.4 22.4 16.1 22.4C18.2 22.4 19.9 21.6 21 20.2" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
-            <circle cx="22.7" cy="21.9" r="1.3" fill="#ffffff"/>
-          </svg>
-          <span>Chrono</span>
+        <a href="#feed" class="brand-link chrono-logo" aria-label="Ir para o feed da Chrono">
+          <span class="chrono-logo-stack">
+            <img src="public/Chrono.png" alt="Chrono" class="chrono-logo-img">
+            <span class="chrono-logo-glitch chrono-logo-glitch--red" aria-hidden="true"></span>
+            <span class="chrono-logo-glitch chrono-logo-glitch--cyan" aria-hidden="true"></span>
+          </span>
         </a>
       </div>
 
@@ -6505,6 +7525,53 @@
     </article>
   </section>
 
+  <section id="cordaoModalOverlay" class="cordao-modal-overlay is-hidden" aria-hidden="true">
+    <article id="cordaoModal" class="cordao-modal" role="dialog" aria-modal="true" aria-labelledby="cordaoModalTitle">
+      <header class="cordao-modal-header">
+        <div>
+          <h3 id="cordaoModalTitle" class="cordao-modal-title">Criar novo cordao</h3>
+          <p class="cordao-modal-subtitle">Publique algo e conecte isso a uma linha tematica.</p>
+        </div>
+        <button id="cordaoModalClose" class="cordao-modal-close" type="button" aria-label="Fechar modal de cordao">
+          <i data-lucide="x"></i>
+        </button>
+      </header>
+
+      <div class="cordao-modal-body">
+        <div class="cordao-modal-user">
+          <img id="cordaoModalUserAvatar" src="https://picsum.photos/seed/juvinho-compose/64/64" alt="Avatar do usuario logado">
+          <div class="cordao-modal-user-meta">
+            <p id="cordaoModalUserName" class="cordao-modal-user-name">Juvinho Silva</p>
+            <p id="cordaoModalUserHandle" class="cordao-modal-user-handle">@Juvinho</p>
+          </div>
+        </div>
+
+        <label class="cordao-modal-field" for="cordaoModalTextarea">
+          <span class="sr-only" style="position:absolute;left:-9999px;">Conteudo do post</span>
+          <textarea id="cordaoModalTextarea" class="cordao-modal-textarea" placeholder="O que esse cordao esta puxando agora?"></textarea>
+        </label>
+
+        <label class="cordao-modal-field" for="cordaoModalInput">
+          <span class="cordao-modal-label">Cordao</span>
+          <input id="cordaoModalInput" class="cordao-modal-input" type="text" maxlength="40" placeholder="#nomedocordao" autocomplete="off">
+        </label>
+
+        <div class="cordao-modal-field">
+          <span class="cordao-modal-label">Sugestoes rapidas</span>
+          <div id="cordaoModalChips" class="cordao-chip-list"></div>
+        </div>
+
+        <p id="cordaoModalCounter" class="cordao-modal-counter">0/280</p>
+        <p id="cordaoModalError" class="cordao-modal-error" role="alert"></p>
+      </div>
+
+      <footer class="cordao-modal-footer">
+        <button id="cordaoModalCancel" class="cordao-modal-btn cancel" type="button">Cancelar</button>
+        <button id="cordaoModalPublish" class="cordao-modal-btn publish" type="button" disabled>Publicar cordao</button>
+      </footer>
+    </article>
+  </section>
+
   <div id="appToastHost" class="app-toast-host" aria-live="polite"></div>
 
   <main class="app-main">
@@ -6585,6 +7652,7 @@
             </nav>
 
             <section class="composer" aria-label="Novo post">
+              <input type="file" id="composerPhotoInput" accept="image/png,image/jpeg,image/webp,image/gif" style="display:none;">
               <div class="composer-top">
                 <img id="composerAvatar" src="https://picsum.photos/seed/juvinho-compose/64/64" alt="Avatar @Juvinho">
                 <label>
@@ -6592,11 +7660,14 @@
                   <textarea id="postComposer" placeholder="O que esta acontecendo?"></textarea>
                 </label>
               </div>
+              <div id="composerImagePreview"></div>
+              <div id="composerPollBuilder"></div>
+              <div id="emojiPickerContainer"></div>
               <div class="composer-bottom">
                 <div class="composer-tools" aria-hidden="true">
-                  <button class="icon-btn" type="button" tabindex="-1" aria-label="Adicionar imagem"><i data-lucide="image"></i></button>
-                  <button class="icon-btn" type="button" tabindex="-1" aria-label="Criar enquete"><i data-lucide="bar-chart-3"></i></button>
-                  <button class="icon-btn" type="button" tabindex="-1" aria-label="Adicionar emoji"><i data-lucide="smile"></i></button>
+                  <button class="icon-btn" id="composerPhotoBtn" type="button" tabindex="-1" aria-label="Adicionar imagem"><i data-lucide="image"></i></button>
+                  <button class="icon-btn" id="composerPollBtn" type="button" tabindex="-1" aria-label="Criar enquete"><i data-lucide="bar-chart-3"></i></button>
+                  <button class="icon-btn" id="composerEmojiBtn" type="button" tabindex="-1" aria-label="Adicionar emoji"><i data-lucide="smile"></i></button>
                 </div>
                 <button type="button" id="publishBtn" class="publish-btn" disabled>Publicar</button>
               </div>
@@ -6616,6 +7687,24 @@
             </section>
 
             <section id="feedList" class="feed-list hidden" aria-live="polite"></section>
+          </section>
+
+          <section id="view-cordao" class="app-view cordao-view" data-view="cordao" aria-label="Cordao ativo">
+            <section class="cordao-view-shell">
+              <aside class="cordao-sidebar" aria-label="Cordoes populares">
+                <h3 class="cordao-sidebar-title">Cordoes populares</h3>
+                <ul id="cordaoSidebarList" class="thread-list cordao-thread-list"></ul>
+              </aside>
+
+              <div class="cordao-main">
+                <header id="cordaoHeaderCard" class="cordao-header-card"></header>
+                <section id="cordaoComposerCard" class="cordao-composer"></section>
+                <section class="cordao-feed-block">
+                  <h3 class="cordao-feed-title">Mais recentes</h3>
+                  <section id="cordaoFeedList" class="feed-list cordao-feed-list" aria-live="polite"></section>
+                </section>
+              </div>
+            </section>
           </section>
 
           <section id="view-profile" class="app-view profile-view" data-view="profile" aria-label="Perfil">
@@ -6844,13 +7933,7 @@
         <section class="panel hub-panel">
           <button id="createThreadBtn" class="create-thread-btn" type="button">Criar Cordao</button>
           <p class="sub-title">CORDOES POPULARES</p>
-          <ul class="thread-list">
-            <li class="thread-item"><span class="tag">#ossodemais</span><span class="count">2</span></li>
-            <li class="thread-item"><span class="tag">#fodademais</span><span class="count">1</span></li>
-            <li class="thread-item"><span class="tag">#Railway</span><span class="count">1</span></li>
-            <li class="thread-item"><span class="tag">#artedistopica</span><span class="count">4</span></li>
-            <li class="thread-item"><span class="tag">#chrono</span><span class="count">7</span></li>
-          </ul>
+          <ul id="rightThreadList" class="thread-list"></ul>
         </section>
       </aside>
     </div>
@@ -6935,6 +8018,14 @@
   <div id="threadLightbox" class="thread-lightbox is-hidden" aria-hidden="true">
     <button type="button" id="threadLightboxClose" class="thread-lightbox-close" aria-label="Fechar imagem">×</button>
     <img id="threadLightboxImage" class="thread-lightbox-image" src="" alt="Imagem em destaque">
+  </div>
+
+  <div id="voteModalOverlay" class="vote-modal-overlay is-hidden" aria-hidden="true">
+    <section id="voteModal" class="vote-modal" role="dialog" aria-modal="true" aria-labelledby="vote-modal-title" tabindex="-1">
+      <header id="voteModalHeader" class="vote-modal-header"></header>
+      <div id="voteModalBody" class="vote-modal-body"></div>
+      <footer id="voteModalFooter" class="vote-modal-footer"></footer>
+    </section>
   </div>
 
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
@@ -7101,11 +8192,17 @@
       var threadLightbox = document.getElementById('threadLightbox');
       var threadLightboxImage = document.getElementById('threadLightboxImage');
       var threadLightboxClose = document.getElementById('threadLightboxClose');
+      var voteModalOverlay = document.getElementById('voteModalOverlay');
+      var voteModal = document.getElementById('voteModal');
+      var voteModalHeader = document.getElementById('voteModalHeader');
+      var voteModalBody = document.getElementById('voteModalBody');
+      var voteModalFooter = document.getElementById('voteModalFooter');
       var appMain = document.querySelector('.app-main');
       var appViewContainer = document.getElementById('app-view-container');
       var appViews = Array.prototype.slice.call(document.querySelectorAll('#app-view-container .app-view'));
 
       var viewProfile = document.getElementById('view-profile');
+      var viewCordao = document.getElementById('view-cordao');
       var viewEditProfile = document.getElementById('view-edit-profile');
       var viewStats = document.getElementById('view-stats');
       var viewTheme = document.getElementById('view-theme');
@@ -7179,6 +8276,11 @@
 
       var languageList = document.getElementById('languageList');
       var createThreadBtn = document.getElementById('createThreadBtn');
+      var rightThreadList = document.getElementById('rightThreadList');
+      var cordaoSidebarList = document.getElementById('cordaoSidebarList');
+      var cordaoHeaderCard = document.getElementById('cordaoHeaderCard');
+      var cordaoComposerCard = document.getElementById('cordaoComposerCard');
+      var cordaoFeedList = document.getElementById('cordaoFeedList');
       var notifViewAllButton = document.getElementById('notifViewAllButton');
       var feedTabAll = document.getElementById('feedTabAll');
       var feedTabFollowing = document.getElementById('feedTabFollowing');
@@ -7205,6 +8307,19 @@
       var unsavedOverlay = document.getElementById('unsavedOverlay');
       var unsavedCancelButton = document.getElementById('unsavedCancelButton');
       var unsavedDiscardButton = document.getElementById('unsavedDiscardButton');
+      var cordaoModalOverlay = document.getElementById('cordaoModalOverlay');
+      var cordaoModal = document.getElementById('cordaoModal');
+      var cordaoModalClose = document.getElementById('cordaoModalClose');
+      var cordaoModalTextarea = document.getElementById('cordaoModalTextarea');
+      var cordaoModalInput = document.getElementById('cordaoModalInput');
+      var cordaoModalChips = document.getElementById('cordaoModalChips');
+      var cordaoModalCounter = document.getElementById('cordaoModalCounter');
+      var cordaoModalError = document.getElementById('cordaoModalError');
+      var cordaoModalCancel = document.getElementById('cordaoModalCancel');
+      var cordaoModalPublish = document.getElementById('cordaoModalPublish');
+      var cordaoModalUserAvatar = document.getElementById('cordaoModalUserAvatar');
+      var cordaoModalUserName = document.getElementById('cordaoModalUserName');
+      var cordaoModalUserHandle = document.getElementById('cordaoModalUserHandle');
       var appToastHost = document.getElementById('appToastHost');
 
       function normalizeAuthorHandle(handle) {
@@ -7606,14 +8721,12 @@
               repostHtml +
               threadNote +
               '<footer class="post-actions">' +
+                VoteSystem.buildClusterHTML(post.id) +
                 '<button class="action-btn action-comment" data-action="comment" type="button" aria-label="Comentarios">' +
                   '<i data-lucide="message-circle"></i><span class="action-count">' + post.metrics.comments + '</span>' +
                 '</button>' +
                 '<button class="action-btn action-repost ' + (post.state.repost ? 'active' : '') + '" data-action="repost" type="button" aria-label="Repostar">' +
                   '<i data-lucide="repeat-2"></i><span class="action-count">' + post.metrics.reposts + '</span>' +
-                '</button>' +
-                '<button class="action-btn action-like ' + (post.state.like ? 'active' : '') + '" data-action="like" type="button" aria-label="Boost">' +
-                  '<i data-lucide="zap"></i><span class="action-count">' + post.metrics.likes + '</span>' +
                 '</button>' +
                 '<button class="action-btn action-share" data-action="share" type="button" aria-label="Compartilhar">' +
                   '<i data-lucide="share-2"></i>' +
@@ -7654,6 +8767,7 @@
 
         animatePollBars();
         safeIconRefresh();
+        VoteSystem.syncAllCards();
       }
 
       function updateTabButtons() {
@@ -7671,11 +8785,6 @@
       function toggleMetric(post, action) {
         if (!post) {
           return;
-        }
-
-        if (action === 'like') {
-          post.state.like = !post.state.like;
-          post.metrics.likes += post.state.like ? 1 : -1;
         }
 
         if (action === 'repost') {
@@ -7764,6 +8873,981 @@
         notify(fallbackMessage || 'Link pronto para compartilhar.');
       }
 
+      function normalizeCordao(input) {
+        var raw = String(input || '').trim().toLowerCase();
+
+        if (!raw) {
+          return '';
+        }
+
+        if (typeof raw.normalize === 'function') {
+          raw = raw.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        }
+
+        raw = raw.replace(/^#+/, '');
+        raw = raw.replace(/\s+/g, '');
+        raw = raw.replace(/[^a-z0-9_]/g, '');
+
+        if (raw.length > 24) {
+          raw = raw.slice(0, 24);
+        }
+
+        return raw ? ('#' + raw) : '';
+      }
+
+      function toCordaoSlug(value) {
+        return normalizeCordao(value).replace(/^#/, '');
+      }
+
+      function displayCordao(value) {
+        var slug = toCordaoSlug(value);
+        return slug ? ('#' + slug) : '#';
+      }
+
+      function extractCordaoFromText(text) {
+        var match = String(text || '').toLowerCase().match(/#([a-z0-9_]{1,24})/);
+        if (!match) {
+          return '';
+        }
+
+        return toCordaoSlug('#' + match[1]);
+      }
+
+      function prependPostToFeed(post, source) {
+        if (!post || !feedList) {
+          return null;
+        }
+
+        if (feedList.querySelector('[data-post-id="' + post.id + '"]')) {
+          return null;
+        }
+
+        var card = createPostCardElement(post, 0, {
+          newPostId: post.id,
+          source: source || post.source || 'cordao'
+        });
+
+        if (!card) {
+          return null;
+        }
+
+        feedList.prepend(card);
+        safeIconRefresh();
+
+        document.dispatchEvent(new CustomEvent('chrono:post-created', {
+          detail: { postEl: card }
+        }));
+
+        return card;
+      }
+
+      var CordaoStore = {
+        cordoes: [],
+        posts: [],
+        listeners: [],
+        initialized: false,
+
+        init: function () {
+          if (this.initialized) {
+            return;
+          }
+
+          var self = this;
+          this.initialized = true;
+
+          this.cordoes = [];
+          this.posts = [];
+
+          MOCK_CORDOES.forEach(function (item) {
+            var slug = toCordaoSlug(item && item.name);
+            if (!slug) {
+              return;
+            }
+
+            var existing = self.createCordaoIfMissing(slug);
+            if (!existing) {
+              return;
+            }
+
+            existing.posts = Math.max(Number(existing.posts) || 0, Number(item.posts) || 0);
+            existing.trending = !!item.trending;
+          });
+
+          postStore.forEach(function (post, index) {
+            applyPostMetadata(post, post && post.source ? post.source : 'initial', index);
+
+            var slug = extractCordaoFromText(post && post.text ? post.text : '');
+            if (!slug) {
+              return;
+            }
+
+            var existing = self.createCordaoIfMissing(slug);
+            if (existing) {
+              existing.posts = Math.max(Number(existing.posts) || 0, 1);
+            }
+
+            self.posts.push({
+              id: post.id,
+              slug: slug,
+              createdAt: Number(post.createdAt) || (Date.now() - (index * 60000))
+            });
+          });
+
+          this.posts.sort(function (a, b) {
+            return (Number(b.createdAt) || 0) - (Number(a.createdAt) || 0);
+          });
+          this.sortCordoes();
+        },
+
+        sortCordoes: function () {
+          this.cordoes.sort(function (a, b) {
+            var countDiff = (Number(b.posts) || 0) - (Number(a.posts) || 0);
+            if (countDiff !== 0) {
+              return countDiff;
+            }
+
+            return String(a.slug || '').localeCompare(String(b.slug || ''));
+          });
+        },
+
+        getCordoes: function () {
+          return this.cordoes.slice();
+        },
+
+        getCordao: function (slug) {
+          var safeSlug = toCordaoSlug(slug);
+          if (!safeSlug) {
+            return null;
+          }
+
+          return this.cordoes.find(function (item) {
+            return item.slug === safeSlug;
+          }) || null;
+        },
+
+        getPostsByCordao: function (slug) {
+          var safeSlug = toCordaoSlug(slug);
+          if (!safeSlug) {
+            return [];
+          }
+
+          return this.posts
+            .filter(function (item) {
+              return item.slug === safeSlug;
+            })
+            .sort(function (a, b) {
+              return (Number(b.createdAt) || 0) - (Number(a.createdAt) || 0);
+            })
+            .map(function (item) {
+              return getPostById(item.id);
+            })
+            .filter(Boolean);
+        },
+
+        createCordaoIfMissing: function (slug) {
+          var safeSlug = toCordaoSlug(slug);
+          if (!safeSlug) {
+            return null;
+          }
+
+          var existing = this.getCordao(safeSlug);
+          if (existing) {
+            return existing;
+          }
+
+          var created = {
+            slug: safeSlug,
+            posts: 0,
+            trending: false
+          };
+
+          this.cordoes.push(created);
+          this.sortCordoes();
+          return created;
+        },
+
+        incrementCordaoCount: function (slug, amount) {
+          var safeSlug = toCordaoSlug(slug);
+          var target = this.createCordaoIfMissing(safeSlug);
+          var nextAmount = Math.max(1, Number(amount) || 1);
+
+          if (!target) {
+            return null;
+          }
+
+          target.posts = Math.max(0, Number(target.posts) || 0) + nextAmount;
+          this.sortCordoes();
+          return target;
+        },
+
+        registerPostReference: function (postId, slug, createdAt) {
+          var safeSlug = toCordaoSlug(slug);
+          var safePostId = String(postId || '').trim();
+
+          if (!safePostId || !safeSlug) {
+            return;
+          }
+
+          this.posts = this.posts.filter(function (item) {
+            return item.id !== safePostId;
+          });
+
+          this.posts.unshift({
+            id: safePostId,
+            slug: safeSlug,
+            createdAt: Number(createdAt) || Date.now()
+          });
+        },
+
+        createPostInCordao: function (payload) {
+          var content = String(payload && payload.content ? payload.content : '').trim();
+          var slug = toCordaoSlug(payload && (payload.cordao || payload.slug));
+
+          if (!content || !slug) {
+            return null;
+          }
+
+          var tag = displayCordao(slug);
+          var finalText = content;
+
+          if (finalText.toLowerCase().indexOf(tag) === -1) {
+            finalText += ' ' + tag;
+          }
+
+          var newPost = {
+            id: 'cd-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+            user: String(payload && payload.author ? payload.author : getProfileHandleValue() || '@Juvinho'),
+            avatar: String(payload && payload.avatar ? payload.avatar : (AppState && AppState.profile && AppState.profile.avatar) || 'https://picsum.photos/seed/juvinho-compose/64/64'),
+            time: 'agora',
+            text: finalText,
+            verified: !!(payload && payload.verified),
+            source: 'cordao',
+            metrics: { comments: 0, reposts: 0, likes: 0 },
+            state: { repost: false, like: false, bookmark: false },
+            createdAt: Number(payload && payload.createdAt) || Date.now()
+          };
+
+          applyPostMetadata(newPost, 'cordao');
+          postStore.unshift(newPost);
+
+          this.createCordaoIfMissing(slug);
+          this.incrementCordaoCount(slug, 1);
+          this.registerPostReference(newPost.id, slug, newPost.createdAt);
+          this.notify({ type: 'post-created', slug: slug, post: newPost });
+
+          return newPost;
+        },
+
+        subscribe: function (listener) {
+          var self = this;
+
+          if (typeof listener !== 'function') {
+            return function () {};
+          }
+
+          this.listeners.push(listener);
+
+          return function () {
+            self.listeners = self.listeners.filter(function (item) {
+              return item !== listener;
+            });
+          };
+        },
+
+        notify: function (payload) {
+          this.sortCordoes();
+          this.listeners.slice().forEach(function (listener) {
+            try {
+              listener(payload || {});
+            } catch (_) {
+              // no-op
+            }
+          });
+        }
+      };
+
+      var SidebarCordoes = {
+        activeSlug: '',
+        initialized: false,
+
+        init: function () {
+          if (this.initialized) {
+            return;
+          }
+
+          this.initialized = true;
+          this.bindList(rightThreadList);
+          this.bindList(cordaoSidebarList);
+
+          var self = this;
+          CordaoStore.subscribe(function () {
+            self.render();
+          });
+
+          this.render();
+        },
+
+        bindList: function (listEl) {
+          if (!listEl) {
+            return;
+          }
+
+          listEl.addEventListener('click', function (event) {
+            var item = event.target.closest('.thread-item[data-cordao-slug]');
+            if (!item) {
+              return;
+            }
+
+            var slug = item.getAttribute('data-cordao-slug');
+            if (!slug) {
+              return;
+            }
+
+            CordaoRouter.navigateToSlug(slug);
+          });
+        },
+
+        setActiveSlug: function (slug) {
+          this.activeSlug = toCordaoSlug(slug);
+          this.paintActiveState();
+        },
+
+        paintActiveState: function () {
+          var current = this.activeSlug;
+
+          [rightThreadList, cordaoSidebarList].forEach(function (listEl) {
+            if (!listEl) {
+              return;
+            }
+
+            Array.prototype.slice.call(listEl.querySelectorAll('.thread-item[data-cordao-slug]')).forEach(function (item) {
+              item.classList.toggle('is-active', item.getAttribute('data-cordao-slug') === current);
+            });
+          });
+        },
+
+        renderList: function (listEl) {
+          if (!listEl) {
+            return;
+          }
+
+          var self = this;
+          var items = CordaoStore.getCordoes();
+
+          if (!items.length) {
+            listEl.innerHTML = '';
+            return;
+          }
+
+          listEl.innerHTML = items.map(function (item) {
+            var slug = item.slug;
+            var isActive = slug === self.activeSlug;
+            var classes = 'thread-item' + (isActive ? ' is-active' : '');
+
+            return (
+              '<li class="' + classes + '" data-cordao-slug="' + slug + '">' +
+                '<span class="tag">' + displayCordao(slug) + '</span>' +
+                '<span class="count">' + formatCompactCount(Number(item.posts) || 0) + '</span>' +
+              '</li>'
+            );
+          }).join('');
+        },
+
+        render: function () {
+          this.renderList(rightThreadList);
+          this.renderList(cordaoSidebarList);
+          this.paintActiveState();
+        }
+      };
+
+      var CordaoRouter = {
+        activeSlug: '',
+
+        parseRouteSlug: function (route) {
+          var normalized = String(route || '').replace(/^#/, '').replace(/^\/+/, '').toLowerCase();
+          var match = normalized.match(/^cordao(?:\/([a-z0-9_]+))?$/);
+
+          if (!match) {
+            return '';
+          }
+
+          return toCordaoSlug(match[1] || '');
+        },
+
+        getFallbackSlug: function () {
+          var list = CordaoStore.getCordoes();
+          return list.length ? String(list[0].slug || '') : 'chrono';
+        },
+
+        syncFromRoute: function (route) {
+          var normalized = String(route || '').replace(/^#/, '').replace(/^\/+/, '').toLowerCase();
+          var slug = this.parseRouteSlug(normalized);
+
+          if (!slug) {
+            slug = this.getFallbackSlug();
+          }
+
+          if (!slug) {
+            return '';
+          }
+
+          this.activeSlug = slug;
+          SidebarCordoes.setActiveSlug(slug);
+
+          var expected = 'cordao/' + slug;
+          if (normalized !== expected && AppRouter && typeof AppRouter.navigate === 'function') {
+            AppRouter.navigate(expected, { replace: true });
+          }
+
+          return slug;
+        },
+
+        navigateToSlug: function (slug, options) {
+          var safeSlug = toCordaoSlug(slug);
+          if (!safeSlug) {
+            return;
+          }
+
+          if (AppRouter && typeof AppRouter.navigate === 'function') {
+            AppRouter.navigate('cordao/' + safeSlug, options || {});
+            return;
+          }
+
+          window.location.hash = 'cordao/' + safeSlug;
+        }
+      };
+
+      var CordaoView = {
+        activeSlug: '',
+        lastInsertedPostId: '',
+        initialized: false,
+
+        init: function () {
+          if (this.initialized) {
+            return;
+          }
+
+          this.initialized = true;
+
+          if (cordaoFeedList) {
+            var self = this;
+            cordaoFeedList.addEventListener('click', function (event) {
+              var action = event.target.closest('[data-cordao-empty-action="publish"]');
+              if (!action) {
+                return;
+              }
+
+              self.focusComposer();
+            });
+          }
+
+          var selfRef = this;
+          CordaoStore.subscribe(function () {
+            if (AppRouter && AppRouter.currentView === 'cordao') {
+              selfRef.render(selfRef.activeSlug, { preserveInput: true });
+            }
+          });
+        },
+
+        focusComposer: function () {
+          if (!cordaoComposerCard) {
+            return;
+          }
+
+          var textarea = cordaoComposerCard.querySelector('#cordaoComposerTextarea');
+          if (textarea) {
+            textarea.focus();
+          }
+        },
+
+        renderHeader: function () {
+          if (!cordaoHeaderCard || !this.activeSlug) {
+            return;
+          }
+
+          var postsCount = CordaoStore.getPostsByCordao(this.activeSlug).length;
+          var postsLabel = postsCount === 1 ? 'post recente' : 'posts recentes';
+
+          cordaoHeaderCard.innerHTML = (
+            '<p class="cordao-breadcrumb">Cordoes / ' + displayCordao(this.activeSlug) + '</p>' +
+            '<h2 class="cordao-title">' + displayCordao(this.activeSlug) + '</h2>' +
+            '<p class="cordao-subtitle">Linha tematica em tempo real</p>' +
+            '<div class="cordao-metrics">' + postsCount + ' ' + postsLabel + ' / Atualizado agora</div>'
+          );
+        },
+
+        renderComposer: function (draftText) {
+          if (!cordaoComposerCard || !this.activeSlug) {
+            return;
+          }
+
+          var avatar = (AppState && AppState.profile && AppState.profile.avatar) || 'https://picsum.photos/seed/juvinho-compose/64/64';
+
+          cordaoComposerCard.innerHTML = (
+            '<div class="cordao-composer-top">' +
+              '<img class="cordao-composer-avatar" src="' + avatar + '" alt="Avatar do usuario logado">' +
+              '<label style="display:block; width:100%;">' +
+                '<span class="sr-only" style="position:absolute;left:-9999px;">Postar no cordao</span>' +
+                '<textarea id="cordaoComposerTextarea" class="cordao-composer-textarea" placeholder="Postar em ' + displayCordao(this.activeSlug) + '..."></textarea>' +
+              '</label>' +
+            '</div>' +
+            '<p id="cordaoComposerError" class="cordao-modal-error" role="alert"></p>' +
+            '<div class="cordao-composer-bottom">' +
+              '<span class="cordao-pill">' + displayCordao(this.activeSlug) + '</span>' +
+              '<button id="cordaoComposerPublish" class="publish-btn" type="button" disabled>Publicar</button>' +
+            '</div>'
+          );
+
+          var textarea = cordaoComposerCard.querySelector('#cordaoComposerTextarea');
+          var publish = cordaoComposerCard.querySelector('#cordaoComposerPublish');
+          var error = cordaoComposerCard.querySelector('#cordaoComposerError');
+          var self = this;
+
+          function updateComposerState() {
+            if (!textarea || !publish) {
+              return;
+            }
+
+            textarea.style.height = 'auto';
+            textarea.style.height = Math.min(textarea.scrollHeight, 220) + 'px';
+            publish.disabled = !textarea.value.trim();
+
+            if (textarea.value.trim()) {
+              textarea.classList.remove('is-error');
+              if (error) {
+                error.textContent = '';
+              }
+            }
+          }
+
+          if (textarea) {
+            textarea.value = String(draftText || '');
+            textarea.addEventListener('input', updateComposerState);
+          }
+
+          if (publish) {
+            publish.addEventListener('click', function () {
+              var content = String(textarea && textarea.value ? textarea.value : '').trim();
+
+              if (!content) {
+                if (error) {
+                  error.textContent = 'Escreva algo antes de publicar.';
+                }
+                if (textarea) {
+                  textarea.classList.add('is-error');
+                  textarea.focus();
+                }
+                return;
+              }
+
+              var newPost = CordaoStore.createPostInCordao({
+                content: content,
+                cordao: self.activeSlug,
+                author: getProfileHandleValue(),
+                avatar: (AppState && AppState.profile && AppState.profile.avatar) || '',
+                verified: true,
+                createdAt: Date.now()
+              });
+
+              if (!newPost) {
+                return;
+              }
+
+              self.lastInsertedPostId = newPost.id;
+              prependPostToFeed(newPost, 'cordao-view');
+
+              if (textarea) {
+                textarea.value = '';
+                textarea.classList.remove('is-error');
+              }
+
+              if (error) {
+                error.textContent = '';
+              }
+
+              updateComposerState();
+              showAppToast('Post publicado em ' + displayCordao(self.activeSlug));
+              self.render(self.activeSlug);
+            });
+          }
+
+          updateComposerState();
+        },
+
+        decorateFeedCards: function () {
+          var self = this;
+          if (!cordaoFeedList || !self.activeSlug) {
+            return;
+          }
+
+          Array.prototype.slice.call(cordaoFeedList.querySelectorAll('.post-card .post-head')).forEach(function (head) {
+            if (!head || head.querySelector('.cordao-card-tag')) {
+              return;
+            }
+
+            var tagEl = document.createElement('span');
+            tagEl.className = 'cordao-card-tag';
+            tagEl.textContent = displayCordao(self.activeSlug);
+            head.appendChild(tagEl);
+          });
+        },
+
+        renderFeed: function () {
+          if (!cordaoFeedList || !this.activeSlug) {
+            return;
+          }
+
+          var self = this;
+          var posts = CordaoStore.getPostsByCordao(this.activeSlug);
+
+          if (!posts.length) {
+            cordaoFeedList.innerHTML = (
+              '<article class="cordao-empty">' +
+                '<h4>Ainda nao ha publicacoes nesse cordao.</h4>' +
+                '<p>Seja o primeiro a puxar essa linha.</p>' +
+                '<button class="cordao-modal-btn publish" type="button" data-cordao-empty-action="publish">Publicar agora</button>' +
+              '</article>'
+            );
+            return;
+          }
+
+          cordaoFeedList.innerHTML = posts.map(function (post, index) {
+            return renderPost(post, index, {
+              source: 'cordao-view',
+              newPostId: self.lastInsertedPostId
+            });
+          }).join('');
+
+          this.lastInsertedPostId = '';
+          this.decorateFeedCards();
+          animatePollBars();
+          safeIconRefresh();
+          VoteSystem.syncAllCards();
+        },
+
+        render: function (slug, options) {
+          options = options || {};
+
+          var safeSlug = toCordaoSlug(slug) || CordaoRouter.activeSlug || CordaoRouter.getFallbackSlug();
+          if (!safeSlug) {
+            return;
+          }
+
+          this.activeSlug = safeSlug;
+          CordaoRouter.activeSlug = safeSlug;
+          SidebarCordoes.setActiveSlug(safeSlug);
+
+          var currentDraft = '';
+          if (options.preserveInput && cordaoComposerCard) {
+            var currentField = cordaoComposerCard.querySelector('#cordaoComposerTextarea');
+            currentDraft = currentField ? currentField.value : '';
+          }
+
+          this.renderHeader();
+          this.renderComposer(currentDraft);
+          this.renderFeed();
+        }
+      };
+
+      var CordaoModal = {
+        isOpen: false,
+        closeTimer: null,
+        quickSuggestions: ['#chrono', '#artedistopica', '#railway', '#ossodemais'],
+
+        init: function () {
+          if (!cordaoModalOverlay || !cordaoModal) {
+            return;
+          }
+
+          this.renderSuggestionChips();
+          this.bindEvents();
+          this.syncUserPreview();
+          this.resetForm();
+        },
+
+        syncUserPreview: function () {
+          var handle = getProfileHandleValue();
+          var displayName = (AppState && AppState.profile && AppState.profile.displayName) || 'Chrono User';
+          var avatar = (AppState && AppState.profile && AppState.profile.avatar) || 'https://picsum.photos/seed/juvinho-compose/64/64';
+
+          if (cordaoModalUserName) {
+            cordaoModalUserName.textContent = displayName;
+          }
+
+          if (cordaoModalUserHandle) {
+            cordaoModalUserHandle.textContent = handle;
+          }
+
+          if (cordaoModalUserAvatar) {
+            cordaoModalUserAvatar.src = avatar;
+            cordaoModalUserAvatar.alt = 'Avatar ' + handle;
+          }
+        },
+
+        renderSuggestionChips: function () {
+          if (!cordaoModalChips) {
+            return;
+          }
+
+          var fromStore = CordaoStore.getCordoes().slice(0, 6).map(function (item) {
+            return displayCordao(item.slug);
+          });
+
+          var merged = this.quickSuggestions.concat(fromStore).reduce(function (acc, current) {
+            var normalized = displayCordao(current);
+            if (acc.indexOf(normalized) === -1 && normalized !== '#') {
+              acc.push(normalized);
+            }
+            return acc;
+          }, []).slice(0, 6);
+
+          cordaoModalChips.innerHTML = merged.map(function (tag) {
+            return '<button class="cordao-chip" type="button" data-cordao-chip="' + toCordaoSlug(tag) + '">' + tag + '</button>';
+          }).join('');
+        },
+
+        sanitizeCordaoInput: function (value) {
+          var raw = String(value || '');
+          var normalized = normalizeCordao(raw);
+
+          if (!normalized && raw.trim().charAt(0) === '#') {
+            return '#';
+          }
+
+          return normalized;
+        },
+
+        setError: function (message, fieldKey) {
+          if (cordaoModalError) {
+            cordaoModalError.textContent = String(message || '');
+          }
+
+          if (cordaoModalTextarea) {
+            cordaoModalTextarea.classList.toggle('is-error', fieldKey === 'content');
+          }
+
+          if (cordaoModalInput) {
+            cordaoModalInput.classList.toggle('is-error', fieldKey === 'cordao');
+          }
+        },
+
+        updateCounter: function () {
+          if (!cordaoModalCounter || !cordaoModalTextarea) {
+            return;
+          }
+
+          cordaoModalCounter.textContent = cordaoModalTextarea.value.length + '/280';
+        },
+
+        updatePublishState: function () {
+          if (!cordaoModalPublish || !cordaoModalTextarea || !cordaoModalInput) {
+            return;
+          }
+
+          var hasContent = !!String(cordaoModalTextarea.value || '').trim();
+          var hasCordao = !!toCordaoSlug(cordaoModalInput.value);
+          cordaoModalPublish.disabled = !(hasContent && hasCordao);
+        },
+
+        autoExpandTextarea: function () {
+          if (!cordaoModalTextarea) {
+            return;
+          }
+
+          cordaoModalTextarea.style.height = 'auto';
+          cordaoModalTextarea.style.height = Math.min(cordaoModalTextarea.scrollHeight, 260) + 'px';
+        },
+
+        resetForm: function () {
+          if (cordaoModalTextarea) {
+            cordaoModalTextarea.value = '';
+            cordaoModalTextarea.classList.remove('is-error');
+            cordaoModalTextarea.style.height = '120px';
+          }
+
+          if (cordaoModalInput) {
+            cordaoModalInput.value = '';
+            cordaoModalInput.classList.remove('is-error');
+          }
+
+          this.setError('', '');
+          this.updateCounter();
+          this.updatePublishState();
+        },
+
+        open: function (prefillSlug) {
+          if (!cordaoModalOverlay) {
+            return;
+          }
+
+          this.syncUserPreview();
+          this.renderSuggestionChips();
+          this.resetForm();
+
+          var safePrefill = toCordaoSlug(prefillSlug);
+          if (safePrefill && cordaoModalInput) {
+            cordaoModalInput.value = displayCordao(safePrefill);
+          }
+
+          this.updatePublishState();
+          this.isOpen = true;
+
+          clearTimeout(this.closeTimer);
+          cordaoModalOverlay.classList.remove('is-hidden');
+          cordaoModalOverlay.setAttribute('aria-hidden', 'false');
+
+          requestAnimationFrame(function () {
+            cordaoModalOverlay.classList.add('is-open');
+          });
+
+          if (cordaoModalTextarea) {
+            cordaoModalTextarea.focus();
+          }
+        },
+
+        close: function () {
+          var self = this;
+
+          if (!cordaoModalOverlay || !this.isOpen) {
+            return;
+          }
+
+          this.isOpen = false;
+          cordaoModalOverlay.classList.remove('is-open');
+          cordaoModalOverlay.setAttribute('aria-hidden', 'true');
+
+          clearTimeout(this.closeTimer);
+          this.closeTimer = setTimeout(function () {
+            cordaoModalOverlay.classList.add('is-hidden');
+            self.resetForm();
+          }, 170);
+        },
+
+        submit: function () {
+          var content = String(cordaoModalTextarea && cordaoModalTextarea.value ? cordaoModalTextarea.value : '').trim();
+          var slug = toCordaoSlug(cordaoModalInput && cordaoModalInput.value ? cordaoModalInput.value : '');
+
+          if (!slug) {
+            this.setError('Voce precisa escolher um cordao para publicar.', 'cordao');
+            if (cordaoModalInput) {
+              cordaoModalInput.focus();
+            }
+            this.updatePublishState();
+            return;
+          }
+
+          if (!content) {
+            this.setError('Escreva algo antes de publicar.', 'content');
+            if (cordaoModalTextarea) {
+              cordaoModalTextarea.focus();
+            }
+            this.updatePublishState();
+            return;
+          }
+
+          this.setError('', '');
+
+          var newPost = CordaoStore.createPostInCordao({
+            content: content,
+            cordao: slug,
+            author: getProfileHandleValue(),
+            avatar: (AppState && AppState.profile && AppState.profile.avatar) || '',
+            verified: true,
+            createdAt: Date.now()
+          });
+
+          if (!newPost) {
+            return;
+          }
+
+          CordaoView.lastInsertedPostId = newPost.id;
+          prependPostToFeed(newPost, 'cordao-modal');
+          this.close();
+          showAppToast('Post publicado em ' + displayCordao(slug));
+          CordaoRouter.navigateToSlug(slug);
+        },
+
+        bindEvents: function () {
+          var self = this;
+
+          if (cordaoModalClose) {
+            cordaoModalClose.addEventListener('click', function () {
+              self.close();
+            });
+          }
+
+          if (cordaoModalCancel) {
+            cordaoModalCancel.addEventListener('click', function () {
+              self.close();
+            });
+          }
+
+          if (cordaoModalPublish) {
+            cordaoModalPublish.addEventListener('click', function () {
+              self.submit();
+            });
+          }
+
+          if (cordaoModalOverlay) {
+            cordaoModalOverlay.addEventListener('click', function (event) {
+              if (event.target === cordaoModalOverlay) {
+                self.close();
+              }
+            });
+          }
+
+          if (cordaoModalTextarea) {
+            cordaoModalTextarea.addEventListener('input', function () {
+              self.updateCounter();
+              self.autoExpandTextarea();
+              self.setError('', '');
+              self.updatePublishState();
+            });
+          }
+
+          if (cordaoModalInput) {
+            cordaoModalInput.addEventListener('input', function () {
+              cordaoModalInput.value = self.sanitizeCordaoInput(cordaoModalInput.value);
+              self.setError('', '');
+              self.updatePublishState();
+            });
+
+            cordaoModalInput.addEventListener('blur', function () {
+              if (!cordaoModalInput.value.trim()) {
+                cordaoModalInput.value = '';
+                return;
+              }
+
+              cordaoModalInput.value = normalizeCordao(cordaoModalInput.value);
+              self.updatePublishState();
+            });
+          }
+
+          if (cordaoModalChips) {
+            cordaoModalChips.addEventListener('click', function (event) {
+              var chip = event.target.closest('[data-cordao-chip]');
+              if (!chip || !cordaoModalInput) {
+                return;
+              }
+
+              var slug = toCordaoSlug(chip.getAttribute('data-cordao-chip'));
+              cordaoModalInput.value = displayCordao(slug);
+              self.setError('', '');
+              self.updatePublishState();
+              cordaoModalInput.focus();
+            });
+          }
+
+          document.addEventListener('keydown', function (event) {
+            if (!self.isOpen || event.key !== 'Escape') {
+              return;
+            }
+
+            self.close();
+          });
+        }
+      };
+
       function onPostActionClick(event) {
         var profileLink = event.target.closest('.post-user-link');
         if (profileLink) {
@@ -7824,14 +9908,6 @@
           var repostCount = card.querySelector('.action-repost .action-count');
           if (repostCount) {
             repostCount.textContent = String(post.metrics.reposts);
-          }
-        }
-
-        if (action === 'like') {
-          button.classList.toggle('active', !!post.state.like);
-          var likeCount = card.querySelector('.action-like .action-count');
-          if (likeCount) {
-            likeCount.textContent = String(post.metrics.likes);
           }
         }
 
@@ -8829,7 +10905,7 @@
               '<li class="bookmark-empty">' +
                 '<i data-lucide="bookmark"></i>' +
                 '<span class="bookmark-empty-title">Nenhuma marcacao ainda</span>' +
-                '<span>Salve posts tocando no icone 🔖</span>' +
+                '<span>Salve posts tocando no icone ­ƒöû</span>' +
               '</li>'
             );
             safeIconRefresh();
@@ -10194,8 +12270,8 @@
 
           this.feedBannerHost.innerHTML = (
             '<div class="feed-day-banner">' +
-              '<span>📅 Exibindo posts de ' + this.getDayLabel(day) + ' · ' + day.activityCount + ' posts encontrados</span>' +
-              '<button class="close-banner" type="button" aria-label="Fechar banner">×</button>' +
+              '<span>­ƒôà Exibindo posts de ' + this.getDayLabel(day) + ' ┬À ' + day.activityCount + ' posts encontrados</span>' +
+              '<button class="close-banner" type="button" aria-label="Fechar banner">├ù</button>' +
             '</div>'
           );
         },
@@ -10428,14 +12504,14 @@
 
           if (day.isFuture) {
             if (day.hasScheduled) {
-              info = '<span class="tooltip-accent">· ' + day.scheduledCount + ' posts agendados</span>';
+              info = '<span class="tooltip-accent">┬À ' + day.scheduledCount + ' posts agendados</span>';
             } else {
-              info = '<span class="tooltip-faint">· Nenhum post agendado</span>';
+              info = '<span class="tooltip-faint">┬À Nenhum post agendado</span>';
             }
           } else if (day.activityCount > 0) {
-            info = '<span class="tooltip-accent">· ' + day.activityCount + ' posts</span>';
+            info = '<span class="tooltip-accent">┬À ' + day.activityCount + ' posts</span>';
           } else {
-            info = '<span class="tooltip-faint">· Nenhuma atividade</span>';
+            info = '<span class="tooltip-faint">┬À Nenhuma atividade</span>';
           }
 
           return formatLongDatePt(day.date) + ' ' + info;
@@ -10813,7 +12889,7 @@
           toast.innerHTML = (
             '<img class="timeline-toast-avatar" src="' + payload.avatar + '" alt="Avatar ' + payload.user + '">' +
             '<div class="timeline-toast-content">' +
-              '<div class="timeline-toast-head">' + payload.user + ' · ' + payload.time + '</div>' +
+              '<div class="timeline-toast-head">' + payload.user + ' ┬À ' + payload.time + '</div>' +
               '<div class="timeline-toast-text">' + payload.text + '</div>' +
             '</div>'
           );
@@ -10867,7 +12943,7 @@
 
           var existing = this.newPostsPillHost.querySelector('#newPostsPill');
           if (existing) {
-            existing.textContent = '↑ ' + count + ' novo post · Ver agora';
+            existing.textContent = 'Ôåæ ' + count + ' novo post ┬À Ver agora';
             clearTimeout(this.newPostsPillTimer);
             this.newPostsPillTimer = setTimeout(function () {
               self.hideNewPostsPill();
@@ -10875,7 +12951,7 @@
             return;
           }
 
-          this.newPostsPillHost.innerHTML = '<button id="newPostsPill" class="new-post-pill">↑ ' + count + ' novo post · Ver agora</button>';
+          this.newPostsPillHost.innerHTML = '<button id="newPostsPill" class="new-post-pill">Ôåæ ' + count + ' novo post ┬À Ver agora</button>';
           var pill = this.newPostsPillHost.querySelector('#newPostsPill');
 
           if (!pill) {
@@ -11209,7 +13285,7 @@
           var months = ['janeiro', 'fevereiro', 'marco', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
           var hh = String(date.getHours()).padStart(2, '0');
           var mm = String(date.getMinutes()).padStart(2, '0');
-          return hh + ':' + mm + ' · ' + date.getDate() + ' de ' + months[date.getMonth()] + ' de ' + date.getFullYear();
+          return hh + ':' + mm + ' ┬À ' + date.getDate() + ' de ' + months[date.getMonth()] + ' de ' + date.getFullYear();
         },
 
         createParent: function (post) {
@@ -11282,7 +13358,7 @@
                 '<span class="thread-parent-line" aria-hidden="true"></span>' +
               '</div>' +
               '<div class="thread-parent-main">' +
-                '<div class="thread-parent-head"><a href="#" class="handle thread-profile-link" data-user="' + this.parentPost.user + '">' + this.parentPost.user + '</a><span>•</span><span>' + this.parentPost.time + '</span></div>' +
+                '<div class="thread-parent-head"><a href="#" class="handle thread-profile-link" data-user="' + this.parentPost.user + '">' + this.parentPost.user + '</a><span>ÔÇó</span><span>' + this.parentPost.time + '</span></div>' +
                 '<p class="thread-parent-text">' + escapeHtml(this.parentPost.text) + '</p>' +
               '</div>' +
             '</article>'
@@ -11346,7 +13422,7 @@
               '<li class="thread-response-item' + (reply.id === newId ? ' new' : '') + '">' +
                 '<img class="thread-response-avatar" src="' + reply.avatar + '" alt="Avatar ' + reply.user + '">' +
                 '<div class="thread-response-main">' +
-                  '<div class="thread-response-head"><a href="#" class="thread-response-handle thread-profile-link" data-user="' + reply.user + '">' + reply.user + '</a><span>•</span><span>' + reply.time + '</span></div>' +
+                  '<div class="thread-response-head"><a href="#" class="thread-response-handle thread-profile-link" data-user="' + reply.user + '">' + reply.user + '</a><span>ÔÇó</span><span>' + reply.time + '</span></div>' +
                   '<p class="thread-response-text">' + escapeHtml(reply.text) + '</p>' +
                 '</div>' +
               '</li>'
@@ -11380,7 +13456,7 @@
               '</header>' +
               '<p class="thread-main-text">' + formatThreadText(this.currentPost.text) + '</p>' +
               imageHtml +
-              '<p class="thread-main-meta"><time title="' + timestampIso + '">' + timestampText + '</time> · <span class="source">Chrono Web</span></p>' +
+              '<p class="thread-main-meta"><time title="' + timestampIso + '">' + timestampText + '</time> ┬À <span class="source">Chrono Web</span></p>' +
             '</section>' +
             this.renderMetricsHtml() +
             this.renderActionsHtml() +
@@ -12087,9 +14163,9 @@
             '<article class="top-post-item" data-profile-post-id="' + escapeHtml(post.id) + '">' +
               '<p>' + escapeHtml(post.text || '') + '</p>' +
               '<div class="top-post-metrics">' +
-                '<span>💬 ' + (post.metrics.comments || 0) + '</span>' +
-                '<span>🔁 ' + (post.metrics.reposts || 0) + '</span>' +
-                '<span>⚡ ' + (post.metrics.likes || 0) + '</span>' +
+                '<span>­ƒÆ¼ ' + (post.metrics.comments || 0) + '</span>' +
+                '<span>­ƒöü ' + (post.metrics.reposts || 0) + '</span>' +
+                '<span>ÔÜí ' + (post.metrics.likes || 0) + '</span>' +
               '</div>' +
             '</article>'
           );
@@ -12448,6 +14524,185 @@
         renderLanguageSelection();
       }
 
+      var CHRONO_LOGO_FALLBACK_DATA_URI = 'data:image/svg+xml;utf8,' + encodeURIComponent(
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">' +
+          '<rect width="256" height="256" fill="#000"/>' +
+          '<path d="M123 57c-37 0-66 31-66 71 0 39 29 71 66 71 22 0 42-10 55-27l-18-26c-9 11-22 17-37 17-22 0-39-19-39-41 0-23 17-41 39-41 15 0 28 7 37 18l18-26c-13-17-33-26-55-26z" fill="#fff"/>' +
+          '<circle cx="187" cy="178" r="17" fill="#fff"/>' +
+        '</svg>'
+      );
+
+      var ChronoLogoFX = {
+        logoEl: null,
+        stackEl: null,
+        imgEl: null,
+        logoSources: [],
+        sourceIndex: 0,
+        isGlitching: false,
+        glitchTimer: 0,
+
+        captureElements: function () {
+          this.logoEl = document.querySelector('.chrono-logo');
+          this.stackEl = this.logoEl ? this.logoEl.querySelector('.chrono-logo-stack') : null;
+          this.imgEl = this.logoEl ? this.logoEl.querySelector('.chrono-logo-img') : null;
+        },
+
+        init: function () {
+          this.captureElements();
+          if (!this.logoEl || !this.stackEl || !this.imgEl) {
+            return;
+          }
+
+          this.prepareLogoSources();
+          this.bindImageEvents();
+          this.bindInteractionEvents();
+
+          if (this.imgEl.complete && this.imgEl.naturalWidth === 0) {
+            this.applyNextLogoSource();
+          } else {
+            this.syncGlitchBackground();
+          }
+
+          this.syncWithRoute(AppRouter && AppRouter.currentView ? AppRouter.currentView : 'feed');
+        },
+
+        prepareLogoSources: function () {
+          var initial = String(this.imgEl.getAttribute('src') || '').trim();
+          var isFileProtocol = !!(window.location && window.location.protocol === 'file:');
+          var candidates = [
+            initial,
+            'public/Chrono.png',
+            './public/Chrono.png',
+            'Chrono.png',
+            CHRONO_LOGO_FALLBACK_DATA_URI
+          ];
+
+          if (!isFileProtocol) {
+            candidates.splice(3, 0, '/Chrono.png');
+          }
+
+          var seen = {};
+          this.logoSources = [];
+          this.sourceIndex = 0;
+
+          candidates.forEach(function (source) {
+            if (!source || seen[source]) {
+              return;
+            }
+
+            seen[source] = true;
+            this.logoSources.push(source);
+          }, this);
+        },
+
+        applyNextLogoSource: function () {
+          if (!this.imgEl || !this.logoSources.length) {
+            return;
+          }
+
+          if (this.sourceIndex >= this.logoSources.length - 1) {
+            return;
+          }
+
+          this.sourceIndex += 1;
+          this.imgEl.src = this.logoSources[this.sourceIndex];
+        },
+
+        bindImageEvents: function () {
+          var self = this;
+
+          this.imgEl.addEventListener('load', function () {
+            self.syncGlitchBackground();
+          });
+
+          this.imgEl.addEventListener('error', function () {
+            self.applyNextLogoSource();
+          });
+        },
+
+        bindInteractionEvents: function () {
+          var self = this;
+
+          this.logoEl.addEventListener('mouseenter', function () {
+            self.triggerGlitch();
+          });
+
+          this.logoEl.addEventListener('focus', function () {
+            self.triggerGlitch();
+          }, true);
+
+          this.logoEl.addEventListener('mouseleave', function () {
+            self.logoEl.classList.remove('is-glitching');
+            self.isGlitching = false;
+
+            if (self.glitchTimer) {
+              clearTimeout(self.glitchTimer);
+              self.glitchTimer = 0;
+            }
+          });
+        },
+
+        syncGlitchBackground: function () {
+          if (!this.stackEl || !this.imgEl) {
+            return;
+          }
+
+          var source = this.imgEl.currentSrc || this.imgEl.getAttribute('src') || '';
+          if (!source) {
+            return;
+          }
+
+          this.stackEl.style.setProperty('--chrono-logo-bg', 'url("' + source + '")');
+        },
+
+        shouldReduceMotion: function () {
+          if (document.body && document.body.classList.contains('reduced-motion')) {
+            return true;
+          }
+
+          return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+        },
+
+        triggerGlitch: function () {
+          if (!this.logoEl || this.shouldReduceMotion() || this.isGlitching) {
+            return;
+          }
+
+          this.isGlitching = true;
+          this.logoEl.classList.add('is-glitching');
+
+          if (this.glitchTimer) {
+            clearTimeout(this.glitchTimer);
+          }
+
+          var self = this;
+          this.glitchTimer = setTimeout(function () {
+            self.logoEl.classList.remove('is-glitching');
+            self.isGlitching = false;
+            self.glitchTimer = 0;
+          }, 460);
+        },
+
+        syncWithRoute: function (viewName) {
+          this.captureElements();
+          if (!this.logoEl) {
+            return;
+          }
+
+          var hasActiveRoute = !!String(viewName || '').trim() || !!window.location.hash;
+          var logo = this.logoEl;
+
+          logo.classList.remove('is-route-active');
+
+          if (!hasActiveRoute) {
+            return;
+          }
+
+          requestAnimationFrame(function () {
+            logo.classList.add('is-route-active');
+          });
+        }
+      };
       var AppRouter = {
         currentView: 'feed',
         pendingRoute: '',
@@ -12459,6 +14714,10 @@
 
         routeToView: function (route) {
           var normalized = this.normalizeRoute(route);
+
+          if (normalized === 'cordao' || normalized.indexOf('cordao/') === 0) {
+            return 'cordao';
+          }
 
           if (normalized === 'profile') {
             return 'profile';
@@ -12588,6 +14847,13 @@
           this.setActiveView(nextView);
           this.applyLayout(nextView);
 
+          if (nextView === 'cordao') {
+            var activeCordaoSlug = CordaoRouter.syncFromRoute(normalized);
+            CordaoView.render(activeCordaoSlug);
+          } else {
+            SidebarCordoes.setActiveSlug('');
+          }
+
           if (nextView === 'profile') {
             renderProfileView();
           }
@@ -12607,9 +14873,16 @@
           if (nextView === 'language') {
             renderLanguageSelection();
           }
-
           if (HeaderModule) {
             HeaderModule.closePanel();
+          }
+
+          if (typeof HeaderLogoController !== 'undefined' && HeaderLogoController && typeof HeaderLogoController.syncWithRoute === 'function') {
+            HeaderLogoController.syncWithRoute(nextView);
+          }
+
+          if (typeof ChronoLogoFX !== 'undefined' && ChronoLogoFX && typeof ChronoLogoFX.syncWithRoute === 'function') {
+            ChronoLogoFX.syncWithRoute(nextView);
           }
 
           safeIconRefresh();
@@ -12682,11 +14955,7 @@
 
           if (createThreadBtn) {
             createThreadBtn.addEventListener('click', function () {
-              self.navigate('feed');
-              showAppToast('Composer aberto para iniciar um novo cordao.');
-              if (composer) {
-                composer.focus();
-              }
+              CordaoModal.open();
             });
           }
 
@@ -12979,29 +15248,1218 @@
 
         publishBtn.addEventListener('click', addNewPost);
         feedList.addEventListener('click', onPostActionClick);
+
+        if (cordaoFeedList) {
+          cordaoFeedList.addEventListener('click', onPostActionClick);
+        }
+
+        // ===== COMPOSER ENHANCEMENTS SETUP =====
+        ComposerController.init();
+        EmojiPicker.init();
       }
+
+      // ===== COMPOSER CONTROLLER =====
+      var ComposerController = (function () {
+        var state = {
+          text: '',
+          image: null,
+          poll: null,
+          emojiPickerOpen: false,
+          pollBuilderOpen: false
+        };
+
+        var elements = {
+          textarea: null,
+          photoBtn: null,
+          pollBtn: null,
+          emojiBtn: null,
+          photoInput: null,
+          imagePreviewContainer: null,
+          pollBuilderContainer: null,
+          emojiPickerContainer: null
+        };
+
+        function init() {
+          elements.textarea = document.getElementById('postComposer');
+          elements.photoBtn = document.getElementById('composerPhotoBtn');
+          elements.pollBtn = document.getElementById('composerPollBtn');
+          elements.emojiBtn = document.getElementById('composerEmojiBtn');
+          elements.photoInput = document.getElementById('composerPhotoInput');
+          elements.imagePreviewContainer = document.getElementById('composerImagePreview');
+          elements.pollBuilderContainer = document.getElementById('composerPollBuilder');
+          elements.emojiPickerContainer = document.getElementById('emojiPickerContainer');
+
+          if (!elements.photoBtn || !elements.pollBtn || !elements.emojiBtn) return;
+
+          // Photo button
+          elements.photoBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            elements.photoInput.click();
+          });
+
+          elements.photoInput.addEventListener('change', onPhotoSelected);
+
+          // Poll button
+          elements.pollBtn.addEventListener('click', togglePollBuilder);
+
+          // Emoji button
+          elements.emojiBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleEmojiPicker();
+          });
+
+          // Close emoji picker when clicking outside
+          document.addEventListener('click', function (e) {
+            if (state.emojiPickerOpen && 
+                !e.target.closest('#emojiPickerContainer') && 
+                !e.target.closest('#composerEmojiBtn')) {
+              closeEmojiPicker();
+            }
+          });
+
+          // Close emoji picker on Escape
+          document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && state.emojiPickerOpen) {
+              closeEmojiPicker();
+            }
+          });
+        }
+
+        function onPhotoSelected(e) {
+          var file = e.target.files[0];
+          if (!file) return;
+
+          var reader = new FileReader();
+          reader.onload = function (event) {
+            state.image = event.target.result;
+            renderImagePreview();
+            updatePublishState();
+          };
+          reader.readAsDataURL(file);
+        }
+
+        function renderImagePreview() {
+          elements.imagePreviewContainer.innerHTML = '';
+
+          if (!state.image) return;
+
+          var preview = document.createElement('div');
+          preview.className = 'composer-image-preview';
+          preview.innerHTML = 
+            '<img src="' + state.image + '" alt="Preview">' +
+            '<button class="composer-image-remove" type="button" aria-label="Remover imagem">×</button>';
+
+          preview.querySelector('.composer-image-remove').addEventListener('click', removeImage);
+          elements.imagePreviewContainer.appendChild(preview);
+        }
+
+        function removeImage() {
+          state.image = null;
+          elements.photoInput.value = '';
+          renderImagePreview();
+          updatePublishState();
+        }
+
+        function toggleEmojiPicker() {
+          if (state.emojiPickerOpen) {
+            closeEmojiPicker();
+          } else {
+            openEmojiPicker();
+          }
+        }
+
+        function openEmojiPicker() {
+          state.emojiPickerOpen = true;
+          elements.emojiBtn.classList.add('active');
+          EmojiPicker.render(elements.emojiPickerContainer);
+        }
+
+        function closeEmojiPicker() {
+          state.emojiPickerOpen = false;
+          elements.emojiBtn.classList.remove('active');
+          elements.emojiPickerContainer.innerHTML = '';
+        }
+
+        function togglePollBuilder() {
+          if (state.pollBuilderOpen) {
+            closePollBuilder();
+          } else {
+            openPollBuilder();
+          }
+        }
+
+        function openPollBuilder() {
+          state.pollBuilderOpen = true;
+          elements.pollBtn.classList.add('active');
+          if (!state.poll) {
+            state.poll = {
+              question: '',
+              options: ['', ''],
+              autoClose24h: false
+            };
+          }
+          renderPollBuilder();
+        }
+
+        function closePollBuilder() {
+          state.pollBuilderOpen = false;
+          elements.pollBtn.classList.remove('active');
+          elements.pollBuilderContainer.innerHTML = '';
+        }
+
+        function renderPollBuilder() {
+          elements.pollBuilderContainer.innerHTML = '';
+
+          var builder = document.createElement('div');
+          builder.className = 'poll-builder';
+
+          var titleHtml = '<div class="poll-title">Nova enquete</div>';
+          var questionHtml = 
+            '<input type="text" class="poll-question-input" placeholder="Pergunta da enquete (opcional)" value="' + 
+            (state.poll.question || '') + '">';
+
+          var optionsHtml = '<div class="poll-options-container">';
+          state.poll.options.forEach(function (option, idx) {
+            optionsHtml += 
+              '<div class="poll-option-row">' +
+                '<input type="text" class="poll-option-input" placeholder="Opção ' + (idx + 1) + '" value="' + (option || '') + '" data-option-idx="' + idx + '">' +
+                (idx >= 2 ? '<button class="poll-option-remove" type="button" data-option-idx="' + idx + '">−</button>' : '<span style="width:30px"></span>') +
+              '</div>';
+          });
+          optionsHtml += '</div>';
+
+          var addOptionBtn = '<button class="poll-add-option-btn" type="button" ' + 
+            (state.poll.options.length >= 5 ? 'disabled' : '') + 
+            '>+ Adicionar opção</button>';
+
+          var autoCloseHtml = 
+            '<label class="poll-auto-close">' +
+              '<input type="checkbox" ' + (state.poll.autoClose24h ? 'checked' : '') + '>' +
+              '<span>Encerrar automaticamente em 24h</span>' +
+            '</label>';
+
+          var removeBtn = '<button class="poll-remove-btn" type="button">Remover enquete</button>';
+
+          builder.innerHTML = titleHtml + questionHtml + optionsHtml + addOptionBtn + autoCloseHtml + removeBtn;
+
+          // Question input
+          builder.querySelector('.poll-question-input').addEventListener('input', function (e) {
+            state.poll.question = e.target.value;
+          });
+
+          // Option inputs
+          var optionInputs = builder.querySelectorAll('.poll-option-input');
+          optionInputs.forEach(function (input, idx) {
+            input.addEventListener('input', function (e) {
+              state.poll.options[idx] = e.target.value;
+            });
+          });
+
+          // Remove option buttons
+          var removeOptBtns = builder.querySelectorAll('.poll-option-remove');
+          removeOptBtns.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+              var idx = parseInt(btn.getAttribute('data-option-idx'));
+              state.poll.options.splice(idx, 1);
+              renderPollBuilder();
+            });
+          });
+
+          // Add option button
+          var addOptBtn = builder.querySelector('.poll-add-option-btn');
+          addOptBtn.addEventListener('click', function () {
+            if (state.poll.options.length < 5) {
+              state.poll.options.push('');
+              renderPollBuilder();
+            }
+          });
+
+          // Auto-close checkbox
+          var autoCloseCheckbox = builder.querySelector('.poll-auto-close input[type="checkbox"]');
+          autoCloseCheckbox.addEventListener('change', function (e) {
+            state.poll.autoClose24h = e.target.checked;
+          });
+
+          // Remove poll button
+          var removePollBtn = builder.querySelector('.poll-remove-btn');
+          removePollBtn.addEventListener('click', removePoll);
+
+          elements.pollBuilderContainer.appendChild(builder);
+        }
+
+        function removePoll() {
+          state.poll = null;
+          closePollBuilder();
+          elements.pollBtn.classList.remove('active');
+          updatePublishState();
+        }
+
+        function insertEmoji(emoji) {
+          var textarea = elements.textarea;
+          var start = textarea.selectionStart;
+          var end = textarea.selectionEnd;
+          var text = textarea.value;
+
+          var newText = text.substring(0, start) + emoji + text.substring(end);
+          textarea.value = newText;
+          textarea.focus();
+          textarea.setSelectionRange(start + emoji.length, start + emoji.length);
+
+          state.text = textarea.value;
+          updatePublishState();
+        }
+
+        function getState() {
+          return {
+            text: elements.textarea.value.trim(),
+            image: state.image,
+            poll: state.poll
+          };
+        }
+
+        function reset() {
+          state.text = '';
+          state.image = null;
+          state.poll = null;
+          state.emojiPickerOpen = false;
+          state.pollBuilderOpen = false;
+
+          elements.textarea.value = '';
+          elements.photoInput.value = '';
+          elements.imagePreviewContainer.innerHTML = '';
+          elements.pollBuilderContainer.innerHTML = '';
+          elements.emojiPickerContainer.innerHTML = '';
+          elements.photoBtn.classList.remove('active');
+          elements.pollBtn.classList.remove('active');
+          elements.emojiBtn.classList.remove('active');
+        }
+
+        return {
+          init: init,
+          getState: getState,
+          reset: reset,
+          insertEmoji: insertEmoji
+        };
+      })();
+
+      // ===== EMOJI PICKER =====
+      var EmojiPicker = (function () {
+        var emojis = ['😀', '😎', '🔥', '💀', '🚀', '🧠', '👁️', '⚡', '❤️', '🫠', '👀', '🤖', '🌌', '🕳️', '🧵', '📡', '🌀', '🫀'];
+
+        function init() {
+          // Can be called on demand
+        }
+
+        function render(container) {
+          container.innerHTML = '';
+          var picker = document.createElement('div');
+          picker.className = 'emoji-picker';
+
+          var grid = document.createElement('div');
+          grid.className = 'emoji-grid';
+
+          emojis.forEach(function (emoji) {
+            var btn = document.createElement('button');
+            btn.className = 'emoji-btn';
+            btn.type = 'button';
+            btn.textContent = emoji;
+            btn.addEventListener('click', function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              ComposerController.insertEmoji(emoji);
+              EmojiPicker.close();
+            });
+            grid.appendChild(btn);
+          });
+
+          picker.appendChild(grid);
+          container.appendChild(picker);
+        }
+
+        function close() {
+          var container = document.getElementById('emojiPickerContainer');
+          if (container) {
+            container.innerHTML = '';
+          }
+          var emojiBtn = document.getElementById('composerEmojiBtn');
+          if (emojiBtn) {
+            emojiBtn.classList.remove('active');
+          }
+        }
+
+        return {
+          init: init,
+          render: render,
+          close: close
+        };
+      })();
+
+      // ===== POLL SYSTEM (FOR VOTING) =====
+      var PollSystem = (function () {
+        var _userVotes = {}; // { postId: optionId }
+
+        function vote(postId, optionId) {
+          if (hasUserVoted(postId)) {
+            return false;
+          }
+
+          _userVotes[postId] = optionId;
+          return true;
+        }
+
+        function hasUserVoted(postId) {
+          return typeof _userVotes[postId] !== 'undefined';
+        }
+
+        function getUserVote(postId) {
+          return _userVotes[postId] || null;
+        }
+
+        function updateUI(postEl) {
+          if (!postEl) return;
+
+          var poll = postEl.querySelector('.poll-card-interactive');
+          if (!poll) return;
+
+          var postId = postEl.getAttribute('data-post-id');
+          var post = getPostById(postId);
+          if (!post || !post.poll) return;
+
+          var options = poll.querySelectorAll('.poll-option-interactive');
+          var userVote = getUserVote(postId);
+
+          options.forEach(function (optEl, idx) {
+            var optionId = optEl.getAttribute('data-option-id');
+            var option = post.poll.options[idx];
+            var isVoted = userVote === optionId;
+
+            // Update percentage
+            var percent = post.poll.totalVotes > 0 
+              ? Math.round((option.votes / post.poll.totalVotes) * 100) 
+              : 0;
+
+            var percentEl = optEl.querySelector('.poll-option-percent');
+            if (percentEl) {
+              percentEl.textContent = percent + '%';
+            }
+
+            // Update fill
+            var fillEl = optEl.querySelector('.poll-option-fill');
+            if (fillEl) {
+              fillEl.style.width = percent + '%';
+            }
+
+            // Update state
+            optEl.classList.toggle('voted', isVoted);
+            if (isVoted) {
+              optEl.classList.add('voted-pulse');
+              setTimeout(function () {
+                optEl.classList.remove('voted-pulse');
+              }, 300);
+            }
+          });
+
+          // Update meta
+          var metaEl = poll.querySelector('.poll-status-text');
+          if (metaEl) {
+            var totalText = post.poll.totalVotes + ' voto' + (post.poll.totalVotes !== 1 ? 's' : '');
+            var statusText = post.poll.closed ? 'Enquete encerrada' : 'Votação ativa';
+            metaEl.textContent = totalText + ' • ' + statusText;
+          }
+        }
+
+        return {
+          vote: vote,
+          hasUserVoted: hasUserVoted,
+          getUserVote: getUserVote,
+          updateUI: updateUI
+        };
+      })();
+
+      // ===== UPDATE PUBLISH STATE =====
+      function updatePublishStateEnhanced() {
+        var composerState = ComposerController.getState();
+        var hasText = composerState.text.length > 0;
+        var hasImage = !!composerState.image;
+        var hasPoll = !!composerState.poll && 
+                      composerState.poll.options.filter(function (o) { return o.trim(); }).length >= 2;
+
+        publishBtn.disabled = !(hasText || hasImage || hasPoll);
+      }
+
+      var originalUpdatePublishState = updatePublishState;
+      updatePublishState = updatePublishStateEnhanced;
+
+      // ===== ENHANCE addNewPost =====
+      var originalAddNewPost = addNewPost;
+      addNewPost = function () {
+        var composerState = ComposerController.getState();
+        var text = composerState.text;
+        var image = composerState.image;
+        var pollData = composerState.poll;
+
+        if (!text && !image && !pollData) {
+          return;
+        }
+
+        // Validate poll if present
+        var pollOptions = pollData 
+          ? pollData.options.filter(function (o) { return o.trim(); })
+          : [];
+
+        if (pollData && pollOptions.length < 2) {
+          alert('A enquete precisa de pelo menos 2 opções.');
+          return;
+        }
+
+        var newId = 'new-' + Date.now();
+
+        // Build poll object if exists
+        var poll = null;
+        if (pollData && pollOptions.length >= 2) {
+          var closesAt = pollData.autoClose24h ? Date.now() + (24 * 60 * 60 * 1000) : null;
+          poll = {
+            question: pollData.question || '',
+            options: pollOptions.map(function (optText, idx) {
+              return {
+                id: 'opt-' + idx,
+                text: optText,
+                votes: 0
+              };
+            }),
+            totalVotes: 0,
+            userVote: null,
+            closed: false,
+            closesAt: closesAt
+          };
+        }
+
+        var newPost = {
+          id: newId,
+          user: typeof getProfileHandleValue === 'function' ? getProfileHandleValue() : '@Juvinho',
+          avatar: (typeof AppState !== 'undefined' && AppState.profile && AppState.profile.avatar)
+            ? AppState.profile.avatar
+            : 'https://picsum.photos/seed/new-juvinho/80/80',
+          time: 'agora',
+          text: text,
+          image: image || undefined,
+          poll: poll || undefined,
+          verified: true,
+          source: 'composer',
+          metrics: { comments: 0, reposts: 0, likes: 0 },
+          state: { repost: false, like: false, bookmark: false }
+        };
+
+        applyPostMetadata(newPost, 'composer');
+        postStore.unshift(newPost);
+
+        var newCard = createPostCardElement(newPost, 0, { newPostId: newId, source: 'composer' });
+
+        if (newCard && feedList) {
+          feedList.prepend(newCard);
+
+          // Setup poll voting if poll exists
+          if (poll) {
+            setupPollVoting(newCard);
+          }
+
+          safeIconRefresh();
+          document.dispatchEvent(new CustomEvent('chrono:post-created', {
+            detail: { postEl: newCard }
+          }));
+        }
+
+        // Reset composer
+        ComposerController.reset();
+        composer.style.height = '54px';
+        updatePublishState();
+
+        var feedStart = document.querySelector('.feed-column');
+        if (feedStart) {
+          feedStart.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      };
+
+      // ===== SETUP POLL VOTING =====
+      function setupPollVoting(postEl) {
+        var poll = postEl.querySelector('.poll-card-interactive');
+        if (!poll) return;
+
+        var postId = postEl.getAttribute('data-post-id');
+        var options = poll.querySelectorAll('.poll-option-interactive');
+
+        options.forEach(function (optEl, idx) {
+          optEl.addEventListener('click', function () {
+            var post = getPostById(postId);
+            if (!post || !post.poll || post.poll.closed) return;
+
+            if (PollSystem.hasUserVoted(postId)) {
+              return; // Already voted
+            }
+
+            var optionId = optEl.getAttribute('data-option-id');
+            var optionIdx = parseInt(optionId.split('-')[1]);
+
+            // Increment votes
+            post.poll.options[optionIdx].votes++;
+            post.poll.totalVotes++;
+            post.poll.userVote = optionId;
+
+            // Vote in system
+            PollSystem.vote(postId, optionId);
+
+            // Update UI
+            PollSystem.updateUI(postEl);
+          });
+        });
+      }
+
+      // ===== RENDER POLL WITH VOTING =====
+      var originalRenderPoll = renderPoll;
+      renderPoll = function (poll) {
+        if (!poll || !poll.options || !poll.options.length) {
+          return '';
+        }
+
+        var isClosed = poll.closed || (poll.closesAt && Date.now() > poll.closesAt);
+        if (isClosed) {
+          poll.closed = true;
+        }
+
+        var optionsHtml = poll.options.map(function (option, idx) {
+          var percent = poll.totalVotes > 0 
+            ? Math.round((option.votes / poll.totalVotes) * 100)
+            : 0;
+
+          return (
+            '<div class="poll-option-interactive" data-option-id="opt-' + idx + '" ' +
+              (isClosed ? 'style="pointer-events:none;"' : '') + '>' +
+              '<div class="poll-option-fill" style="width:' + percent + '%"></div>' +
+              '<div class="poll-option-content">' +
+                '<span class="poll-option-text">' + option.text + '</span>' +
+                '<span class="poll-option-percent">' + percent + '%</span>' +
+              '</div>' +
+            '</div>'
+          );
+        }).join('');
+
+        var closesInText = '';
+        if (poll.closesAt && !isClosed) {
+          var msRemaining = poll.closesAt - Date.now();
+          if (msRemaining > 0) {
+            var hoursRemaining = Math.floor(msRemaining / (60 * 60 * 1000));
+            closesInText = 'Encerra em ' + hoursRemaining + 'h';
+          }
+        }
+
+        var statusText = isClosed 
+          ? 'Enquete encerrada' 
+          : (closesInText || 'Enquete ativa');
+
+        return (
+          '<section class="poll-card poll-card-interactive" aria-label="Enquete">' +
+            (poll.question ? '<div style="font-weight:600;margin-bottom:10px;font-size:13px;">' + poll.question + '</div>' : '') +
+            optionsHtml +
+            '<div class="poll-status-text">' + poll.totalVotes + ' voto' + (poll.totalVotes !== 1 ? 's' : '') + ' • ' + statusText + '</div>' +
+          '</section>'
+        );
+      };
+
+      // ===== ENHANCE createPostCardElement =====
+      var originalCreatePostCardElement = createPostCardElement;
+      createPostCardElement = function (post, index, options) {
+        var el = originalCreatePostCardElement(post, index, options);
+
+        // Setup poll voting if post has poll
+        if (post.poll && el) {
+          setupPollVoting(el);
+        }
+
+        return el;
+      };
+
+      var VoteSystem = (function () {
+
+        var _states = {};
+        var _longPressTimer = null;
+
+        function _createState(post) {
+          var rng = seededRandom((post && post.id ? post.id : 'post') + '-vote');
+          return {
+            up: 10 + Math.floor(rng() * 20),
+            stable: 3 + Math.floor(rng() * 10),
+            down: 4 + Math.floor(rng() * 16),
+            userVote: null,
+          };
+        }
+
+        function _fmtScore(score) {
+          return score > 0 ? '+' + score : String(score);
+        }
+
+        function _scoreClass(score) {
+          return score > 0 ? 'positive' : score < 0 ? 'negative' : 'neutral';
+        }
+
+        function getState(postId, post) {
+          if (!postId) { return { up: 0, stable: 0, down: 0, userVote: null }; }
+          if (!_states[postId]) {
+            _states[postId] = _createState(post || getPostById(postId) || { id: postId });
+          }
+          return _states[postId];
+        }
+
+        function getCounts(postId) {
+          var s = getState(postId);
+          return { up: s.up, stable: s.stable, down: s.down };
+        }
+
+        function getScore(postId) {
+          var s = getState(postId);
+          return s.up - s.down;
+        }
+
+        function buildClusterHTML(postId) {
+          var s = getState(postId);
+          var score = s.up - s.down;
+          return (
+            '<div class="vote-cluster" data-vote-cluster="true" data-post-id="' + postId + '">' +
+              '<button class="vote-quick vote-up' + (s.userVote === 'up' ? ' is-active' : '') + '" data-vote-quick="up" type="button" aria-label="Upvote">' +
+                '<i data-lucide="chevron-up"></i>' +
+              '</button>' +
+              '<span class="vote-score-value ' + _scoreClass(score) + '" data-vote-score="true">' + _fmtScore(score) + '</span>' +
+              '<button class="vote-quick vote-stable' + (s.userVote === 'stable' ? ' is-active' : '') + '" data-vote-quick="stable" type="button" aria-label="Estavel">' +
+                '<i data-lucide="minus"></i>' +
+              '</button>' +
+              '<button class="vote-quick vote-down' + (s.userVote === 'down' ? ' is-active' : '') + '" data-vote-quick="down" type="button" aria-label="Downvote">' +
+                '<i data-lucide="chevron-down"></i>' +
+              '</button>' +
+            '</div>'
+          );
+        }
+
+        function syncCard(postId) {
+          var clusters = Array.prototype.slice.call(
+            document.querySelectorAll('[data-vote-cluster="true"][data-post-id="' + postId + '"]')
+          );
+          var s = getState(postId);
+          var score = s.up - s.down;
+
+          clusters.forEach(function (cluster) {
+            var scoreEl = cluster.querySelector('[data-vote-score="true"]');
+            if (scoreEl) {
+              scoreEl.textContent = _fmtScore(score);
+              scoreEl.className = 'vote-score-value ' + _scoreClass(score);
+            }
+
+            Array.prototype.slice.call(cluster.querySelectorAll('[data-vote-quick]')).forEach(function (btn) {
+              btn.classList.toggle('is-active', s.userVote === btn.getAttribute('data-vote-quick'));
+            });
+          });
+
+          if (typeof ThreadModal !== 'undefined' && ThreadModal.isOpen &&
+              ThreadModal.currentPost && ThreadModal.currentPost.id === postId &&
+              typeof ThreadModal.syncVoteMetrics === 'function') {
+            ThreadModal.syncVoteMetrics();
+          }
+        }
+
+        function syncAllCards() {
+          Object.keys(_states).forEach(function (postId) { syncCard(postId); });
+        }
+
+        function flashCluster(postId) {
+          var clusters = Array.prototype.slice.call(
+            document.querySelectorAll('[data-vote-cluster="true"][data-post-id="' + postId + '"]')
+          );
+          clusters.forEach(function (cluster) {
+            cluster.classList.remove('vote-cluster-flash');
+            void cluster.offsetWidth;
+            cluster.classList.add('vote-cluster-flash');
+          });
+        }
+
+        function setVote(postId, voteType) {
+          var s = getState(postId);
+          var current = s.userVote;
+
+          if (current === voteType) { return s; }
+
+          if (current && s[current] > 0) { s[current] -= 1; }
+
+          if (voteType && typeof s[voteType] === 'number') {
+            s[voteType] += 1;
+            s.userVote = voteType;
+          } else {
+            s.userVote = null;
+          }
+
+          syncCard(postId);
+          return s;
+        }
+
+        function clearVote(postId) {
+          return setVote(postId, null);
+        }
+
+        function toggleQuickVote(postId, voteType) {
+          var s = getState(postId);
+          if (s.userVote === voteType) {
+            return clearVote(postId);
+          }
+          return setVote(postId, voteType);
+        }
+
+        function _animateBtn(btn, type) {
+          var map = { up: 'vote-pop-up', stable: 'vote-pop-stable', down: 'vote-pop-down' };
+          var cls = map[type];
+          if (!cls) { return; }
+          btn.classList.remove(cls);
+          void btn.offsetWidth;
+          btn.classList.add(cls);
+          setTimeout(function () { btn.classList.remove(cls); }, 320);
+        }
+
+        function init() {
+          document.addEventListener('click', function (event) {
+            var cluster = event.target.closest('[data-vote-cluster="true"]');
+            var quickBtn = event.target.closest('[data-vote-quick]');
+            var openBtn = event.target.closest('[data-vote-open="true"]');
+            var postId;
+
+            if (!cluster) { return; }
+
+            postId = cluster.getAttribute('data-post-id');
+            if (!postId) { return; }
+
+            if (quickBtn) {
+              event.preventDefault();
+              event.stopPropagation();
+              var type = quickBtn.getAttribute('data-vote-quick');
+              toggleQuickVote(postId, type);
+              _animateBtn(quickBtn, type);
+              flashCluster(postId);
+              return;
+            }
+
+            if (openBtn) {
+              event.preventDefault();
+              event.stopPropagation();
+              if (typeof VoteModal !== 'undefined' && typeof VoteModal.open === 'function') {
+                VoteModal.open(postId, openBtn);
+              }
+            }
+          });
+
+          document.addEventListener('pointerdown', function (event) {
+            var cluster = event.target.closest('[data-vote-cluster="true"]');
+            if (!cluster) { return; }
+            if (event.pointerType === 'mouse' && event.button !== 0) { return; }
+
+            clearTimeout(_longPressTimer);
+            _longPressTimer = setTimeout(function () {
+              var postId = cluster.getAttribute('data-post-id');
+              if (postId && typeof VoteModal !== 'undefined' && typeof VoteModal.open === 'function') {
+                VoteModal.open(postId, cluster);
+              }
+            }, 350);
+          });
+
+          function cancelLongPress() { clearTimeout(_longPressTimer); _longPressTimer = null; }
+          document.addEventListener('pointerup', cancelLongPress);
+          document.addEventListener('pointercancel', cancelLongPress);
+
+          document.addEventListener('chrono:post-created', function (event) {
+            if (!event || !event.detail || !event.detail.postEl) { return; }
+            var postId = event.detail.postEl.getAttribute('data-post-id');
+            if (postId) { getState(postId, getPostById(postId)); syncCard(postId); }
+          });
+        }
+
+        return {
+          init: init,
+          getState: getState,
+          getCounts: getCounts,
+          getScore: getScore,
+          buildClusterHTML: buildClusterHTML,
+          setVote: setVote,
+          clearVote: clearVote,
+          toggleQuickVote: toggleQuickVote,
+          syncCard: syncCard,
+          syncAllCards: syncAllCards,
+          flashCluster: flashCluster,
+        };
+      })();
+      var VoteModal = (function () {
+        var activePostId = '';
+        var triggerElement = null;
+        var initialized = false;
+        var isOpen = false;
+
+        var optionMeta = {
+          up: {
+            title: 'Upvote',
+            desc: 'Valoriza a contribuicao deste post.',
+            icon: 'chevron-up',
+            className: 'vote-option-up'
+          },
+          stable: {
+            title: 'Estavel',
+            desc: 'Mantem como referencia neutra no feed.',
+            icon: 'minus',
+            className: 'vote-option-stable'
+          },
+          down: {
+            title: 'Downvote',
+            desc: 'Sinaliza que o conteudo nao agregou.',
+            icon: 'chevron-down',
+            className: 'vote-option-down'
+          }
+        };
+
+        function getVoteState() {
+          if (!activePostId || typeof VoteSystem === 'undefined' || !VoteSystem || typeof VoteSystem.getState !== 'function') {
+            return { userVote: null };
+          }
+
+          return VoteSystem.getState(activePostId);
+        }
+
+        function getVoteCounts() {
+          if (!activePostId || typeof VoteSystem === 'undefined' || !VoteSystem || typeof VoteSystem.getCounts !== 'function') {
+            return { up: 0, stable: 0, down: 0 };
+          }
+
+          return VoteSystem.getCounts(activePostId);
+        }
+
+        function renderHeader(post) {
+          if (!voteModalHeader) {
+            return;
+          }
+
+          var handle = (post && post.user) ? post.user : '@Chrono';
+          var text = (post && post.text) ? post.text : 'Selecione a acao de voto para este post.';
+
+          voteModalHeader.innerHTML = (
+            '<div>' +
+              '<h3 id="vote-modal-title" class="vote-modal-title">Votar em ' + escapeHtml(handle) + '</h3>' +
+              '<p class="vote-modal-subtitle">' + escapeHtml(text) + '</p>' +
+            '</div>' +
+            '<button class="vote-modal-close" type="button" data-vote-close="true" aria-label="Fechar modal de voto">' +
+              '<i data-lucide="x"></i>' +
+            '</button>'
+          );
+        }
+
+        function renderBody() {
+          if (!voteModalBody) {
+            return;
+          }
+
+          var counts = getVoteCounts();
+          var state = getVoteState();
+
+          voteModalBody.innerHTML = ['up', 'stable', 'down'].map(function (type) {
+            var meta = optionMeta[type];
+            var count = counts[type] || 0;
+            var activeClass = state.userVote === type ? ' is-active' : '';
+
+            return (
+              '<button class="vote-option ' + meta.className + activeClass + '" type="button" data-vote-type="' + type + '">' +
+                '<span class="vote-option-icon"><i data-lucide="' + meta.icon + '"></i></span>' +
+                '<span class="vote-option-text">' +
+                  '<strong class="vote-option-title">' + meta.title + '</strong>' +
+                  '<span class="vote-option-desc">' + meta.desc + '</span>' +
+                '</span>' +
+                '<span class="vote-option-count">' + count + '</span>' +
+                '<span class="vote-option-indicator" aria-hidden="true"></span>' +
+              '</button>'
+            );
+          }).join('');
+        }
+
+        function renderFooter() {
+          if (!voteModalFooter) {
+            return;
+          }
+
+          voteModalFooter.innerHTML = (
+            '<button type="button" class="btn-subtle" data-vote-clear="true">Limpar voto</button>' +
+            '<button type="button" class="btn-primary" data-vote-close="true">Fechar</button>'
+          );
+        }
+
+        function render() {
+          var post = activePostId ? getPostById(activePostId) : null;
+          renderHeader(post);
+          renderBody();
+          renderFooter();
+          safeIconRefresh();
+        }
+
+        function close() {
+          if (!voteModalOverlay || !isOpen) {
+            return;
+          }
+
+          voteModalOverlay.classList.remove('is-open');
+          voteModalOverlay.classList.add('is-closing');
+          voteModalOverlay.setAttribute('aria-hidden', 'true');
+
+          setTimeout(function () {
+            voteModalOverlay.classList.remove('is-closing');
+            voteModalOverlay.classList.add('is-hidden');
+          }, 160);
+
+          isOpen = false;
+
+          if (triggerElement && typeof triggerElement.focus === 'function') {
+            triggerElement.focus();
+          }
+        }
+
+        function open(postId, opener) {
+          if (!voteModalOverlay || !voteModal) {
+            return;
+          }
+
+          activePostId = String(postId || '').trim();
+          if (!activePostId) {
+            return;
+          }
+
+          triggerElement = opener || document.activeElement;
+          render();
+
+          voteModalOverlay.classList.remove('is-hidden', 'is-closing');
+          voteModalOverlay.classList.add('is-open');
+          voteModalOverlay.setAttribute('aria-hidden', 'false');
+          isOpen = true;
+
+          if (typeof voteModal.focus === 'function') {
+            voteModal.focus();
+          }
+        }
+
+        function bindModalActions() {
+          if (!voteModal) {
+            return;
+          }
+
+          voteModal.addEventListener('click', function (event) {
+            var closeBtn = event.target.closest('[data-vote-close="true"]');
+            if (closeBtn) {
+              event.preventDefault();
+              close();
+              return;
+            }
+
+            var clearBtn = event.target.closest('[data-vote-clear="true"]');
+            if (clearBtn) {
+              event.preventDefault();
+
+              if (typeof VoteSystem !== 'undefined' && VoteSystem && typeof VoteSystem.clearVote === 'function' && activePostId) {
+                VoteSystem.clearVote(activePostId);
+              }
+
+              render();
+              return;
+            }
+
+            var voteOption = event.target.closest('[data-vote-type]');
+            if (!voteOption || !activePostId) {
+              return;
+            }
+
+            event.preventDefault();
+
+            if (typeof VoteSystem !== 'undefined' && VoteSystem && typeof VoteSystem.toggleQuickVote === 'function') {
+              VoteSystem.toggleQuickVote(activePostId, voteOption.getAttribute('data-vote-type'));
+            }
+
+            if (typeof VoteSystem !== 'undefined' && VoteSystem && typeof VoteSystem.flashCluster === 'function') {
+              VoteSystem.flashCluster(activePostId);
+            }
+
+            render();
+          });
+        }
+
+        function init() {
+          if (initialized) {
+            return;
+          }
+
+          initialized = true;
+
+          if (!voteModalOverlay || !voteModal) {
+            return;
+          }
+
+          bindModalActions();
+
+          voteModalOverlay.addEventListener('click', function (event) {
+            if (event.target === voteModalOverlay) {
+              close();
+            }
+          });
+
+          document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape' && isOpen) {
+              close();
+            }
+          });
+        }
+
+        return {
+          init: init,
+          open: open,
+          close: close
+        };
+      })();
+
+      var HeaderLogoController = {
+        logoEl: null,
+        hashBound: false,
+
+        init: function () {
+          this.logoEl = document.querySelector('.chrono-logo');
+          this.syncWithRoute(AppRouter && AppRouter.currentView ? AppRouter.currentView : window.location.hash);
+
+          if (!this.hashBound) {
+            var self = this;
+            window.addEventListener('hashchange', function () {
+              self.syncWithRoute(window.location.hash);
+            });
+            this.hashBound = true;
+          }
+        },
+
+        syncWithRoute: function (viewName) {
+          if (!this.logoEl) {
+            return;
+          }
+
+          var hasActiveRoute = !!String(viewName || '').trim() || !!window.location.hash;
+          var logo = this.logoEl;
+
+          logo.classList.remove('is-route-active');
+
+          if (!hasActiveRoute) {
+            return;
+          }
+
+          requestAnimationFrame(function () {
+            logo.classList.add('is-route-active');
+          });
+        }
+      };
 
       function boot() {
         safeIconRefresh();
-        HeaderModule.init();
-        ChronoTimeline.init();
-        ThreadModal.init();
-        AppRouter.init();
-        attachEvents();
-        AutocompleteSystem.init();
-        autoExpandComposer();
-        updatePublishState();
+
+        if (typeof VoteSystem !== 'undefined' && VoteSystem && typeof VoteSystem.init === 'function') {
+          VoteSystem.init();
+        }
+
+        if (typeof VoteModal !== 'undefined' && VoteModal && typeof VoteModal.init === 'function') {
+          VoteModal.init();
+        }
+
+        if (typeof HeaderLogoController !== 'undefined' && HeaderLogoController && typeof HeaderLogoController.init === 'function') {
+          HeaderLogoController.init();
+        }
+
+        if (typeof ChronoLogoFX !== 'undefined' && ChronoLogoFX && typeof ChronoLogoFX.init === 'function') {
+          ChronoLogoFX.init();
+        }
+
+        if (typeof CordaoStore !== 'undefined' && CordaoStore && typeof CordaoStore.init === 'function') {
+          CordaoStore.init();
+        }
+
+        if (typeof SidebarCordoes !== 'undefined' && SidebarCordoes && typeof SidebarCordoes.init === 'function') {
+          SidebarCordoes.init();
+        }
+
+        if (typeof CordaoView !== 'undefined' && CordaoView && typeof CordaoView.init === 'function') {
+          CordaoView.init();
+        }
+
+        if (typeof CordaoModal !== 'undefined' && CordaoModal && typeof CordaoModal.init === 'function') {
+          CordaoModal.init();
+        }
+
+        if (typeof AppRouter !== 'undefined' && AppRouter && typeof AppRouter.init === 'function') {
+          AppRouter.init();
+        }
+
+        if (typeof HeaderModule !== 'undefined' && HeaderModule && typeof HeaderModule.init === 'function') {
+          HeaderModule.init();
+        }
+
+        if (typeof ChronoTimeline !== 'undefined' && ChronoTimeline && typeof ChronoTimeline.init === 'function') {
+          ChronoTimeline.init();
+        }
+
+        if (typeof ThreadModal !== 'undefined' && ThreadModal && typeof ThreadModal.init === 'function') {
+          ThreadModal.init();
+        }
+
+        if (typeof attachEvents === 'function') {
+          attachEvents();
+        }
+
+        if (typeof AutocompleteSystem !== 'undefined' && AutocompleteSystem && typeof AutocompleteSystem.init === 'function') {
+          AutocompleteSystem.init();
+        }
+
+        if (typeof autoExpandComposer === 'function') {
+          autoExpandComposer();
+        }
+
+        if (typeof updatePublishState === 'function') {
+          updatePublishState();
+        }
+
+        if (typeof window.lucide !== 'undefined' && window.lucide && typeof window.lucide.createIcons === 'function') {
+          window.lucide.createIcons();
+        }
 
         setTimeout(function () {
-          feedSkeleton.style.display = 'none';
-          feedList.classList.remove('hidden');
-          renderFeed({ withStagger: true });
-          FeedFilters.init();
+          if (feedSkeleton) {
+            feedSkeleton.style.display = 'none';
+          }
+
+          if (feedList) {
+            feedList.classList.remove('hidden');
+          }
+
+          if (typeof renderFeed === 'function') {
+            renderFeed({ withStagger: true });
+          }
+
+          if (typeof FeedFilters !== 'undefined' && FeedFilters && typeof FeedFilters.init === 'function') {
+            FeedFilters.init();
+          }
         }, 800);
       }
 
-      document.addEventListener('DOMContentLoaded', boot);
+      document.addEventListener('DOMContentLoaded', function () {
+        boot();
+      });
     })();
   </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
