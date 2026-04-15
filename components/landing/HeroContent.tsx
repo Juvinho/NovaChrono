@@ -1,8 +1,17 @@
+import Image from 'next/image'
 import Link from 'next/link'
 
 export default function HeroContent() {
   return (
     <div className="relative z-10 flex flex-col items-center text-center px-6 py-20 max-w-3xl mx-auto">
+      <Image
+        src="/Chrono.png"
+        alt="Chrono"
+        width={176}
+        height={56}
+        priority
+        className="animate-fade-in-1 mb-6"
+      />
 
       {/* Nome */}
       <h1

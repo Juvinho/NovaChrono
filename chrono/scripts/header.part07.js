@@ -25,7 +25,9 @@ var HeaderActions = {
 
 var SearchController = {
   init: function () {},
-  filter: function (query) {
+  filter: function (query, options) {
+    var opts = options || {};
+
     if (searchInput) {
       searchInput.value = String(query || '');
       state.query = normalize(searchInput.value.trim());
@@ -33,6 +35,10 @@ var SearchController = {
         FeedFilters.applyFilter(FeedFilters.current, false);
       } else if (typeof renderFeed === 'function') {
         renderFeed();
+      }
+
+      if (!opts.fromOverlay && typeof SearchOverlay !== 'undefined' && SearchOverlay && typeof SearchOverlay.syncWithController === 'function') {
+        SearchOverlay.syncWithController(searchInput.value);
       }
     }
   },

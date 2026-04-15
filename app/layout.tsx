@@ -12,6 +12,11 @@ const syne = Syne({
 export const metadata: Metadata = {
   title: 'Chrono — Sua linha. Sua história.',
   description: 'A rede social baseada em timeline.',
+  icons: {
+    icon: '/Chrono.png',
+    shortcut: '/Chrono.png',
+    apple: '/Chrono.png',
+  },
 }
 
 export default function RootLayout({

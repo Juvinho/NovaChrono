@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server'
-import { Prisma } from '@prisma/client'
 import { hash } from 'bcryptjs'
 
 import { prisma } from '@/lib/prisma'
@@ -22,8 +21,39 @@ function errorResponse(status: number, body: RegisterErrorBody) {
   return NextResponse.json(body, { status })
 }
 
+function stringifyError(error: unknown) {
+  if (!error) {
+    return 'unknown-error'
+  }
+
+  if (error instanceof Error) {
+    return `${error.name}: ${error.message}`
+  }
+
+  try {
+    return JSON.stringify(error)
+  } catch {
+    return String(error)
+  }
+}
+
+function hasPrismaErrorCode(error: unknown): error is { code: string } {
+  if (!error || typeof error !== 'object') {
+    return false
+  }
+
+  return typeof (error as { code?: unknown }).code === 'string'
+}
+
 export async function POST(request: Request) {
   try {
+    if (!process.env.DATABASE_URL) {
+      console.error('[api/register] DATABASE_URL is missing in runtime environment')
+      return errorResponse(503, {
+        message: 'Configuracao de banco ausente no servidor.',
+      })
+    }
+
     const formData = await request.formData()
 
     const username = normalizeFormValue(formData.get('username'))
@@ -104,20 +134,35 @@ export async function POST(request: Request) {
       { status: 201 }
     )
   } catch (error) {
+    console.error('[api/register] request failed', {
+      reason: stringifyError(error),
+      prismaCode: hasPrismaErrorCode(error) ? error.code : undefined,
+      stack: error instanceof Error ? error.stack : undefined,
+    })
+
     if (error instanceof AvatarFileError) {
       return errorResponse(error.statusCode, { message: error.message })
     }
 
-    if (
-      error instanceof Prisma.PrismaClientKnownRequestError &&
-      error.code === 'P2002'
-    ) {
+    if (hasPrismaErrorCode(error) && error.code === 'P2002') {
       return errorResponse(409, {
         message: 'Ja existe uma conta com esses dados.',
       })
     }
 
-    return errorResponse(500, {
+    if (hasPrismaErrorCode(error) && error.code === 'P2021') {
+      return errorResponse(503, {
+        message: 'Estrutura do banco ainda nao foi aplicada (tabela User ausente).',
+      })
+    }
+
+    if (hasPrismaErrorCode(error) && error.code === 'P1001') {
+      return errorResponse(503, {
+        message: 'Banco de dados indisponivel no momento.',
+      })
+    }
+
+    return errorResponse(503, {
       message: 'Erro interno ao criar a conta.',
     })
   }
