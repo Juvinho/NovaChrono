@@ -214,6 +214,7 @@ function toggleMetric(post, action) {
 
 function openProfileRouteFromHandle(handle) {
         var profileHandle = String(handle || '@usuario').trim() || '@usuario';
+  var routeHandle = profileHandle.replace(/^@/, '').trim().toLowerCase() || 'usuario';
 
         if (typeof window !== 'undefined') {
           window.__chronoLastProfileHandle = profileHandle;
@@ -228,7 +229,7 @@ function openProfileRouteFromHandle(handle) {
         }
 
         if (AppRouter && typeof AppRouter.navigate === 'function') {
-          AppRouter.navigate('profile');
+          AppRouter.navigate('perfil/' + routeHandle);
         }
 
         if (typeof showAppToast === 'function') {
@@ -237,7 +238,7 @@ function openProfileRouteFromHandle(handle) {
       }
 
 function openHashtagFeed(tag) {
-        var cleanTag = String(tag || '').replace(/^#/, '').trim().toLowerCase();
+  var cleanTag = String(tag || '').replace(/^[#$]/, '').trim().toLowerCase();
 
         if (!cleanTag) {
           return;
@@ -248,7 +249,7 @@ function openHashtagFeed(tag) {
         }
 
         if (searchInput) {
-          searchInput.value = '#' + cleanTag;
+          searchInput.value = '$' + cleanTag;
           state.query = normalize(searchInput.value);
         }
 
@@ -264,7 +265,7 @@ function openHashtagFeed(tag) {
         }
 
         if (typeof showAppToast === 'function') {
-          showAppToast('Filtrando por #' + cleanTag + '.');
+          showAppToast('Filtrando por $' + cleanTag + '.');
         }
       }
 

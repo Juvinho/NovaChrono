@@ -11,7 +11,7 @@ function normalizeCordao(input) {
           raw = raw.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
         }
 
-        raw = raw.replace(/^#+/, '');
+        raw = raw.replace(/^[#$]+/, '');
         raw = raw.replace(/\s+/g, '');
         raw = raw.replace(/[^a-z0-9_]/g, '');
 
@@ -19,25 +19,25 @@ function normalizeCordao(input) {
           raw = raw.slice(0, 24);
         }
 
-        return raw ? ('#' + raw) : '';
+        return raw ? ('$' + raw) : '';
       }
 
 function toCordaoSlug(value) {
-        return normalizeCordao(value).replace(/^#/, '');
+        return normalizeCordao(value).replace(/^[#$]/, '');
       }
 
 function displayCordao(value) {
         var slug = toCordaoSlug(value);
-        return slug ? ('#' + slug) : '#';
+        return slug ? ('$' + slug) : '$';
       }
 
 function extractCordaoFromText(text) {
-        var match = String(text || '').toLowerCase().match(/#([a-z0-9_]{1,24})/);
+        var match = String(text || '').toLowerCase().match(/\$([a-z0-9_]{1,24})/);
         if (!match) {
           return '';
         }
 
-        return toCordaoSlug('#' + match[1]);
+        return toCordaoSlug('$' + match[1]);
       }
 
 function prependPostToFeed(post, source) {

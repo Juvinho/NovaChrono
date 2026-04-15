@@ -299,7 +299,7 @@ function normalizeAuthorHandle(handle) {
       function formatThreadText(text) {
         var escaped = escapeHtml(text);
 
-        escaped = escaped.replace(/(^|\s)(#\w+)/g, function (_, leading, tag) {
+        escaped = escaped.replace(/(^|\s)(\$\w+)/g, function (_, leading, tag) {
           return leading + '<a href="#" class="thread-hashtag" data-thread-link="tag" data-tag="' + tag + '">' + tag + '</a>';
         });
 
@@ -308,4 +308,49 @@ function normalizeAuthorHandle(handle) {
         });
 
         return escaped;
+      }
+
+function toast(message) {
+        if (typeof showAppToast === 'function') {
+          showAppToast(message);
+          return;
+        }
+
+        console.log('[Chrono toast]', String(message || 'Atualizado.'));
+      }
+
+function formatDate(value) {
+        var source = value instanceof Date ? value : new Date(value);
+        if (Number.isNaN(source.getTime())) {
+          return '';
+        }
+
+        var day = String(source.getDate()).padStart(2, '0');
+        var month = String(source.getMonth() + 1).padStart(2, '0');
+        var year = source.getFullYear();
+        return day + '/' + month + '/' + year;
+      }
+
+function generateId(prefix) {
+        var base = String(prefix || 'id');
+        return base + '-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
+      }
+
+function debounce(callback, waitMs) {
+        if (typeof callback !== 'function') {
+          return function () {};
+        }
+
+        var timeout = 0;
+        var wait = Number(waitMs) || 0;
+
+        return function () {
+          var args = arguments;
+          var context = this;
+
+          clearTimeout(timeout);
+          timeout = setTimeout(function () {
+            callback.apply(context, args);
+          }, wait);
+        };
       }

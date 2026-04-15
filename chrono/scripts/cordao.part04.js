@@ -3,7 +3,7 @@
 var CordaoModal = {
         isOpen: false,
         closeTimer: null,
-        quickSuggestions: ['#chrono', '#artedistopica', '#railway', '#ossodemais'],
+        quickSuggestions: ['$chrono', '$artedistopica', '$railway', '$ossodemais'],
 
         init: function () {
           if (!cordaoModalOverlay || !cordaoModal) {
@@ -46,7 +46,7 @@ var CordaoModal = {
 
           var merged = this.quickSuggestions.concat(fromStore).reduce(function (acc, current) {
             var normalized = displayCordao(current);
-            if (acc.indexOf(normalized) === -1 && normalized !== '#') {
+            if (acc.indexOf(normalized) === -1 && normalized !== '$') {
               acc.push(normalized);
             }
             return acc;
@@ -61,8 +61,8 @@ var CordaoModal = {
           var raw = String(value || '');
           var normalized = normalizeCordao(raw);
 
-          if (!normalized && raw.trim().charAt(0) === '#') {
-            return '#';
+          if (!normalized && /^[#$]/.test(raw.trim())) {
+            return '$';
           }
 
           return normalized;

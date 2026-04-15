@@ -6,7 +6,7 @@ var postStore = [
           user: '@cuberta_dobrada',
           avatar: 'https://picsum.photos/seed/p1-avatar/80/80',
           time: 'ha 8 min',
-          text: 'A chuva neon refletindo no asfalto hoje parecia frame de filme antigo. #artedistopica',
+          text: 'A chuva neon refletindo no asfalto hoje parecia frame de filme antigo. $artedistopica',
           verified: true,
           following: true,
           metrics: { comments: 5, reposts: 2, likes: 12 },
@@ -193,12 +193,14 @@ var postStore = [
       var profileCoverEl = document.getElementById('profileCover');
       var profilePostsList = document.getElementById('profilePostsList');
       var profileTabs = document.getElementById('profileTabs');
+      var profileTabPanels = document.getElementById('profileTabPanels');
 
       var profileViewButton = document.getElementById('profileViewButton');
       var profileEditButton = document.getElementById('profileEditButton');
       var profileStatsButton = document.getElementById('profileStatsButton');
       var languageSettingsButton = document.getElementById('languageSettingsButton');
       var profileEditCta = document.getElementById('profileEditCta');
+      var profileBackToFeedCta = document.getElementById('profileBackToFeedCta');
       var profileFollowingBtn = document.getElementById('profileFollowingBtn');
       var profileFollowersBtn = document.getElementById('profileFollowersBtn');
       var profileFollowersCount = document.getElementById('profileFollowersCount');
@@ -292,3 +294,40 @@ var postStore = [
       postStore.forEach(function (post, index) {
         applyPostMetadata(post, 'initial', index);
       });
+
+      if (typeof AppState === 'undefined') {
+        var AppState = {
+          user: {
+            username: 'juvinho',
+            displayName: 'Juvinho Silva'
+          },
+          theme: 'dark',
+          currentView: 'feed'
+        };
+      }
+
+      var FeedStore = {
+        posts: postStore,
+        addPost: function (post) {
+          if (!post || typeof post !== 'object') {
+            return null;
+          }
+
+          var nextPost = Object.assign({}, post);
+          if (!nextPost.id) {
+            nextPost.id = generateId('post');
+          }
+
+          applyPostMetadata(nextPost, nextPost.source || 'feed-store', 0);
+          postStore.unshift(nextPost);
+          return nextPost;
+        },
+        getPosts: function () {
+          return postStore.slice();
+        }
+      };
+
+      var MockData = {
+        posts: postStore,
+        users: Array.isArray(MOCK_USERS) ? MOCK_USERS.slice() : []
+      };
