@@ -1,0 +1,284 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Reset & base ─── */
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ═══════════════════════════════════════
+   CONIC GRADIENT — camada de profundidade
+═══════════════════════════════════════ */
+@keyframes conicSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* ═══════════════════════════════════════
+   AURORA BLOB KEYFRAMES
+   Blobs 1 e 4: rotação contínua com path
+   circular — start/end iguais = sem snap.
+   Blobs 2, 3, 5: alternate, suave.
+═══════════════════════════════════════ */
+
+/* Blob 1 — violeta — orbita circular horária + respiração */
+@keyframes aurora1 {
+  0%   { transform: translate(  0px,   0px) rotate(  0deg) scale(1.00); filter: blur(90px);  opacity: 0.58; }
+  25%  { transform: translate( 80px, -50px) rotate( 90deg) scale(1.08); filter: blur(72px);  opacity: 0.80; }
+  50%  { transform: translate( 40px,  90px) rotate(180deg) scale(0.95); filter: blur(108px); opacity: 0.42; }
+  75%  { transform: translate(-50px,  55px) rotate(270deg) scale(1.05); filter: blur(78px);  opacity: 0.72; }
+  100% { transform: translate(  0px,   0px) rotate(360deg) scale(1.00); filter: blur(90px);  opacity: 0.58; }
+}
+
+/* Blob 2 — azul claro — diagonal T→B + brilha ao chegar */
+@keyframes aurora2 {
+  from { transform: translate(  0px,    0px) scale(1.00); filter: blur(80px);  opacity: 0.40; }
+  to   { transform: translate(-120px, 110px) scale(1.13); filter: blur(64px);  opacity: 0.74; }
+}
+
+/* Blob 3 — índigo — sweep horizontal + pulsa */
+@keyframes aurora3 {
+  from { transform: translate(  0px,   0px) scale(1.00); filter: blur(85px);  opacity: 0.40; }
+  to   { transform: translate(140px, -75px) scale(0.90); filter: blur(68px);  opacity: 0.73; }
+}
+
+/* Blob 4 — ciano — orbita anti-horária + respiração */
+@keyframes aurora4 {
+  0%   { transform: translate(  0px,   0px) rotate(   0deg); filter: blur(70px);  opacity: 0.40; }
+  25%  { transform: translate(-65px, -40px) rotate( -90deg); filter: blur(58px);  opacity: 0.60; }
+  50%  { transform: translate(-90px,  70px) rotate(-180deg); filter: blur(82px);  opacity: 0.28; }
+  75%  { transform: translate(-20px,  90px) rotate(-270deg); filter: blur(62px);  opacity: 0.55; }
+  100% { transform: translate(  0px,   0px) rotate(-360deg); filter: blur(70px);  opacity: 0.40; }
+}
+
+/* Blob 5 — roxo — float diagonal + acende */
+@keyframes aurora5 {
+  from { transform: translate( 0px,    0px) scale(1.00); filter: blur(88px);  opacity: 0.35; }
+  to   { transform: translate(95px, 115px) scale(0.92); filter: blur(70px);  opacity: 0.68; }
+}
+
+/* ═══════════════════════════════════════
+   PARTÍCULAS
+═══════════════════════════════════════ */
+@keyframes particleFloat {
+  0%   { transform: translateY(  0px) translateX( 0px); opacity: 0;    }
+  12%  { opacity: 0.65; }
+  88%  { opacity: 0.40; }
+  100% { transform: translateY(-85px) translateX(10px); opacity: 0;    }
+}
+
+/* ═══════════════════════════════════════
+   FADE-IN STAGGER
+═══════════════════════════════════════ */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+.animate-fade-in-1 { animation: fadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both; }
+.animate-fade-in-2 { animation: fadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.40s both; }
+.animate-fade-in-3 { animation: fadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.65s both; }
+
+/* ═══════════════════════════════════════
+   AURORA BLOBS
+   mix-blend-mode: screen faz as cores se
+   misturarem onde os blobs se sobrepõem,
+   criando o efeito aurora.
+═══════════════════════════════════════ */
+.aurora-blob {
+  position: absolute;
+  border-radius: 50%;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* 1 — violeta, topo-esquerda, grande */
+.aurora-1 {
+  width: 700px;
+  height: 700px;
+  background: #6d28d9;
+  top: -20%;
+  left: -14%;
+  animation: aurora1 26s linear infinite;
+}
+
+/* 2 — azul claro, topo-direita */
+.aurora-2 {
+  width: 530px;
+  height: 530px;
+  background: #0ea5e9;
+  top: -12%;
+  right: -8%;
+  animation: aurora2 14s ease-in-out infinite alternate;
+}
+
+/* 3 — índigo, baixo-esquerda */
+.aurora-3 {
+  width: 630px;
+  height: 630px;
+  background: #4f46e5;
+  bottom: -20%;
+  left: 2%;
+  animation: aurora3 19s ease-in-out infinite alternate;
+}
+
+/* 4 — ciano, centro-direita, anti-horário */
+.aurora-4 {
+  width: 430px;
+  height: 430px;
+  background: #06b6d4;
+  top: 33%;
+  right: 3%;
+  animation: aurora4 21s linear infinite;
+}
+
+/* 5 — roxo, baixo-direita */
+.aurora-5 {
+  width: 570px;
+  height: 570px;
+  background: #7c3aed;
+  bottom: -14%;
+  right: -12%;
+  animation: aurora5 17s ease-in-out infinite alternate;
+}
+
+/* ═══════════════════════════════════════
+   PARTÍCULAS
+═══════════════════════════════════════ */
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  animation: particleFloat linear infinite;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+/* ═══════════════════════════════════════
+   BUTTONS
+═══════════════════════════════════════ */
+.btn-primary {
+  background: #6366f1;
+  color: #ffffff;
+  box-shadow: 0 0 28px rgba(99, 102, 241, 0.42);
+  transition: transform 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
+}
+.btn-primary:hover {
+  background: #4f46e5;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 36px rgba(99, 102, 241, 0.58);
+}
+.btn-primary:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.btn-primary:disabled:hover {
+  transform: none;
+  background: #6366f1;
+  box-shadow: none;
+}
+.btn-primary:active {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 18px rgba(99, 102, 241, 0.4);
+}
+
+.btn-outline {
+  border: 1.5px solid rgba(99, 102, 241, 0.48);
+  color: rgba(165, 180, 252, 0.88);
+  background: transparent;
+  transition: transform 0.22s ease, box-shadow 0.22s ease,
+              border-color 0.22s ease, color 0.22s ease, background 0.22s ease;
+}
+.btn-outline:hover {
+  border-color: rgba(99, 102, 241, 0.85);
+  color: #ffffff;
+  background: rgba(99, 102, 241, 0.10);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px rgba(99, 102, 241, 0.22);
+}
+.btn-outline:active { transform: translateY(-1px); }
+
+/* ═══════════════════════════════════════
+   INPUTS
+═══════════════════════════════════════ */
+.input-field {
+  width: 100%;
+  background: rgba(5, 8, 15, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.75rem;
+  padding: 0.875rem 1rem 0.875rem 2.75rem;
+  color: #ffffff;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 0.875rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.input-field::placeholder {
+  color: rgba(255, 255, 255, 0.28);
+}
+
+.input-field:focus {
+  border-color: rgba(99, 102, 241, 0.65);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12),
+              inset 0 0 0 1px rgba(99, 102, 241, 0.08);
+}
+
+/* ═══════════════════════════════════════
+   CHECKBOX CUSTOMIZADO
+═══════════════════════════════════════ */
+.checkbox-box {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  border-radius: 5px;
+  border: 1.5px solid rgba(124, 58, 237, 0.45);
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.checkbox-box.is-checked {
+  border-color: #6366f1;
+  background: rgba(99, 102, 241, 0.18);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.10);
+}
+
+/* Traço do check — animado via stroke-dashoffset */
+.checkbox-mark {
+  stroke-dasharray: 12;
+  stroke-dashoffset: 12;
+  transition: stroke-dashoffset 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.checkbox-box.is-checked .checkbox-mark {
+  stroke-dashoffset: 0;
+}
+
+/* Input com erro de validação */
+.input-field.has-error {
+  border-color: rgba(239, 68, 68, 0.5);
+}
+.input-field.has-error:focus {
+  border-color: rgba(239, 68, 68, 0.7);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.10),
+              inset 0 0 0 1px rgba(239, 68, 68, 0.06);
+}
+
+/* Evita o fundo branco do autocomplete nos navegadores WebKit */
+.input-field:-webkit-autofill,
+.input-field:-webkit-autofill:hover,
+.input-field:-webkit-autofill:focus {
+  -webkit-text-fill-color: #ffffff;
+  -webkit-box-shadow: 0 0 0px 1000px rgba(5, 8, 15, 0.9) inset;
+  transition: background-color 5000s ease-in-out 0s;
+}

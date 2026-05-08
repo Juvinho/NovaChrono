@@ -1,0 +1,192 @@
+.cordao-feed-block {
+      border: 1px solid var(--color-border);
+      border-radius: 16px;
+      background: rgba(15, 17, 32, 0.95);
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+.cordao-feed-title {
+      margin: 0;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--color-text-muted);
+      font-weight: 600;
+    }
+
+.cordao-feed-list {
+      margin-top: 0;
+    }
+
+.cordao-card-tag {
+      margin-left: auto;
+      border-radius: 999px;
+      border: 1px solid rgba(124, 90, 240, 0.45);
+      background: rgba(124, 90, 240, 0.17);
+      color: #e9e4ff;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      line-height: 1.3;
+    }
+
+.cordao-empty {
+      border: 1px dashed rgba(255, 255, 255, 0.14);
+      border-radius: 14px;
+      padding: 18px;
+      text-align: center;
+      display: grid;
+      gap: 8px;
+      background: rgba(10, 12, 22, 0.72);
+    }
+
+.cordao-empty h4 {
+      margin: 0;
+      font-size: 16px;
+      color: #f1f3ff;
+      font-family: var(--font-display);
+    }
+
+.cordao-empty p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--color-text-muted);
+    }
+
+.cordao-modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 560;
+      background: rgba(0, 0, 0, 0.74);
+      backdrop-filter: blur(10px);
+      display: grid;
+      place-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 170ms ease;
+      padding: 12px;
+    }
+
+.cordao-modal-overlay.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+.cordao-modal-overlay.is-hidden {
+      display: none;
+    }
+
+.cordao-modal {
+      width: min(560px, calc(100vw - 24px));
+      max-height: calc(100vh - 24px);
+      overflow: auto;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(10, 11, 20, 0.98);
+      box-shadow: 0 28px 64px rgba(0, 0, 0, 0.52);
+      transform: translateY(20px) scale(0.96);
+      opacity: 0;
+      transition: transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1), opacity 180ms ease;
+    }
+
+.cordao-modal-overlay.is-open .cordao-modal {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+
+.cordao-modal-header {
+      padding: 18px 20px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: start;
+    }
+
+.cordao-modal-title {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 22px;
+      color: #f2f4ff;
+      line-height: 1.15;
+    }
+
+.cordao-modal-subtitle {
+      margin: 4px 0 0;
+      color: var(--color-text-muted);
+      font-size: 13px;
+    }
+
+.cordao-modal-close {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--color-text-muted);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+
+.cordao-modal-close:hover {
+      color: var(--color-text);
+      border-color: rgba(255, 255, 255, 0.24);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+.cordao-modal-close i,
+    .cordao-modal-close svg {
+      width: 16px;
+      height: 16px;
+    }
+
+.cordao-modal-body {
+      padding: 16px 20px;
+      display: grid;
+      gap: 12px;
+    }
+
+.cordao-modal-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+.cordao-modal-user img {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      object-fit: cover;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      flex-shrink: 0;
+    }
+
+.cordao-modal-user-meta {
+      min-width: 0;
+      display: grid;
+      gap: 2px;
+    }
+
+.cordao-modal-user-name {
+      margin: 0;
+      font-size: 14px;
+      color: #eff1ff;
+      font-weight: 600;
+    }
+
+.cordao-modal-user-handle {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: 12px;
+    }
+
+.cordao-modal-field {
+      display: grid;
+      gap: 7px;
+    }

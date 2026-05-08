@@ -1,0 +1,193 @@
+.timeline-intensity-fill {
+      display: block;
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      transition: width 400ms ease;
+    }
+
+.timeline-label-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      min-height: 13px;
+    }
+
+.timeline-label {
+      font-size: 10px;
+      color: var(--color-text-muted);
+      line-height: 1;
+      text-align: center;
+    }
+
+.timeline-label.label-pop {
+      animation: label-pop 250ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+.timeline-label.today {
+      color: var(--color-primary);
+      font-weight: 800;
+    }
+
+.timeline-label.near {
+      color: var(--color-text);
+      font-weight: 600;
+    }
+
+.timeline-label.future-far {
+      color: var(--color-text-faint);
+    }
+
+.timeline-day.selected .timeline-label {
+      color: #9370ff;
+      font-weight: 700;
+    }
+
+.timeline-now-clock {
+      font-size: 9px;
+      color: rgba(147, 112, 255, 0.6);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.02em;
+    }
+
+.timeline-ripple {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      background: rgba(124, 90, 240, 0.4);
+      border-radius: 50%;
+      width: 8px;
+      height: 8px;
+      pointer-events: none;
+      animation: ripple-expand 400ms forwards;
+      z-index: 0;
+    }
+
+.timeline-particle {
+      position: absolute;
+      left: 50%;
+      top: 20px;
+      width: 4px;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(124, 90, 240, 0.6);
+      pointer-events: none;
+      animation: timeline-particle-up 600ms ease-out forwards;
+      z-index: 2;
+    }
+
+.timeline-tooltip {
+      position: absolute;
+      bottom: 78px;
+      left: 50%;
+      transform: translate(-50%, 4px);
+      background: rgba(15, 17, 32, 0.96);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 11px;
+      color: var(--color-text);
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 150ms ease, transform 150ms ease;
+      z-index: 320;
+    }
+
+.timeline-tooltip.is-visible {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+.timeline-tooltip.is-hidden {
+      display: none;
+    }
+
+.timeline-tooltip::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: -6px;
+      width: 0;
+      height: 0;
+      transform: translateX(-50%);
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 6px solid rgba(15, 17, 32, 0.96);
+    }
+
+.timeline-calendar-popup {
+      position: absolute;
+      bottom: 110px;
+      left: 16px;
+      width: 280px;
+      background: #0f1120;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba(124, 90, 240, 0.15);
+      transform-origin: bottom left;
+      transform: scale(0.85);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 300;
+    }
+
+.timeline-calendar-popup.is-open {
+      transform: scale(1);
+      opacity: 1;
+      pointer-events: auto;
+      transition: transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1), opacity 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+.timeline-calendar-popup.is-closing {
+      transform: scale(0.9);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 150ms ease-in, opacity 150ms ease-in;
+    }
+
+.timeline-calendar-popup.is-hidden {
+      display: none;
+    }
+
+.calendar-popup-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+.calendar-month-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-text);
+      font-family: var(--font-display);
+    }
+
+.calendar-nav-btn {
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+      border: 0;
+      background: transparent;
+      color: var(--color-text-muted);
+      cursor: pointer;
+      display: inline-grid;
+      place-items: center;
+      transition: color 150ms ease, transform 150ms ease, background 150ms ease;
+    }
+
+.calendar-nav-btn:hover {
+      color: var(--color-text);
+      background: rgba(255, 255, 255, 0.06);
+      transform: scale(1.1);
+    }
+
+.calendar-nav-btn i,
+    .calendar-nav-btn svg {
+      width: 14px;
+      height: 14px;
+    }

@@ -1,0 +1,247 @@
+@media (max-width: 767px) {
+      .autocomplete-dropdown {
+        width: min(92vw, 280px);
+      }
+
+      .cordao-view-shell {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 10px;
+      }
+
+      .cordao-sidebar {
+        position: static;
+        top: auto;
+        max-height: none;
+        border-radius: 14px;
+        padding: 10px;
+      }
+
+      .cordao-sidebar-title {
+        margin-bottom: 8px;
+      }
+
+      .cordao-thread-list {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        scroll-snap-type: x proximity;
+      }
+
+      .cordao-thread-list .thread-item {
+        min-width: max-content;
+        scroll-snap-align: start;
+      }
+
+      .cordao-header-card {
+        padding: 14px;
+      }
+
+      .cordao-title {
+        font-size: 24px;
+      }
+
+      .cordao-composer {
+        padding: 10px;
+      }
+
+      .cordao-composer-textarea {
+        min-height: 92px;
+      }
+
+      .cordao-feed-block {
+        padding: 10px;
+      }
+
+      .cordao-modal {
+        width: min(560px, calc(100vw - 12px));
+        max-height: calc(100vh - 12px);
+      }
+
+      .cordao-modal-header,
+      .cordao-modal-body,
+      .cordao-modal-footer {
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+
+      .kpi-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .choice-row {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .view-head {
+        padding: 16px 16px 0;
+      }
+
+      .edit-profile-wrap {
+        padding: 14px;
+      }
+
+      .profile-shell {
+        padding: 4px 0 14px;
+      }
+
+      .profile-cover {
+        height: 140px;
+        border-radius: 16px 16px 0 0;
+      }
+
+      .profile-info-card {
+        grid-template-columns: minmax(0, 1fr);
+        border-radius: 0 0 16px 16px;
+        padding: 14px;
+        gap: 12px;
+      }
+
+      .profile-avatar-wrap {
+        margin-top: -48px;
+      }
+
+      .profile-avatar {
+        width: 72px;
+        height: 72px;
+        border-width: 3px;
+      }
+
+      .profile-handle-big {
+        font-size: 22px;
+      }
+
+      .profile-bio {
+        font-size: 15px;
+      }
+
+      .profile-side-actions {
+        display: grid;
+        justify-items: stretch;
+      }
+
+      .profile-edit-cta,
+      .profile-back-link {
+        width: 100%;
+      }
+
+      .profile-tabs {
+        min-height: 48px;
+      }
+
+      .profile-tab {
+        font-size: 12px;
+      }
+
+      .profile-tab-panels {
+        padding: 14px;
+      }
+
+      .profile-media-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .profile-temporal-input {
+        min-width: 0;
+        width: 100%;
+      }
+
+      .columns {
+        grid-template-columns: minmax(0, 1fr);
+        max-width: 720px;
+      }
+
+      .left-sidebar,
+      .right-sidebar {
+        display: none;
+      }
+
+      .search-slot {
+        display: none;
+      }
+
+      .profile-name,
+      .profile-chevron,
+      .header-divider,
+      #settingsButton,
+      #logoutButton {
+        display: none;
+      }
+
+      .header-inner {
+        padding: 0 12px;
+        gap: 8px;
+      }
+
+      .header-right {
+        gap: 2px;
+      }
+
+      .profile-chip {
+        padding: 3px;
+      }
+
+      .header-drawer {
+        width: 100%;
+      }
+
+      .header-notif-dropdown {
+        width: min(94vw, 320px);
+        left: 16px;
+      }
+
+      .profile-dropdown {
+        left: 16px;
+      }
+
+      .tabs-row {
+        top: var(--header-h);
+      }
+
+      .feed-tab {
+        padding: 0 12px;
+        font-size: 12px;
+      }
+
+      .timeline-range-indicator {
+        display: none;
+      }
+
+      .timeline-scroll-wrap {
+        padding-left: 44px;
+      }
+
+      .timeline-day {
+        min-width: 60px;
+      }
+
+      .timeline-label {
+        font-size: 10px;
+      }
+
+      .timeline-calendar-popup {
+        width: 250px;
+        left: 8px;
+      }
+
+      .timeline-main-icon {
+        width: 32px;
+        height: 32px;
+      }
+
+      .vote-modal {
+        width: calc(100vw - 16px);
+        max-height: 85vh;
+      }
+
+      .vote-option {
+        margin-left: 10px;
+        margin-right: 10px;
+        width: calc(100% - 20px);
+      }
+
+      .vote-score-card {
+        margin-left: 10px;
+        margin-right: 10px;
+      }
+    }

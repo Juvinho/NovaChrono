@@ -1,0 +1,65 @@
+.thread-share-btn {
+      border: 0;
+      background: transparent;
+      color: var(--color-text-muted);
+      border-radius: 8px;
+      padding: 6px;
+      cursor: pointer;
+      transition: color 150ms ease, background 150ms ease;
+      display: inline-grid;
+      place-items: center;
+    }
+
+.thread-parent-left {
+      width: 36px;
+      display: grid;
+      justify-items: center;
+      align-content: start;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+.thread-parent-main {
+      min-width: 0;
+      display: grid;
+      gap: 5px;
+      padding-top: 2px;
+    }
+
+.thread-main-user {
+      min-width: 0;
+      display: grid;
+      gap: 2px;
+    }
+
+.thread-reply-tools button {
+      border: 0;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+      padding: 0;
+      display: inline-grid;
+      place-items: center;
+      transition: color 150ms ease;
+    }
+
+.thread-responses {
+      margin: 0;
+      padding: 0 16px 16px;
+      list-style: none;
+      display: grid;
+      gap: 12px;
+    }
+
+.thread-response-main {
+      min-width: 0;
+      flex: 1;
+      display: grid;
+      gap: 4px;
+    }
+
+.poll-options-container {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 12px;
+    }

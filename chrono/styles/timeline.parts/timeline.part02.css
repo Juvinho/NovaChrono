@@ -1,0 +1,191 @@
+.timeline-scroll {
+      width: 100%;
+      padding-left: 0;
+      padding-right: 8px;
+      display: flex;
+      align-items: center;
+      gap: 0;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      cursor: grab;
+      user-select: none;
+    }
+
+.timeline-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+.timeline-scroll.is-dragging {
+      cursor: grabbing;
+      scroll-snap-type: none;
+    }
+
+.timeline-edge {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 38px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 200ms ease;
+      z-index: 3;
+    }
+
+.timeline-edge.left {
+      left: 48px;
+      background: linear-gradient(90deg, rgba(8, 10, 18, 0.96), transparent);
+    }
+
+.timeline-edge.right {
+      right: 0;
+      background: linear-gradient(270deg, rgba(8, 10, 18, 0.96), transparent);
+    }
+
+.timeline-scroll-wrap.has-left .timeline-edge.left,
+    .timeline-scroll-wrap.has-right .timeline-edge.right {
+      opacity: 1;
+    }
+
+.timeline-edge-hint {
+      position: absolute;
+      bottom: 4px;
+      font-size: 10px;
+      color: var(--color-text-faint);
+      opacity: 0;
+      pointer-events: none;
+      animation: edgeHintBlink 1.2s ease-in-out infinite;
+      z-index: 4;
+    }
+
+.timeline-edge-hint.left {
+      left: 56px;
+    }
+
+.timeline-edge-hint.right {
+      right: 10px;
+    }
+
+.timeline-scroll-wrap.has-left .timeline-edge-hint.left,
+    .timeline-scroll-wrap.has-right .timeline-edge-hint.right {
+      opacity: 0.85;
+    }
+
+.timeline-day {
+      min-width: 80px;
+      height: 72px;
+      padding: 8px 4px;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--color-text-muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      gap: 3px;
+      cursor: pointer;
+      scroll-snap-align: center;
+      position: relative;
+      transition: background 150ms ease, border-color 150ms ease, transform 150ms ease;
+      overflow: hidden;
+    }
+
+.timeline-day:hover {
+      background: rgba(255, 255, 255, 0.05);
+      transform: translateY(-1px);
+    }
+
+.timeline-day.selected {
+      background: rgba(124, 90, 240, 0.18);
+      border: 1px solid rgba(124, 90, 240, 0.45);
+      box-shadow:
+        0 0 12px rgba(124, 90, 240, 0.25),
+        inset 0 0 8px rgba(124, 90, 240, 0.08);
+    }
+
+.timeline-day.today-pulse {
+      animation: timelineTilePulse 320ms ease;
+    }
+
+.timeline-day.keyboard-focus {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+
+.timeline-avatar-zone {
+      height: 26px;
+      min-width: 46px;
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+.timeline-empty-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+.timeline-avatar-wrap {
+      position: relative;
+      height: 22px;
+      min-width: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+.timeline-avatar {
+      position: absolute;
+      top: 0;
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      object-fit: cover;
+      border: 1.5px solid var(--color-bg);
+      background: #111426;
+    }
+
+.timeline-avatar.is-left {
+      left: 2px;
+    }
+
+.timeline-avatar.is-right {
+      right: 2px;
+    }
+
+.timeline-plus-badge {
+      position: absolute;
+      right: -2px;
+      bottom: -3px;
+      background: var(--color-primary);
+      color: #fff;
+      font-size: 9px;
+      border-radius: 999px;
+      padding: 1px 4px;
+      line-height: 1.1;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+.timeline-scheduled-icon {
+      width: 14px;
+      height: 14px;
+      color: var(--color-text-faint);
+    }
+
+.timeline-intensity-track {
+      width: 40px;
+      height: 3px;
+      border-radius: 2px;
+      background: transparent;
+      overflow: hidden;
+      margin-top: 31px;
+    }

@@ -1,0 +1,187 @@
+.thread-main-image {
+      width: 100%;
+      border-radius: 12px;
+      margin-bottom: 14px;
+      cursor: pointer;
+      transition: filter 200ms ease;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: var(--color-surface-2);
+      object-fit: cover;
+      max-height: 420px;
+    }
+
+.thread-main-image:hover {
+      filter: brightness(0.9);
+    }
+
+.thread-main-meta {
+      font-size: 13px;
+      color: var(--color-text-muted);
+      margin-bottom: 0;
+    }
+
+.thread-main-meta .source {
+      color: var(--color-text-faint);
+    }
+
+.thread-metrics-bar {
+      padding: 12px 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+.thread-metric {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+    }
+
+.thread-metric:hover {
+      text-decoration: underline;
+    }
+
+.metric-value {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--color-text);
+      display: inline-block;
+      min-width: 12px;
+      transform-origin: center;
+    }
+
+.metric-value.flip {
+      animation: metricFlip 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+.metric-label {
+      font-size: 13px;
+      color: var(--color-text-muted);
+    }
+
+.thread-actions-bar {
+      padding: 6px 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+.thread-action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      background: transparent;
+      border: 0;
+      font-size: 13px;
+      color: var(--color-text-muted);
+      transition: all 150ms ease;
+    }
+
+.thread-action-btn i,
+    .thread-action-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+
+.thread-action-comment:hover {
+      background: rgba(124, 90, 240, 0.1);
+      color: #7c5af0;
+    }
+
+.thread-action-boost:hover {
+      background: rgba(240, 165, 0, 0.1);
+      color: #f0a500;
+    }
+
+.thread-action-share:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--color-text);
+    }
+
+.thread-action-btn.is-active.thread-action-boost {
+      color: #f0a500;
+    }
+
+.thread-action-btn.is-active.thread-action-boost svg {
+      fill: currentColor;
+      stroke: currentColor;
+    }
+
+.thread-action-btn.boost-pop {
+      animation: threadBoostPop 280ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+.thread-reply-box {
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+.thread-reply-avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      border: 1.5px solid rgba(124, 90, 240, 0.4);
+      object-fit: cover;
+      flex-shrink: 0;
+      background: #101325;
+    }
+
+.thread-reply-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+.thread-reply-textarea {
+      width: 100%;
+      min-height: 44px;
+      max-height: 140px;
+      background: transparent;
+      border: 0;
+      outline: none;
+      resize: none;
+      font-size: 15px;
+      color: var(--color-text);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      overflow-y: auto;
+    }
+
+.thread-reply-textarea::placeholder {
+      color: var(--color-text-faint);
+    }
+
+.thread-reply-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+.thread-reply-tools {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--color-text-faint);
+      font-size: 0;
+    }
+
+.thread-reply-tools button:hover {
+      color: var(--color-primary);
+    }
